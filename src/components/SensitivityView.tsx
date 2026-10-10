@@ -71,47 +71,48 @@ export function SensitivityView({ requirements }: { requirements: Requirement[] 
     .sort((a, b) => a.baseline - b.baseline);
 
   return (
-    <section className="border border-neutral-800 bg-neutral-900/40 p-3">
+    <section className="border border-neutral-200 bg-white">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between text-left text-[11px] font-semibold uppercase tracking-wide text-neutral-500 hover:text-neutral-300"
+        className="flex w-full items-center justify-between px-6 py-4 text-left text-[13px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50"
       >
-        <span>
-          {open ? "▾" : "▸"} Sensitivity: how fragile is this ranking?
+        <span className="flex items-center gap-2">
+          <span className={clsx("text-neutral-400 transition-transform", open && "rotate-180")}>⌄</span>
+          Sensitivity: how fragile is this ranking?
         </span>
-        <span className="font-mono text-[10px] normal-case text-neutral-600">
+        <span className="font-mono text-[11px] font-normal text-neutral-500">
           {rows.filter((r) => r.maxSwing >= 2).length} requirement(s) swing ≥ 2 ranks under different priorities
         </span>
       </button>
 
       {open && (
-        <div className="mt-3 overflow-x-auto">
-          <table className="w-full border-collapse text-left text-[11px]">
+        <div className="overflow-x-auto border-t border-neutral-100 px-6 py-5">
+          <table className="w-full border-collapse text-left text-[12px]">
             <thead>
-              <tr className="border-b border-neutral-800 text-[10px] uppercase tracking-wide text-neutral-500">
-                <th className="py-1.5 pr-3 font-medium">Requirement</th>
-                <th className="px-2 py-1.5 text-center font-medium">Current</th>
+              <tr className="border-b border-neutral-200 text-[10px] uppercase tracking-[0.1em] text-neutral-400">
+                <th className="py-2 pr-3 font-medium">Requirement</th>
+                <th className="px-2 py-2 text-center font-medium">Current</th>
                 {PRESETS.map((p) => (
-                  <th key={p.key} className="px-2 py-1.5 text-center font-medium" title={p.label}>
+                  <th key={p.key} className="px-2 py-2 text-center font-medium" title={p.label}>
                     {p.label.split(" ")[0]}
                   </th>
                 ))}
-                <th className="px-2 py-1.5 text-center font-medium">Max swing</th>
+                <th className="px-2 py-2 text-center font-medium">Max swing</th>
               </tr>
             </thead>
             <tbody>
               {rows.map(({ req, baseline, underPreset, maxSwing }) => (
-                <tr key={req.id} className="border-b border-neutral-900">
-                  <td className="max-w-xs truncate py-1.5 pr-3 text-neutral-300" title={req.title}>
+                <tr key={req.id} className="border-b border-neutral-100 last:border-0">
+                  <td className="max-w-xs truncate py-2 pr-3 text-neutral-700" title={req.title}>
                     {req.title}
                   </td>
-                  <td className="px-2 py-1.5 text-center font-mono text-neutral-200">#{baseline}</td>
+                  <td className="px-2 py-2 text-center font-mono text-neutral-900">#{baseline}</td>
                   {underPreset.map(({ preset, rank }) => (
                     <td
                       key={preset.key}
                       className={clsx(
-                        "px-2 py-1.5 text-center font-mono",
-                        rank === baseline ? "text-neutral-500" : rank < baseline ? "text-emerald-400" : "text-amber-400",
+                        "px-2 py-2 text-center font-mono",
+                        rank === baseline ? "text-neutral-400" : rank < baseline ? "text-emerald-600" : "text-amber-600",
                       )}
                     >
                       #{rank}
@@ -119,8 +120,8 @@ export function SensitivityView({ requirements }: { requirements: Requirement[] 
                   ))}
                   <td
                     className={clsx(
-                      "px-2 py-1.5 text-center font-mono font-semibold",
-                      maxSwing >= 3 ? "text-red-400" : maxSwing >= 2 ? "text-amber-400" : "text-neutral-600",
+                      "px-2 py-2 text-center font-mono font-semibold",
+                      maxSwing >= 3 ? "text-red-600" : maxSwing >= 2 ? "text-amber-600" : "text-neutral-400",
                     )}
                   >
                     {maxSwing === 0 ? "—" : `±${maxSwing}`}
@@ -129,7 +130,7 @@ export function SensitivityView({ requirements }: { requirements: Requirement[] 
               ))}
             </tbody>
           </table>
-          <p className="mt-2 text-[10px] text-neutral-600">
+          <p className="mt-3 text-[11px] text-neutral-500">
             Each column re-scores every requirement with a different weight profile applied uniformly (not the
             per-requirement weights set via each card&apos;s sliders). Green = ranks higher under that profile, amber =
             ranks lower. A requirement that stays near its current rank across every profile is a safer bet than

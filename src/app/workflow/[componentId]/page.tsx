@@ -233,16 +233,6 @@ export default function WorkflowPage() {
             onSelectRequirement={setSelectedReqId}
           />
 
-          <SensitivityView requirements={requirements} />
-
-          <StakeholderMatrix
-            requirements={requirements}
-            reviews={reviews}
-            stakeholders={stakeholders}
-            selectedReqId={selectedReq?.id ?? null}
-            onSelectRequirement={setSelectedReqId}
-          />
-
           <section>
             <SectionTitle
               eyebrow="Evidence & sources"

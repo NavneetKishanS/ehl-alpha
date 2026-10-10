@@ -33,24 +33,22 @@ export function StakeholderMatrix({
   const pendingCount = reviews.filter((r) => r.decision === "pending").length;
 
   return (
-    <section className="border border-neutral-800 bg-neutral-900/40 p-3">
-      <div className="mb-2 flex items-center justify-between">
-        <h2 className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
-          Review status across all requirements
-        </h2>
-        <span className="font-mono text-[10px] text-neutral-600">
+    <section className="border border-neutral-200 bg-white p-6">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-[13px] font-medium text-neutral-800">Review status across all requirements</h2>
+        <span className="font-mono text-[11px] text-neutral-500">
           {reviews.length - pendingCount}/{reviews.length} decided
         </span>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-left text-[11px]">
+        <table className="w-full border-collapse text-left text-[12px]">
           <thead>
-            <tr className="border-b border-neutral-800 text-[10px] uppercase tracking-wide text-neutral-500">
-              <th className="py-1.5 pr-3 font-medium">Requirement</th>
+            <tr className="border-b border-neutral-200 text-[10px] uppercase tracking-[0.1em] text-neutral-400">
+              <th className="py-2 pr-3 font-medium">Requirement</th>
               {columns.map((s) => (
-                <th key={s.id} className="px-2 py-1.5 text-center font-medium" title={s.name}>
+                <th key={s.id} className="px-2 py-2 text-center font-medium" title={s.name}>
                   <span
-                    className="mx-auto flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-bold text-white"
+                    className="mx-auto flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold text-white"
                     style={{ backgroundColor: s.avatarColor }}
                   >
                     {s.name.slice(0, 1)}
@@ -69,17 +67,17 @@ export function StakeholderMatrix({
                   key={req.id}
                   onClick={() => onSelectRequirement(req.id)}
                   className={clsx(
-                    "cursor-pointer border-b border-neutral-900 hover:bg-neutral-800/50",
-                    selectedReqId === req.id && "bg-neutral-800/70",
+                    "cursor-pointer border-b border-neutral-100 last:border-0 hover:bg-neutral-50",
+                    selectedReqId === req.id && "bg-neutral-50",
                   )}
                 >
-                  <td className="max-w-[16rem] truncate py-1.5 pr-3 text-neutral-300" title={req.title}>
+                  <td className="max-w-[16rem] truncate py-2.5 pr-3 text-neutral-700" title={req.title}>
                     {req.title}
                   </td>
                   {columns.map((s) => {
                     const review = reviewAt(req.id, s.id);
                     return (
-                      <td key={s.id} className="px-2 py-1.5 text-center">
+                      <td key={s.id} className="px-2 py-2.5 text-center">
                         <DecisionDot review={review} stakeholderName={s.name} />
                       </td>
                     );
@@ -96,12 +94,12 @@ export function StakeholderMatrix({
 
 function DecisionDot({ review, stakeholderName }: { review?: StakeholderReview; stakeholderName: string }) {
   if (!review) {
-    return <span className="inline-block h-2.5 w-2.5 rounded-full bg-neutral-800" title={`${stakeholderName}: not asked`} />;
+    return <span className="inline-block h-2.5 w-2.5 rounded-full bg-neutral-200" title={`${stakeholderName}: not asked`} />;
   }
   const style = {
     approve: "bg-emerald-500",
     reject: "bg-red-500",
-    pending: "bg-amber-500/70 ring-1 ring-amber-400/50",
+    pending: "bg-amber-400 ring-2 ring-amber-100",
   }[review.decision];
   const title = `${stakeholderName}: ${review.decision}${review.expertOpinion ? ` — ${review.expertOpinion.slice(0, 80)}` : ""}`;
   return <span className={clsx("inline-block h-2.5 w-2.5 rounded-full", style)} title={title} />;
