@@ -5,3 +5,7 @@
 <status>failed</status>
 <summary>Background command "Start test dev server with real key on port 3100" failed with exit code 144</summary>
 </task-notification>
+
+---
+
+i have restarted the npm run dev, yes i also want the second parse with figures captions as well and first create a new brach and commit the changes to that branch
