@@ -10,7 +10,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "ingest": "tsx scripts/ingest-real-data.ts"
+    "ingest": "tsx scripts/ingest-real-data.ts",
+    "docker:dev": "sh scripts/docker-dev.sh",
+    "docker:reset": "sh scripts/docker-dev.sh --reset"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.0",
