@@ -13,6 +13,8 @@ import type {
   Stakeholder,
   Signal,
   SourceRecord,
+  VehicleComponent,
+  Vehicle,
 } from "@/lib/types";
 import { PipelineStrip } from "@/components/PipelineStrip";
 import { RequirementCard } from "@/components/RequirementCard";
@@ -20,9 +22,18 @@ import { AuditLogPanel } from "@/components/AuditLogPanel";
 import { ReviewerRow } from "@/components/ReviewerRow";
 import { EvidenceBadge } from "@/components/EvidenceBadge";
 
+const SENTIMENT_DOT: Record<Signal["sentiment"], string> = {
+  positive: "bg-emerald-500",
+  negative: "bg-red-500",
+  mixed: "bg-sky-500",
+  neutral: "bg-neutral-600",
+};
+
 export default function WorkflowPage() {
   const params = useParams<{ componentId: string }>();
   const [workflow, setWorkflow] = useState<Workflow | null>(null);
+  const [component, setComponent] = useState<VehicleComponent | null>(null);
+  const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [requirements, setRequirements] = useState<Requirement[]>([]);
   const [auditLog, setAuditLog] = useState<AuditLogEntry[]>([]);
   const [aiSummaries, setAISummaries] = useState<AISummary[]>([]);
@@ -34,27 +45,30 @@ export default function WorkflowPage() {
   const [notFound, setNotFound] = useState(false);
 
   const refresh = useCallback(async () => {
-    const wf = await api.getWorkflowByComponent(params.componentId);
+    const [comp, wf] = await Promise.all([api.getComponent(params.componentId), api.getWorkflowByComponent(params.componentId)]);
+    setComponent(comp);
     if (!wf) {
       setNotFound(true);
       return;
     }
     setWorkflow(wf);
-    const [reqs, log, summaries, revs, shs, sig] = await Promise.all([
+    const [reqs, log, summaries, revs, shs, sig, veh] = await Promise.all([
       api.listRequirements(wf.id),
       api.getAuditLog(wf.id),
       api.getAISummaries(wf.id),
       api.listReviews(wf.id),
       api.listStakeholders(),
       api.getSignals(wf.id),
+      api.getVehicle(wf.vehicleId),
     ]);
     setRequirements(reqs);
     setAuditLog(log);
     setAISummaries(summaries);
     setReviews(revs);
     setStakeholders(shs);
-    setSignals(sig.signals);
+    setSignals([...sig.signals].sort((a, b) => b.frequency - a.frequency));
     setSources(sig.sources);
+    setVehicle(veh);
   }, [params.componentId]);
 
   useEffect(() => {
@@ -85,39 +99,52 @@ export default function WorkflowPage() {
   const stakeholderOverview = aiSummaries.find((s) => s.type === "stakeholder_overview");
   const limitations = aiSummaries.find((s) => s.type === "limitations");
 
-  const selectedReq = requirements.find((r) => r.id === selectedReqId) ?? requirements[0] ?? null;
+  const selectedReq =
+    requirements.find((r) => r.id === selectedReqId) ??
+    requirements.find((r) => reviews.some((rv) => rv.requirementId === r.id)) ??
+    requirements[0] ??
+    null;
   const selectedReviews = selectedReq ? reviews.filter((r) => r.requirementId === selectedReq.id) : [];
+  const totalMentions = signals.reduce((a, s) => a + s.frequency, 0);
 
   return (
     <main className="mx-auto min-h-screen max-w-7xl px-6 py-8">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex items-start justify-between">
         <div>
           <Link href="/" className="text-xs text-neutral-500 hover:text-neutral-300">← All components</Link>
-          <h1 className="mt-1 text-2xl font-bold text-neutral-50 capitalize">
-            {workflow.componentId.replace("comp_", "").replace(/_/g, " ")} workflow
+          <h1 className="mt-1 text-xl font-bold text-neutral-50">
+            {vehicle?.name ?? "…"} · {component?.label ?? "…"}
           </h1>
-          <p className="text-sm text-neutral-500">Market: {workflow.market} · Status: {workflow.status.replace(/_/g, " ")}</p>
+          <p className="font-mono text-xs text-neutral-500">
+            market={workflow.market} · status={workflow.status} · {totalMentions.toLocaleString()} verbatims across {signals.length} themes
+          </p>
         </div>
+        <Link
+          href={`/evidence?vehicleCode=${vehicle?.id?.replace("veh_", "").toUpperCase()}&component=${component?.key}`}
+          className="shrink-0 border border-neutral-700 px-2.5 py-1.5 text-xs text-neutral-400 hover:border-neutral-500 hover:text-neutral-200"
+        >
+          Open Evidence Explorer →
+        </Link>
       </div>
 
-      <section className="mb-8 rounded-xl border border-white/10 bg-white/[0.02] p-5">
+      <section className="mb-6 border border-neutral-800 bg-neutral-900/40 p-4">
         <PipelineStrip stages={workflow.stages} />
       </section>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
-        <div className="space-y-6">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_340px]">
+        <div className="min-w-0 space-y-5">
           {decisionTrail && (
-            <section className="rounded-xl border border-sky-400/20 bg-sky-500/5 p-4">
-              <h2 className="text-xs font-semibold uppercase tracking-wide text-sky-300">AI summary · decision trail</h2>
-              <p className="mt-2 text-sm text-neutral-200">{decisionTrail.content}</p>
+            <section className="border-l-2 border-sky-600 bg-sky-950/20 p-3">
+              <h2 className="text-[10px] font-semibold uppercase tracking-wide text-sky-400">AI summary · decision trail</h2>
+              <p className="mt-1.5 text-xs leading-relaxed text-neutral-300">{decisionTrail.content}</p>
             </section>
           )}
 
           <section>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-400">
+            <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
               Requirements ({requirements.length})
             </h2>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {requirements.map((req) => (
                 <div key={req.id} onClick={() => setSelectedReqId(req.id)}>
                   <RequirementCard requirement={req} onChanged={onRequirementChanged} />
@@ -130,15 +157,15 @@ export default function WorkflowPage() {
           </section>
 
           {selectedReq && (
-            <section className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
-              <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-400">
+            <section className="border border-neutral-800 bg-neutral-900/40 p-3">
+              <div className="mb-2 flex items-center justify-between">
+                <h2 className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
                   Stakeholder reviews — {selectedReq.title}
                 </h2>
-                {stakeholderOverview && <EvidenceBadge level={selectedReq.evidenceLevel} />}
+                <EvidenceBadge level={selectedReq.evidenceLevel} />
               </div>
               {stakeholderOverview && (
-                <p className="mb-3 rounded-lg border border-violet-400/20 bg-violet-500/5 p-3 text-xs text-violet-200">
+                <p className="mb-2 border-l-2 border-violet-600 bg-violet-950/20 p-2 text-[11px] text-violet-200">
                   <span className="font-semibold">AI overview: </span>
                   {stakeholderOverview.content}
                 </p>
@@ -154,41 +181,45 @@ export default function WorkflowPage() {
             </section>
           )}
 
-          <section className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-400">
-              Evidence &amp; sources ({sources.length})
+          <section className="border border-neutral-800 bg-neutral-900/40 p-3">
+            <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
+              Evidence &amp; sources — {signals.length} real feedback themes
             </h2>
-            <div className="space-y-2">
+            <div className="divide-y divide-neutral-800">
               {signals.map((sig) => (
-                <details key={sig.id} className="rounded-lg border border-white/10 bg-white/[0.03] p-3 text-sm">
-                  <summary className="cursor-pointer font-medium text-neutral-200">
-                    {sig.theme} <span className="text-xs text-neutral-500">({sig.frequency} mentions, {sig.sentiment})</span>
+                <details key={sig.id} className="group py-1.5">
+                  <summary className="flex cursor-pointer items-center gap-2 text-xs text-neutral-300 hover:text-neutral-100">
+                    <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${SENTIMENT_DOT[sig.sentiment]}`} />
+                    <span className="flex-1">{sig.theme}</span>
+                    <span className="font-mono text-[10px] text-neutral-600">{sig.frequency}× · {sig.sentiment}</span>
                   </summary>
-                  <ul className="mt-2 space-y-1 pl-4 text-xs text-neutral-400">
+                  <ul className="mt-1.5 space-y-1 pl-5 text-[11px] text-neutral-500">
                     {sig.sourceIds
                       .map((id) => sources.find((s) => s.id === id))
                       .filter(Boolean)
+                      .slice(0, 8)
                       .map((s) => (
                         <li key={s!.id}>
-                          <span className="text-neutral-500">[{s!.datasetType}/{s!.reliability}]</span> {s!.title}: {s!.excerpt}
+                          <span className="font-mono text-neutral-600">[{s!.datasetType}/{s!.reliability}{s!.country ? `/${s!.country}` : ""}]</span> {s!.excerpt}
                         </li>
                       ))}
                   </ul>
                 </details>
               ))}
+              {signals.length === 0 && <p className="text-xs text-neutral-600">No signals extracted yet.</p>}
             </div>
           </section>
 
           {limitations && (
-            <section className="rounded-xl border border-amber-400/20 bg-amber-500/5 p-4">
-              <h2 className="text-xs font-semibold uppercase tracking-wide text-amber-300">Limitations panel</h2>
-              <p className="mt-2 text-sm text-neutral-200">{limitations.content}</p>
+            <section className="border-l-2 border-amber-600 bg-amber-950/20 p-3">
+              <h2 className="text-[10px] font-semibold uppercase tracking-wide text-amber-400">Limitations</h2>
+              <p className="mt-1.5 text-xs leading-relaxed text-neutral-300">{limitations.content}</p>
             </section>
           )}
         </div>
 
-        <aside className="lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)]">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-400">
+        <aside className="min-w-0 lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)]">
+          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
             Audit trail ({auditLog.length})
           </h2>
           <AuditLogPanel entries={auditLog} />

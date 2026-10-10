@@ -15,7 +15,24 @@ import type {
   AuditLogEntry,
   AISummary,
   ReviewDecision,
+  FeedbackRecord,
+  CustomerStudyScore,
 } from "./types";
+
+export interface FeedbackPage {
+  total: number;
+  page: number;
+  pageSize: number;
+  rows: FeedbackRecord[];
+  noData?: boolean;
+}
+
+export interface Facets {
+  vehicleCodes: { value: string; count: number }[];
+  components: { value: string; count: number }[];
+  feedbackTypes: { value: string; count: number }[];
+  countries: { value: string; count: number }[];
+}
 
 async function j<T>(res: Response): Promise<T> {
   if (!res.ok) {
@@ -28,8 +45,12 @@ async function j<T>(res: Response): Promise<T> {
 export const api = {
   listVehicles: () => fetch("/api/vehicles").then((r) => j<Vehicle[]>(r)),
 
+  getVehicle: (id: string) => fetch(`/api/vehicles/${id}`).then((r) => j<Vehicle>(r)),
+
   listComponents: (vehicleId: string) =>
     fetch(`/api/components?vehicleId=${encodeURIComponent(vehicleId)}`).then((r) => j<VehicleComponent[]>(r)),
+
+  getComponent: (id: string) => fetch(`/api/components/${id}`).then((r) => j<VehicleComponent>(r)),
 
   getWorkflowByComponent: (componentId: string) =>
     fetch(`/api/workflows/by-component/${componentId}`).then((r) => (r.status === 404 ? null : j<Workflow>(r))),
@@ -89,4 +110,15 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ decision, expertOpinion }),
     }).then((r) => j<StakeholderReview>(r)),
+
+  getFeedback: (params: Record<string, string | number | undefined>) => {
+    const sp = new URLSearchParams();
+    for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== "") sp.set(k, String(v));
+    return fetch(`/api/feedback?${sp.toString()}`).then((r) => j<FeedbackPage>(r));
+  },
+
+  getFeedbackFacets: () => fetch("/api/feedback/facets").then((r) => j<Facets>(r)),
+
+  getCustomerStudy: (workflowId: string) =>
+    fetch(`/api/workflows/${workflowId}/customer-study`).then((r) => j<CustomerStudyScore[]>(r)),
 };

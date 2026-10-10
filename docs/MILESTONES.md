@@ -1,10 +1,15 @@
 # Milestones (15-17h build)
 
-v0 already exists on `main` as of kickoff: landing page, PM workflow page,
-stakeholder review page, in-memory store, mocked AI layer, one fully
-populated demo workflow (BMW 5 Series / Battery & Charging / Europe), all
-wired end to end and verified working. Everyone starts from a running app,
-not a blank repo — `npm install && npm run dev` should work immediately.
+v0 already exists on `main` as of kickoff — and it's further along than a
+typical hackathon starting point: landing page with a vehicle switcher
+across all 3 BMW lines, PM workflow page, stakeholder review page, an
+Evidence Explorer over real data, in-memory store, mocked AI layer (OpenAI
+target), and **real BMW data already flowing through a deterministic
+derivation+scoring pipeline** — 13,771 real verbatims, real sales volumes,
+real customer-study benchmarks, ~17 real component workflows across 3
+vehicle lines, one fully narrated flagship workflow (BMW 5 Series /
+Battery & Charging). All wired end to end and verified working. Everyone
+starts from a running, data-grounded app, not a blank repo or a mock demo.
 
 Times are elapsed-from-kickoff, not wall-clock — shift to fit your actual
 start time. Each role's detailed task list is in its own doc
@@ -12,28 +17,37 @@ start time. Each role's detailed task list is in its own doc
 `ROLE_D_STAKEHOLDER_TRUST.md`).
 
 ## H0 — Kickoff (30 min)
-- Everyone: clone, `npm install`, `npm run dev`, click through all three
-  views against the seeded data. Confirm you understand the demo narrative
-  in `docs/PROJECT_BRIEF.md` before writing code.
+- Everyone: clone, `npm install`. Get the real dataset files (see
+  `docs/DATA_SETUP.md`) into `data-raw/`, run `npm run ingest`, then
+  `npm run dev` and click through all views against the real data. Confirm
+  you understand the demo narrative in `docs/PROJECT_BRIEF.md` before
+  writing code.
 - Agree on branch strategy: short-lived feature branches off `main`, small
   PRs, merge often (every 1-2h) to avoid a brutal integration at H14. A
   stale branch in a 16h hackathon is a dead branch.
-- Role A: get an Anthropic API key into the team's hands for Role B.
+- Role A: get an OpenAI API key into the team's hands for Role B (budget:
+  $70/person — see `docs/ROLE_B_AI.md` for why that's plenty).
 - Everyone: confirm Node version (`node -v`) — 18.17+ required, 20+ fine.
+- **Reminder**: `data-raw/` and `src/data/*.json` are gitignored on
+  purpose — confidential hackathon data, never `git add -f` them.
 
 ## H0:30 - H4 — Parallel build, independent tracks
-- **Role A**: dataset ingestion endpoint (US-1.1) — CSV/paste upload for the
-  four dataset types, malformed-row flagging, `SourceRecord` creation.
-  Start on a second seeded component (e.g. "interior") in parallel so
-  there's a second demo-able story by H8.
-- **Role B**: wire the Anthropic SDK, get `summarizeDecisionTrail()`
-  producing real output against the seeded battery audit log. This is the
+- **Role A**: live in-app ingestion endpoint (US-1.1, upgrading the
+  offline `npm run ingest` script) with malformed-row flagging; web
+  enrichment stub (US-1.2, currently missing entirely — every source today
+  is internal BMW data).
+- **Role B**: wire the OpenAI SDK, get `summarizeDecisionTrail()`
+  producing real output against the real battery audit log (already has
+  real numbers baked in from `buildFlagshipNarrative()` — your job is to
+  make the narration live instead of templated). This is the
   highest-leverage function in the app — prioritize it over everything
   else in your doc.
 - **Role C**: real car visual for the landing page (static image + hotspot
   overlay, minimum; 360 viewer if time allows). This is the first thing
   judges see — don't let it stay a wireframe SVG past H4.
-- **Role D**: standalone audit trail view with filtering (US-8.1, 8.4).
+- **Role D**: audit log CSV export + dedicated audit trail view (US-8.1,
+  8.4) — the embedded sidebar version with actor filtering already exists,
+  this is about a standalone/exportable view.
 
 **Checkpoint H4**: everyone demos their piece to the group, 2 min each.
 Merge anything stable into `main`.

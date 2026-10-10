@@ -40,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# real BMW hackathon datasets — confidential, never commit
+/data-raw/
+/src/data/*.json
+!/src/data/.gitkeep

@@ -76,6 +76,10 @@ export function listVehicles(): Vehicle[] {
   return store.vehicles;
 }
 
+export function getVehicle(id: string): Vehicle | undefined {
+  return store.vehicles.find((v) => v.id === id);
+}
+
 export function listComponents(vehicleId: string): VehicleComponent[] {
   return store.components.filter((c) => c.vehicleId === vehicleId);
 }

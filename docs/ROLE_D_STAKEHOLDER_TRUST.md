@@ -1,101 +1,103 @@
 # Role D — Frontend: Stakeholder & Trust Experience
 
-You own the stakeholder review page and everything about making the app's
-reasoning *inspectable* — evidence, uncertainty, and the full audit trail.
-This is the surface most directly tied to the "honesty and uncertainty"
-(Epic 7) and "traceability and auditability" (Epic 8) evaluation criteria.
+You own the stakeholder review page, the Evidence Explorer, and the audit
+trail — everything about making the app's reasoning *inspectable*. Read
+`docs/PROJECT_BRIEF.md` and `docs/DATA_SETUP.md` first, run
+`npm run ingest` (see that doc), then `npm run dev` and click through
+`/stakeholder/wf_g60_battery/sh_design` and `/evidence` before changing
+anything — both already run end to end against the real 13,771-row
+dataset.
 
-Read `docs/PROJECT_BRIEF.md` first. Run `npm run dev`, open
-`http://localhost:3000/stakeholder/wf_battery_demo/sh_design` directly
-(that's a stakeholder with a pending review in the seed data) and click
-through the approve/reject flow before changing anything.
-
-## What already exists (v0, working)
+## What already exists (v0, working, real data)
 
 - `src/app/stakeholder/[workflowId]/[stakeholderId]/page.tsx` — the
-  stakeholder's view: a "summary so far" AI panel, a read-only list of all
-  requirements in the workflow with evidence badges and a per-factor bar
-  "chart" of the score breakdown, and a review form per requirement
-  assigned to this stakeholder (free-text expert opinion + approve/not
-  approve). Submitting disables the form and timestamps it — this already
-  round-trips to `PATCH /api/reviews/:id` → `submitReview()` in `db.ts` →
-  writes an audit log entry → the PM's workflow page picks it up on next
-  refresh.
-- `src/components/EvidenceBadge.tsx` — strong/moderate/weak pill, used on
-  both the PM and stakeholder pages. Shared with Role C.
-- `src/components/AuditLogPanel.tsx` — the append-only log list (actor
-  type, actor name, action, rationale, timestamp), color-coded by actor
-  type (ai/pm/stakeholder). Currently lives inside the PM workflow page's
-  sidebar.
-- Note there's currently no login/auth — `stakeholderId` is just a route
-  param. That's intentional for v0; don't build auth, it's out of scope for
-  the hackathon.
+  stakeholder's view: a "summary so far" AI panel, a real customer-study
+  comparison chart (`GroupedBarChart`) when the workflow's component maps
+  to a benchmarked category, a read-only requirement list with evidence
+  badges and real per-factor score bars (`MetricBar`), and a review form
+  per requirement assigned to this stakeholder. Submitting disables the
+  form and timestamps it, round-trips to `PATCH /api/reviews/:id` →
+  `submitReview()` in `db.ts` → audit log entry → the PM's workflow page
+  picks it up on next refresh.
+- **`src/app/evidence/page.tsx` — the Evidence Explorer, already built**:
+  a filterable, paginated table over all 13,771 real feedback rows
+  (vehicle, component, feedback type, country, free-text search), backed
+  by `GET /api/feedback` and `GET /api/feedback/facets`
+  (`src/app/api/feedback/**`). This is your base to extend, not a
+  from-scratch task — see tasks below.
+- `src/components/charts/MetricBar.tsx` and `GroupedBarChart.tsx` — real
+  SVG charts (gridlines, axis labels, no div-width-as-bar-chart), used on
+  the stakeholder page and ready to reuse anywhere else you need one.
+- `src/components/EvidenceBadge.tsx` — strong/moderate/weak pill, shared
+  with Role C.
+- `src/components/AuditLogPanel.tsx` — the append-only log list, already
+  has an actor-type filter (all/ai/pm/stakeholder) built in. Currently
+  lives embedded in the PM workflow page's sidebar only.
+- No login/auth — `stakeholderId` is just a route param. Intentional for
+  v0, don't build auth.
 
 ## Your tasks, in priority order
 
-### 1. Standalone audit trail / traceability view (US-8.1, 8.4)
-Right now `AuditLogPanel` only appears embedded in the PM workflow page.
-Build a dedicated, filterable view — either a route like
-`/workflow/[componentId]/audit` or a modal/drawer triggered from the
-workflow page. Must support (US-8.4): filter by requirement, actor type,
-action type, and date range. Each entry already has everything needed
-(`AuditLogEntry` in `types.ts`) — this is a filtering/UI task, not a data
-task. A "jump to full evidence chain" affordance (US-8.1: requirement →
-scoring → consolidation → signals → source records) is the stretch version
-— clicking a requirement in the log could open the evidence accordion
-already built into the PM workflow page (`signals.map(...)` section),
-scrolled/highlighted to the relevant signal.
+### 1. Audit log CSV/JSON export (US-8.4)
+No export button exists yet. Add one to wherever `AuditLogPanel` renders,
+pulling from `GET /api/workflows/:id/audit-log`. Client-side generation
+(`entries.map(...).join(',')` + `Blob` + `<a download>`) is the whole
+feature, no backend change needed.
 
-### 2. Export the audit log (US-8.4)
-A "Download CSV" or "Download JSON" button on your audit trail view, pulling
-from `GET /api/workflows/:id/audit-log`. Client-side CSV generation (no
-backend change needed) is enough — `entries.map(e => [...]).join(',')`
-plus a `Blob`/`<a download>` is the whole feature.
+### 2. Standalone/dedicated audit trail view (US-8.1)
+`AuditLogPanel` only appears embedded in the PM workflow page's sidebar
+today. A dedicated route or drawer with more room — plus a "jump to full
+evidence chain" affordance (requirement → scoring → signals → source
+records, US-8.1) — would strengthen traceability. The evidence accordion
+already on the workflow page (grouped by signal, sorted by frequency) is
+the thing to deep-link into.
 
-### 3. Limitations panel, promoted and reusable (US-7.3)
-The PM workflow page already renders an `AISummary` of type `"limitations"`
-inline near the bottom. Consider: does this need its own visible affordance
-higher up the page (a persistent banner/badge) rather than being the last
-thing a PM scrolls to? You own the call — the goal is "I know the data's
-reach" being obvious, not buried. Also surface it on the stakeholder page
-if there's a workflow-level limitations summary by the time Role B's real
-summaries are wired in.
+### 3. Low-confidence / needs-decision queue (US-7.2)
+A view surfacing requirements where `evidenceLevel === "weak"` or
+`status === "challenged"` across *all* workflows, not just the one you're
+currently looking at — right now a PM has to visit each workflow to find
+these. Could be a new route (`/needs-review`) querying across workflows,
+or a counter badge on the landing page per vehicle. Coordinate with Role C
+if it touches the landing page.
 
-### 4. Low-confidence queue (US-7.2)
-A "needs your decision" view: requirements where `evidenceLevel === "weak"`
-or `status === "challenged"`, surfaced prominently rather than mixed into
-the main requirement list. Could be a filter/tab on the PM workflow page's
-requirement list, or a small counter badge in the header. Coordinate with
-Role C since this touches the page they also own — this is a good joint
-task if either of you finishes early.
+### 4. Evidence Explorer: drill-down from a signal
+The workflow page's evidence accordion shows up to 8 sample sources per
+signal; the Evidence Explorer shows all matching rows. Wire a link from an
+accordion entry straight into `/evidence?vehicleCode=...&component=...`
+with the theme pre-filled into the search box — currently the link only
+pre-filters by vehicle+component, not by theme/category.
 
-### 5. Source reliability filter (US-1.3, depends on Role A's ingestion)
-Once Role A's ingestion assigns `reliability` tiers to real sources, add a
-filter control on the evidence/sources accordion (already on the PM
-workflow page) to show/hide by `first_party` / `official` / `review_site` /
-`forum`.
+### 5. Source reliability filter refinement (US-1.3)
+`FeedbackRecord`/`SourceRecord` already carry `reliability` for web
+sources once Role A's enrichment step (`docs/ROLE_A_BACKEND.md` task 2)
+lands real external data — today everything in the real pipeline is
+`first_party` (internal verbatims), so a reliability filter on the
+Evidence Explorer has nothing to differentiate yet. Revisit once Role A's
+web sources exist.
 
 ## Guardrails
 
 - Stakeholder review submission is one-shot by design (disabled after
-  submit, per the "PR reviewer" mental model) — don't add an edit-after-
-  submit flow unless the team explicitly decides reviewers should be able
-  to revise, since that changes the audit log semantics (Role A would need
-  to add a new action type).
-- Anything you show as "AI-generated" should visually read as such — reuse
-  the violet/sky color convention already used for AI-sourced panels
-  (`AuditLogPanel`'s `ACTOR_COLOR.ai`, the sky-tinted decision-trail panel)
-  rather than inventing a new convention.
-- Don't fetch the full audit log on every keystroke if you add filtering —
-  fetch once per workflow, filter client-side; the log is small enough
-  (tens of entries) for this hackathon's scope.
+  submit) — don't add an edit-after-submit flow without coordinating with
+  Role A, since it changes audit log semantics.
+- AI-sourced content uses a left-accent-bar convention (sky=summary,
+  violet=overview, amber=limitations/uncertainty) — reuse it, don't invent
+  a new visual language for AI content.
+- The Evidence Explorer currently reads `src/data/feedback.json` fresh on
+  every request (`loadFeedback()` in `src/lib/realData.ts`) — fine at 14k
+  rows for a hackathon demo. If you add more filters, filter client-side
+  against an already-fetched page rather than adding more round-trips per
+  keystroke.
 
 ## Files you own
 
 ```
 src/app/stakeholder/[workflowId]/[stakeholderId]/page.tsx
+src/app/evidence/page.tsx
+src/app/api/feedback/**
 src/components/AuditLogPanel.tsx
 src/components/ReviewerRow.tsx
+src/components/charts/*.tsx
 ```
 `EvidenceBadge.tsx` is shared with Role C — coordinate before changing its
 props.

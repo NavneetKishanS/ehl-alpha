@@ -1,5 +1,14 @@
 # Project brief
 
+**Status: real data is already ingested and grounding the app** — this
+isn't a greenfield concept doc, the datasets BMW gave us (real verbatims,
+sales volumes, customer studies, option lists for F70/G60/G70) are already
+flowing through a deterministic derivation+scoring pipeline into real
+workflows. Read [`docs/DATA_SETUP.md`](DATA_SETUP.md) alongside this doc —
+it explains exactly what's real vs. still a placeholder, which matters for
+how you pitch this ("grounded in actual BMW customer data" is true, say it
+plainly).
+
 ## The challenge (BMW Group)
 
 > What should the next generation of a BMW vehicle offer its customers? Build
@@ -88,12 +97,20 @@ We will not build all 9 epics to full depth. Priority order for the time box:
   evidence flagged; limitations panel. (Built in v0: `EvidenceBadge`,
   `AISummary` type "limitations".)
 
-**Should have, reach during the build (Epics 1, 2, 5):**
-- US-1.1 — real dataset upload/ingestion (v0 only has seeded sources).
-- US-2.1 through 2.7 — real signal clustering from uploaded verbatims
-  (v0 has a mock `extractSignals()` in `ai.ts`).
-- US-5.1 — vehicle/derivative/market selector (v0 only has market at
-  workflow-creation time).
+**Should have — now mostly real, not just seeded (Epics 1, 2, 5):**
+- US-1.1 — real dataset ingestion: done as an offline pipeline
+  (`npm run ingest`, see `docs/DATA_SETUP.md`), not yet a live in-app
+  upload flow. Malformed-row flagging is not yet implemented (worth adding
+  if a live upload endpoint gets built — see `docs/ROLE_A_BACKEND.md`).
+- US-2.1 through 2.6 — real signal clustering: done, but via BMW's own VFC
+  taxonomy (226 real categories) rather than LLM clustering — arguably
+  *stronger* evidence than an AI-invented clustering would be, since it's
+  BMW's own classification, not ours. US-2.7 (contradiction flagging)
+  is not yet implemented — `Signal.contradicts` exists in the type but
+  isn't populated by the ingestion pipeline.
+- US-5.1 — vehicle/market selector: done on the landing page (3 vehicle
+  lines). Still only one market is "active" per workflow at a time —
+  per-market variant workflows (US-5.2) aren't built.
 
 **Could have, only if time remains (Epic 1.4, 5.4, 9.2, 9.4, 9.5):**
 - Config-driven new data sources, onboarding another model/market without

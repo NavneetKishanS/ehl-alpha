@@ -1,12 +1,15 @@
-// Seed data: a believable, fully-populated "battery" workflow for the BMW 5
-// Series so every view (landing, PM workflow, stakeholder review, audit
-// trail) has something real to render on first load. Other components are
-// left empty so the landing page's "create new workflow" path is also
-// demonstrable.
+// Builds the in-memory store's starting state.
 //
-// Swap-out point for Role A: once real datasets (verbatims, equipment,
-// sales, study) are uploaded, replace buildSeed()'s battery fixtures with
-// an ingest() pipeline that produces the same shapes.
+// If a teammate has run `npm run ingest` (real BMW data present in
+// src/data/*.json, gitignored), buildSeed() assembles real workflows for
+// all three vehicle lines (F70/1 Series, G60/5 Series, G70/7 Series) from
+// real verbatims, sales volumes and customer-study benchmarks — see
+// buildRealSeed() below and docs/DATA_SETUP.md.
+//
+// Otherwise it falls back to buildMockSeed(): one hand-written "battery"
+// workflow for the BMW 5 Series, so the app still runs end to end for
+// anyone who hasn't copied the (confidential, never-committed) datasets
+// yet.
 
 import { nanoid } from "nanoid";
 import type {
@@ -20,38 +23,357 @@ import type {
   StakeholderReview,
   AuditLogEntry,
   AISummary,
+  ComponentKey,
 } from "./types";
-
-const VEHICLE_ID = "veh_5series";
-const COMPONENT_BATTERY_ID = "comp_battery";
-const WORKFLOW_ID = "wf_battery_demo";
+import {
+  hasRealData,
+  loadFeedback,
+  loadSignals,
+  loadSales,
+  loadCustomerStudy,
+  type RawSignal,
+} from "./realData";
+import { pickCandidates, titleFor, descriptionFor, assumptionsFor, evidenceLevelFor, categoryFor, buildScoreFactors, type Candidate } from "./deriveRequirements";
 
 export function buildSeed() {
+  return hasRealData() ? buildRealSeed() : buildMockSeed();
+}
+
+// ===========================================================================
+// REAL DATA SEED
+// ===========================================================================
+
+const COMPONENT_KEYS: ComponentKey[] = ["battery", "exterior", "interior", "windows", "steering", "engine"];
+const COMPONENT_LABEL: Record<ComponentKey, string> = {
+  battery: "Battery & Charging",
+  exterior: "Exterior & Design",
+  interior: "Interior & Cabin",
+  windows: "Windows & Glass",
+  steering: "Steering & Cockpit",
+  engine: "Powertrain",
+};
+const HOTSPOT: Record<ComponentKey, { xPct: number; yPct: number }> = {
+  battery: { xPct: 49, yPct: 61 },
+  exterior: { xPct: 50, yPct: 76 },
+  interior: { xPct: 61, yPct: 46 },
+  windows: { xPct: 76, yPct: 38 },
+  steering: { xPct: 58, yPct: 50 },
+  engine: { xPct: 24, yPct: 59 },
+};
+const VEHICLE_META: Record<string, { name: string; generation: string }> = {
+  F70: { name: "BMW 1 Series", generation: "F70 → successor" },
+  G60: { name: "BMW 5 Series", generation: "G60/G68 → successor" },
+  G70: { name: "BMW 7 Series", generation: "G70 → successor" },
+};
+const PRIMARY_MARKET: Record<string, string> = { F70: "Europe", G60: "Europe", G70: "USA" };
+const MARKET_CODE: Record<string, "EU" | "CN" | "US"> = { Europe: "EU", China: "CN", USA: "US" };
+
+function buildRealSeed() {
+  const feedback = loadFeedback();
+  const feedbackById = new Map(feedback.map((f) => [f.id, f]));
+  const rawSignals = loadSignals();
+  const sales = loadSales();
+  const customerStudy = loadCustomerStudy();
+
+  const vehicleCodes = Array.from(new Set(rawSignals.map((s) => s.vehicleCode))).sort();
+
+  const vehicles: Vehicle[] = vehicleCodes.map((code) => {
+    const markets = sales
+      .filter((s) => s.vehicleCode === code && s.volume2025 > 0 && s.marketCode in { EU: 1, CN: 1, US: 1 })
+      .map((s) => s.market);
+    return {
+      id: `veh_${code.toLowerCase()}`,
+      name: VEHICLE_META[code]?.name ?? code,
+      generation: VEHICLE_META[code]?.generation ?? code,
+      markets: markets.length ? markets : ["Europe"],
+    };
+  });
+
+  const components: VehicleComponent[] = [];
+  const workflows: Workflow[] = [];
+  const requirements: Requirement[] = [];
+  const signals: Signal[] = [];
+  const sources: SourceRecord[] = [];
+  const auditLog: AuditLogEntry[] = [];
+  const aiSummaries: AISummary[] = [];
+  const flagshipReviews: StakeholderReview[] = [];
+
+  const now = new Date();
+  const daysAgo = (n: number) => new Date(now.getTime() - n * 86400000).toISOString();
+  const sourceCache = new Map<string, SourceRecord>(); // dedupe by feedback id across requirements in one workflow
+
+  for (const vehicleCode of vehicleCodes) {
+    const vehicleId = `veh_${vehicleCode.toLowerCase()}`;
+    const market = PRIMARY_MARKET[vehicleCode] ?? "Europe";
+    const region = MARKET_CODE[market] ?? "EU";
+    const signalsForVehicle = rawSignals.filter((s) => s.vehicleCode === vehicleCode && s.component !== "general");
+    const maxFrequencyInVehicle = Math.max(1, ...signalsForVehicle.map((s) => s.frequency));
+
+    for (const component of COMPONENT_KEYS) {
+      const componentId = `comp_${vehicleCode.toLowerCase()}_${component}`;
+      const signalsForComponent = signalsForVehicle.filter((s) => s.component === component);
+      const candidates = pickCandidates(signalsForComponent, 4);
+
+      let workflowId: string | null = null;
+
+      if (candidates.length > 0) {
+        const wfId = `wf_${vehicleCode.toLowerCase()}_${component}`;
+        workflowId = wfId;
+        const isFlagship = vehicleCode === "G60" && component === "battery";
+
+        const workflow: Workflow = {
+          id: wfId,
+          vehicleId,
+          componentId,
+          market,
+          status: isFlagship ? "pm_review" : "stakeholder_review",
+          stages: [
+            { key: "ingest", label: "Ingest datasets", status: "complete", startedAt: daysAgo(9), completedAt: daysAgo(9), owner: "pm" },
+            { key: "enrich", label: "Enrich with web knowledge", status: "pending", startedAt: null, completedAt: null, owner: "ai" },
+            { key: "extract", label: "Extract signals", status: "complete", startedAt: daysAgo(8), completedAt: daysAgo(8), owner: "ai" },
+            { key: "derive", label: "Derive requirements", status: "complete", startedAt: daysAgo(7), completedAt: daysAgo(7), owner: "ai" },
+            { key: "score", label: "Score & prioritize", status: "complete", startedAt: daysAgo(7), completedAt: daysAgo(7), owner: "ai" },
+            { key: "stakeholder_review", label: "Stakeholder review", status: isFlagship ? "complete" : "active", startedAt: daysAgo(6), completedAt: isFlagship ? daysAgo(2) : null, owner: "stakeholder" },
+            { key: "pm_decision", label: "PM decision", status: isFlagship ? "active" : "pending", startedAt: isFlagship ? daysAgo(2) : null, completedAt: null, owner: "pm" },
+            { key: "deploy", label: "Move to deploy", status: "pending", startedAt: null, completedAt: null, owner: "pm" },
+          ],
+          createdAt: daysAgo(9),
+          updatedAt: daysAgo(isFlagship ? 0 : 6),
+        };
+        workflows.push(workflow);
+
+        // signals: every real theme for this component, not just the ones promoted to requirements
+        for (const raw of signalsForComponent) {
+          signals.push(toAppSignal(raw, wfId, vehicleCode, component));
+        }
+
+        // requirements + their sources, for the promoted candidates only
+        candidates.forEach((candidate, i) => {
+          const reqId = `req_${vehicleCode.toLowerCase()}_${component}_${i}`;
+          const scoreFactors = buildScoreFactors({
+            candidate,
+            maxFrequencyInVehicle,
+            component,
+            vehicleCode,
+            region,
+            market,
+            sales,
+            study: customerStudy,
+          });
+          const score = weightedScore(scoreFactors);
+
+          const linkedSourceIds = candidate.signal.feedbackIds.slice(0, 8).map((fid) => {
+            const srcId = `src_${fid}`;
+            if (!sourceCache.has(srcId)) {
+              const fb = feedbackById.get(fid);
+              const rec: SourceRecord = {
+                id: srcId,
+                workflowId: wfId,
+                datasetType: "verbatim",
+                reliability: "first_party",
+                title: `Feedback ${fid}${fb ? ` (${fb.country}, ${fb.engineType})` : ""}`,
+                excerpt: fb?.text ?? "(feedback text unavailable)",
+                url: null,
+                retrievedAt: daysAgo(9),
+                country: fb?.country,
+                engineType: fb?.engineType,
+                feedbackType: fb?.feedbackType ?? undefined,
+              };
+              sourceCache.set(srcId, rec);
+              sources.push(rec);
+            }
+            return srcId;
+          });
+
+          const req: Requirement = {
+            id: reqId,
+            workflowId: wfId,
+            title: titleFor(candidate),
+            description: descriptionFor(candidate),
+            category: categoryFor(component),
+            status: isFlagship && i === 0 ? "challenged" : "proposed",
+            evidenceLevel: evidenceLevelFor(candidate),
+            assumptions: assumptionsFor(candidate),
+            uncertainties: [
+              "Derived deterministically from internal verbatim frequency — not yet cross-checked against external competitor reviews or engineering feasibility (see docs/ROLE_B_AI.md for the AI upgrade path).",
+            ],
+            linkedSignalIds: [signalIdFor(candidate.signal, vehicleCode, component)],
+            linkedSourceIds,
+            scoreFactors,
+            score,
+            effort: "medium",
+            createdAt: daysAgo(7),
+            updatedAt: daysAgo(isFlagship && i === 0 ? 1 : 7),
+          };
+          requirements.push(req);
+        });
+
+        if (isFlagship) {
+          const top = candidates[0];
+          const topReq = requirements.find((r) => r.workflowId === wfId && r.status === "challenged")!;
+          const { reviews, logs, summaries } = buildFlagshipNarrative(wfId, topReq, top, daysAgo);
+          auditLog.push(...logs);
+          aiSummaries.push(...summaries);
+          flagshipReviews.push(...reviews);
+        } else {
+          // lightweight: log the derive step so the audit trail isn't empty
+          auditLog.push(
+            mkLog(wfId, "requirement_proposed", "requirement", requirements[requirements.length - 1]?.id ?? wfId, aiActor(), null, { count: candidates.length }, `Derived ${candidates.length} draft requirement(s) from ${signalsForComponent.length} real feedback themes (${signalsForComponent.reduce((a, s) => a + s.frequency, 0)} verbatims total).`, daysAgo(7)),
+          );
+        }
+      }
+
+      components.push({ id: componentId, vehicleId, key: component, label: COMPONENT_LABEL[component], hotspot: HOTSPOT[component], workflowId });
+    }
+  }
+
+  const stakeholders = DEFAULT_STAKEHOLDERS;
+  // assign all 4 stakeholders as reviewers (pending) on the top requirement of every non-flagship workflow
+  const reviews: StakeholderReview[] = [...flagshipReviews];
+  for (const req of requirements) {
+    if (req.status === "challenged") continue; // flagship already has bespoke reviews
+    const isTopOfItsWorkflow = requirements.find((r) => r.workflowId === req.workflowId)?.id === req.id;
+    if (!isTopOfItsWorkflow) continue;
+    for (const sh of stakeholders) {
+      reviews.push({
+        id: `rev_${req.id}_${sh.id}`,
+        workflowId: req.workflowId,
+        stakeholderId: sh.id,
+        requirementId: req.id,
+        decision: "pending",
+        expertOpinion: "",
+        submittedAt: null,
+        aiContextSnapshot: `Signal: ${req.title} (${req.evidenceLevel} evidence, score ${req.score.toFixed(1)}).`,
+      });
+    }
+  }
+
+  return { vehicles, components, workflows, requirements, signals, sources, stakeholders, reviews, auditLog, aiSummaries };
+}
+
+const DEFAULT_STAKEHOLDERS: Stakeholder[] = [
+  { id: "sh_engineering", name: "Mara Voss — Engineering", expertise: "engineering", avatarColor: "#1c69d4" },
+  { id: "sh_sales", name: "Li Wen — Sales", expertise: "sales", avatarColor: "#d97706" },
+  { id: "sh_design", name: "Jonas Keller — Design", expertise: "design", avatarColor: "#8b5cf6" },
+  { id: "sh_legal", name: "Amara Johnson — Legal & Regulatory", expertise: "legal_regulatory", avatarColor: "#16a34a" },
+];
+
+function toAppSignal(raw: RawSignal, workflowId: string, vehicleCode: string, component: ComponentKey): Signal {
+  const total = raw.frequency;
+  const sentiment: Signal["sentiment"] =
+    raw.likes / total > 0.5 ? "positive" : (raw.difficultToUse + raw.defect) / total > 0.4 ? "negative" : raw.wants / total > 0.3 ? "mixed" : "neutral";
+  return {
+    id: signalIdFor(raw, vehicleCode, component),
+    workflowId,
+    theme: raw.theme,
+    frequency: raw.frequency,
+    sentiment,
+    sampleVerbatims: raw.sampleVerbatims.slice(0, 4),
+    sourceIds: raw.feedbackIds.slice(0, 8).map((id) => `src_${id}`),
+    contradicts: [],
+  };
+}
+
+function signalIdFor(raw: RawSignal, vehicleCode: string, component: ComponentKey): string {
+  const slug = raw.theme.toLowerCase().replace(/[^a-z0-9]+/g, "_").slice(0, 40);
+  return `sig_${vehicleCode.toLowerCase()}_${component}_${slug}`;
+}
+
+function weightedScore(factors: { weight: number; rawValue: number }[]): number {
+  const totalWeight = factors.reduce((s, f) => s + f.weight, 0) || 1;
+  const weighted = factors.reduce((s, f) => s + f.rawValue * f.weight, 0);
+  return Math.round((weighted / totalWeight) * 10) / 10;
+}
+
+// The one hand-authored narrative beat we keep even with real data: a PM
+// challenge -> AI revision -> stakeholder review loop, rebased onto
+// whichever requirement the real data actually produces as the #1 battery
+// finding (so the story stays true even if re-running ingestion shifts
+// the numbers).
+function buildFlagshipNarrative(workflowId: string, req: Requirement, candidate: Candidate, daysAgo: (n: number) => string) {
+  const freq = candidate.signal.frequency;
+  const pct = Math.round(candidate.concentration * 100);
+
+  const reviews: StakeholderReview[] = [
+    { id: "rev_eng_flagship", workflowId, stakeholderId: "sh_engineering", requirementId: req.id, decision: "approve", expertOpinion: `${pct}% concentration on "${candidate.signal.theme}" across ${freq} verbatims lines up with what we're already seeing in warranty data. Technically addressable next cycle; flagging as a roadmap priority, not a blocker.`, submittedAt: daysAgo(5), aiContextSnapshot: `Signal: ${req.title} (${freq} verbatims).` },
+    { id: "rev_sales_flagship", workflowId, stakeholderId: "sh_sales", requirementId: req.id, decision: "approve", expertOpinion: `This shows up in loss-reason conversations with customers cross-shopping. Approve — directly tied to the sales volume we're trying to grow in this segment.`, submittedAt: daysAgo(4), aiContextSnapshot: `Signal: ${req.title} (${freq} verbatims).` },
+    { id: "rev_legal_flagship", workflowId, stakeholderId: "sh_legal", requirementId: req.id, decision: "reject", expertOpinion: `No regulatory blocker on the underlying requirement, but any public-facing claim derived from this needs substantiation before marketing use — flagging so it doesn't ship as an unverified claim.`, submittedAt: daysAgo(3), aiContextSnapshot: `Signal: ${req.title} (${freq} verbatims).` },
+    { id: "rev_design_flagship", workflowId, stakeholderId: "sh_design", requirementId: req.id, decision: "pending", expertOpinion: "", submittedAt: null, aiContextSnapshot: `Signal: ${req.title} (${freq} verbatims).` },
+  ];
+
+  const logs: AuditLogEntry[] = [
+    mkLog(workflowId, "requirement_proposed", "requirement", req.id, aiActor(), null, { title: req.title, score: req.score }, `Derived from ${freq} real verbatims tagged "${candidate.signal.theme}", ${pct}% sharing the same sentiment. Evidence level: ${req.evidenceLevel}.`, daysAgo(7)),
+    mkLog(workflowId, "requirement_challenged", "requirement", req.id, pmActor(), { score: req.score }, { note: "PM pushed back on the first draft" }, `PM asked: "the first draft just restates the complaint — give me something I can act on, grounded in the actual numbers, not a paraphrase."`, daysAgo(6)),
+    mkLog(workflowId, "ai_summary_generated", "requirement", req.id, aiActor(), null, { note: "revised" }, `Re-derived with explicit evidence: ${freq} verbatims, ${pct}% concentration, cross-referenced against sibling-model customer-study scores for competitive framing. PM's challenge moved the requirement from a restated complaint to a cited, scoreable one.`, daysAgo(6)),
+    mkLog(workflowId, "stage_transition", "stage", "stakeholder_review", pmActor(), "pending", "active", `PM sent "${req.title}" to stakeholder review: Engineering, Sales, Design, Legal.`, daysAgo(5)),
+    mkLog(workflowId, "stakeholder_review_submitted", "review", "rev_eng_flagship", stakeholderActor("sh_engineering", "Mara Voss — Engineering"), { decision: "pending" }, { decision: "approve" }, reviews[0].expertOpinion, daysAgo(5)),
+    mkLog(workflowId, "stakeholder_review_submitted", "review", "rev_sales_flagship", stakeholderActor("sh_sales", "Li Wen — Sales"), { decision: "pending" }, { decision: "approve" }, reviews[1].expertOpinion, daysAgo(4)),
+    mkLog(workflowId, "stakeholder_review_submitted", "review", "rev_legal_flagship", stakeholderActor("sh_legal", "Amara Johnson — Legal & Regulatory"), { decision: "pending" }, { decision: "reject" }, reviews[2].expertOpinion, daysAgo(3)),
+    mkLog(workflowId, "stage_transition", "stage", "stakeholder_review", pmActor(), "active", "complete", "3 of 4 stakeholder reviews in; Design still pending. PM chose to proceed given majority signal.", daysAgo(2)),
+    mkLog(workflowId, "stage_transition", "stage", "pm_decision", pmActor(), "pending", "active", "PM reviewing stakeholder input: 2 approve, 1 reject (process objection, not technical), 1 pending.", daysAgo(2)),
+  ];
+
+  const summaries: AISummary[] = [
+    { id: "aisum_decision_trail", workflowId, type: "decision_trail", content: `Started from ${freq} real verbatims tagged "${candidate.signal.theme}" (${pct}% sharing the same sentiment). First AI draft restated the complaint without a concrete hook; PM challenged it as not actionable. AI revised using the actual frequency/concentration numbers and a cross-model customer-study comparison. Sent to 4 stakeholders: Engineering and Sales approved; Legal rejected on a process ground (any public claim needs substantiation before marketing use, not a product objection); Design has not responded yet. PM is now deciding whether to approve with a caveat requiring Legal sign-off before any public claim, or wait for Design.`, basedOnLogIds: [], generatedAt: daysAgo(1) },
+    { id: "aisum_stakeholder_overview", workflowId, type: "stakeholder_overview", content: `3 of 4 stakeholders responded. Engineering confirms this matches internal warranty-data patterns and is addressable next cycle. Sales ties it directly to loss-reason conversations with cross-shopping customers. Legal's rejection is narrow: it blocks public marketing claims, not the underlying requirement. Design has not yet weighed in.`, basedOnLogIds: [], generatedAt: daysAgo(1) },
+    { id: "aisum_limitations", workflowId, type: "limitations", content: `This requirement is derived entirely from internal verbatim frequency — no external competitor review data or engineering feasibility input is factored in yet (see the competitive_gap and effort_inverse score-factor rationales for exactly where those gaps are). Customer-study comparisons mix a direct 0-10 mean (CN/EU) with a distribution-reconstructed mean (US) — treat US figures as lower-precision.`, basedOnLogIds: [], generatedAt: daysAgo(1) },
+  ];
+
+  return { reviews, logs, summaries };
+}
+
+function aiActor() {
+  return { type: "ai" as const, id: "ai_engine", name: "Requirements Copilot", model: "gpt-4.1" };
+}
+function pmActor() {
+  return { type: "pm" as const, id: "pm_demo", name: "Product Manager" };
+}
+function stakeholderActor(id: string, name: string) {
+  return { type: "stakeholder" as const, id, name };
+}
+function mkLog(
+  workflowId: string,
+  action: AuditLogEntry["action"],
+  targetType: AuditLogEntry["targetType"],
+  targetId: string,
+  actor: AuditLogEntry["actor"],
+  oldValue: unknown,
+  newValue: unknown,
+  rationale: string,
+  timestamp: string,
+): AuditLogEntry {
+  return { id: `log_${nanoid(8)}`, workflowId, actor, action, targetType, targetId, oldValue, newValue, rationale, timestamp };
+}
+
+// ===========================================================================
+// MOCK SEED (fallback when src/data/*.json isn't present)
+// ===========================================================================
+
+const MOCK_VEHICLE_ID = "veh_5series";
+const MOCK_COMPONENT_BATTERY_ID = "comp_battery";
+const MOCK_WORKFLOW_ID = "wf_battery_demo";
+
+function buildMockSeed() {
   const vehicles: Vehicle[] = [
-    {
-      id: VEHICLE_ID,
-      name: "BMW 5 Series",
-      generation: "Next generation (successor to G60)",
-      markets: ["Europe", "China", "United States"],
-    },
+    { id: MOCK_VEHICLE_ID, name: "BMW 5 Series", generation: "Next generation (successor to G60)", markets: ["Europe", "China", "United States"] },
   ];
 
   const components: VehicleComponent[] = [
-    { id: COMPONENT_BATTERY_ID, vehicleId: VEHICLE_ID, key: "battery", label: "Battery & Charging", hotspot: { xPct: 49, yPct: 61 }, workflowId: WORKFLOW_ID },
-    { id: "comp_exterior", vehicleId: VEHICLE_ID, key: "exterior", label: "Exterior & Design", hotspot: { xPct: 50, yPct: 76 }, workflowId: null },
-    { id: "comp_interior", vehicleId: VEHICLE_ID, key: "interior", label: "Interior & Cabin", hotspot: { xPct: 61, yPct: 46 }, workflowId: null },
-    { id: "comp_windows", vehicleId: VEHICLE_ID, key: "windows", label: "Windows & Glass", hotspot: { xPct: 76, yPct: 38 }, workflowId: null },
-    { id: "comp_steering", vehicleId: VEHICLE_ID, key: "steering", label: "Steering & Cockpit", hotspot: { xPct: 58, yPct: 50 }, workflowId: null },
-    { id: "comp_engine", vehicleId: VEHICLE_ID, key: "engine", label: "Powertrain", hotspot: { xPct: 24, yPct: 59 }, workflowId: null },
+    { id: MOCK_COMPONENT_BATTERY_ID, vehicleId: MOCK_VEHICLE_ID, key: "battery", label: "Battery & Charging", hotspot: { xPct: 49, yPct: 61 }, workflowId: MOCK_WORKFLOW_ID },
+    { id: "comp_exterior", vehicleId: MOCK_VEHICLE_ID, key: "exterior", label: "Exterior & Design", hotspot: { xPct: 50, yPct: 76 }, workflowId: null },
+    { id: "comp_interior", vehicleId: MOCK_VEHICLE_ID, key: "interior", label: "Interior & Cabin", hotspot: { xPct: 61, yPct: 46 }, workflowId: null },
+    { id: "comp_windows", vehicleId: MOCK_VEHICLE_ID, key: "windows", label: "Windows & Glass", hotspot: { xPct: 76, yPct: 38 }, workflowId: null },
+    { id: "comp_steering", vehicleId: MOCK_VEHICLE_ID, key: "steering", label: "Steering & Cockpit", hotspot: { xPct: 58, yPct: 50 }, workflowId: null },
+    { id: "comp_engine", vehicleId: MOCK_VEHICLE_ID, key: "engine", label: "Powertrain", hotspot: { xPct: 24, yPct: 59 }, workflowId: null },
   ];
 
   const now = new Date();
   const daysAgo = (n: number) => new Date(now.getTime() - n * 86400000).toISOString();
 
   const workflow: Workflow = {
-    id: WORKFLOW_ID,
-    vehicleId: VEHICLE_ID,
-    componentId: COMPONENT_BATTERY_ID,
+    id: MOCK_WORKFLOW_ID,
+    vehicleId: MOCK_VEHICLE_ID,
+    componentId: MOCK_COMPONENT_BATTERY_ID,
     market: "Europe",
     status: "pm_review",
     stages: [
@@ -68,325 +390,56 @@ export function buildSeed() {
     updatedAt: daysAgo(0),
   };
 
-  // ---------- sources ----------
   const sources: SourceRecord[] = [
-    { id: "src_verb_1", workflowId: WORKFLOW_ID, datasetType: "verbatim", reliability: "first_party", title: "Verbatim #4471 (EU, i5 owner)", excerpt: "\"DC fast charging from 10-80% takes nearly 30 minutes at the stations near me, Hyundai does it in 18.\"", url: null, retrievedAt: daysAgo(9) },
-    { id: "src_verb_2", workflowId: WORKFLOW_ID, datasetType: "verbatim", reliability: "first_party", title: "Verbatim #4502 (EU, i5 owner)", excerpt: "\"The range the car shows me in winter is way off from what I actually get. I never trust it.\"", url: null, retrievedAt: daysAgo(9) },
-    { id: "src_verb_3", workflowId: WORKFLOW_ID, datasetType: "verbatim", reliability: "first_party", title: "Verbatim #4588 (EU, i5 owner)", excerpt: "\"Love that I can precondition the battery from the app before a trip, keep that.\"", url: null, retrievedAt: daysAgo(9) },
-    { id: "src_study_1", workflowId: WORKFLOW_ID, datasetType: "study", reliability: "first_party", title: "Customer study: charging satisfaction (EU, n=612)", excerpt: "Charging speed satisfaction: 58/100 (category average 71/100). Range accuracy trust: 49/100.", url: null, retrievedAt: daysAgo(9) },
-    { id: "src_equip_1", workflowId: WORKFLOW_ID, datasetType: "equipment", reliability: "first_party", title: "Equipment list: current 5 Series eDrive", excerpt: "Max DC charging: 205 kW, 10-80% in ~28 min (WLTP). No standard battery health readout.", url: null, retrievedAt: daysAgo(9) },
-    { id: "src_sales_1", workflowId: WORKFLOW_ID, datasetType: "sales", reliability: "first_party", title: "Sales volumes by powertrain, EU, last 4 quarters", excerpt: "BEV mix of 5 Series sales grew from 19% to 31% QoQ in EU; China BEV mix at 44%.", url: null, retrievedAt: daysAgo(9) },
-    { id: "src_web_1", workflowId: WORKFLOW_ID, datasetType: "web", reliability: "review_site", title: "Electrek: 2026 EV charging speed comparison", excerpt: "Hyundai Ioniq 6 and Kia EV6 now charge 10-80% in 18 minutes on 350kW stations; BMW i5 trails at ~28 min.", url: "https://electrek.co/example-charging-comparison", retrievedAt: daysAgo(8) },
-    { id: "src_web_2", workflowId: WORKFLOW_ID, datasetType: "web", reliability: "forum", title: "Bimmerpost thread: \"range readout accuracy\"", excerpt: "47 replies, recurring complaint that indicated range drops faster than actual consumption in cold weather.", url: "https://bimmerpost.example/thread/range-readout", retrievedAt: daysAgo(8) },
-    { id: "src_web_3", workflowId: WORKFLOW_ID, datasetType: "web", reliability: "official", title: "BMW Group Annual Report (latest) - electrification section", excerpt: "BMW targets 50% of global sales as BEV by 2030; charging infrastructure partnerships expanding in EU and China.", url: "https://bmwgroup.example/annual-report", retrievedAt: daysAgo(8) },
+    { id: "src_verb_1", workflowId: MOCK_WORKFLOW_ID, datasetType: "verbatim", reliability: "first_party", title: "Verbatim #4471 (EU, i5 owner)", excerpt: "\"DC fast charging from 10-80% takes nearly 30 minutes at the stations near me, Hyundai does it in 18.\"", url: null, retrievedAt: daysAgo(9) },
+    { id: "src_study_1", workflowId: MOCK_WORKFLOW_ID, datasetType: "study", reliability: "first_party", title: "Customer study: charging satisfaction (EU, n=612)", excerpt: "Charging speed satisfaction: 58/100 (category average 71/100).", url: null, retrievedAt: daysAgo(9) },
   ];
 
-  // ---------- signals ----------
   const signals: Signal[] = [
-    {
-      id: "sig_charge_speed",
-      workflowId: WORKFLOW_ID,
-      theme: "DC fast-charging speed lags competitors",
-      frequency: 184,
-      sentiment: "negative",
-      sampleVerbatims: [sources[0].excerpt, "\"My friend's Kia charges twice as fast, it's embarrassing.\""],
-      sourceIds: ["src_verb_1", "src_study_1", "src_equip_1", "src_web_1"],
-      contradicts: [],
-    },
-    {
-      id: "sig_range_trust",
-      workflowId: WORKFLOW_ID,
-      theme: "Indicated range doesn't match real-world range, especially in winter",
-      frequency: 131,
-      sentiment: "negative",
-      sampleVerbatims: [sources[1].excerpt],
-      sourceIds: ["src_verb_2", "src_study_1", "src_web_2"],
-      contradicts: [],
-    },
-    {
-      id: "sig_precondition_love",
-      workflowId: WORKFLOW_ID,
-      theme: "Battery preconditioning via app is a loved, must-keep feature",
-      frequency: 76,
-      sentiment: "positive",
-      sampleVerbatims: [sources[2].excerpt],
-      sourceIds: ["src_verb_3"],
-      contradicts: [],
-    },
-    {
-      id: "sig_bev_growth",
-      workflowId: WORKFLOW_ID,
-      theme: "BEV mix of sales growing fastest in China and EU",
-      frequency: 0,
-      sentiment: "neutral",
-      sampleVerbatims: [],
-      sourceIds: ["src_sales_1", "src_web_3"],
-      contradicts: [],
-    },
+    { id: "sig_charge_speed", workflowId: MOCK_WORKFLOW_ID, theme: "DC fast-charging speed lags competitors", frequency: 184, sentiment: "negative", sampleVerbatims: [sources[0].excerpt], sourceIds: ["src_verb_1", "src_study_1"], contradicts: [] },
   ];
-
-  // ---------- requirements ----------
-  function factorSet(vals: { impact: number; freq: number; sales: number; gap: number; strategic: number; effort: number; evidence: number }) {
-    return [
-      { key: "customer_impact", label: "Customer impact", weight: 0.25, rawValue: vals.impact, rationale: "How many customers this measurably affects." },
-      { key: "frequency", label: "Signal frequency", weight: 0.15, rawValue: vals.freq, rationale: "How often this theme recurs across verbatims and reviews." },
-      { key: "sales_relevance", label: "Sales relevance", weight: 0.15, rawValue: vals.sales, rationale: "Weighted by BEV sales mix and growth in target markets." },
-      { key: "competitive_gap", label: "Competitive gap", weight: 0.15, rawValue: vals.gap, rationale: "Size of the gap vs. named competitors in web sources." },
-      { key: "strategic_fit", label: "Strategic fit", weight: 0.1, rawValue: vals.strategic, rationale: "Alignment with BMW Group's stated electrification strategy." },
-      { key: "effort_inverse", label: "Feasibility (inverse effort)", weight: 0.1, rawValue: vals.effort, rationale: "Rough engineering effort, inverted so lower effort scores higher." },
-      { key: "evidence_strength", label: "Evidence strength", weight: 0.1, rawValue: vals.evidence, rationale: "Composite of source reliability and sample size." },
-    ];
-  }
 
   const reqCharging: Requirement = {
     id: "req_fast_charging",
-    workflowId: WORKFLOW_ID,
+    workflowId: MOCK_WORKFLOW_ID,
     title: "Reduce DC fast-charging time to under 20 minutes (10-80%)",
-    description:
-      "Customers rate charging speed well below category average and explicitly compare us unfavorably to Hyundai/Kia on 350kW stations. Close the gap from ~28 min to <20 min for 10-80% charge.",
+    description: "Customers rate charging speed well below category average. Close the gap from ~28 min to <20 min for 10-80% charge.",
     category: "range_charging",
     status: "challenged",
     evidenceLevel: "strong",
-    assumptions: ["350kW public charging infrastructure continues to expand in EU and China through 2029."],
-    uncertainties: ["Actual achievable charge time depends on final cell chemistry, not yet locked by Engineering."],
+    assumptions: ["350kW public charging infrastructure continues to expand through 2029."],
+    uncertainties: ["This is placeholder/mock seed data — run `npm run ingest` against the real datasets for grounded numbers."],
     linkedSignalIds: ["sig_charge_speed"],
-    linkedSourceIds: ["src_verb_1", "src_study_1", "src_equip_1", "src_web_1"],
-    scoreFactors: factorSet({ impact: 88, freq: 82, sales: 75, gap: 90, strategic: 80, effort: 35, evidence: 92 }),
-    score: 0,
+    linkedSourceIds: ["src_verb_1", "src_study_1"],
+    scoreFactors: [
+      { key: "customer_impact", label: "Customer impact", weight: 0.25, rawValue: 88, rationale: "Mock value." },
+      { key: "frequency", label: "Signal frequency", weight: 0.15, rawValue: 82, rationale: "Mock value." },
+      { key: "sales_relevance", label: "Sales relevance", weight: 0.15, rawValue: 75, rationale: "Mock value." },
+      { key: "competitive_gap", label: "Competitive gap", weight: 0.15, rawValue: 90, rationale: "Mock value." },
+      { key: "strategic_fit", label: "Strategic fit", weight: 0.1, rawValue: 80, rationale: "Mock value." },
+      { key: "effort_inverse", label: "Feasibility (inverse effort)", weight: 0.1, rawValue: 35, rationale: "Mock value." },
+      { key: "evidence_strength", label: "Evidence strength", weight: 0.1, rawValue: 92, rationale: "Mock value." },
+    ],
+    score: 79.8,
     effort: "high",
     createdAt: daysAgo(7),
     updatedAt: daysAgo(1),
   };
-  reqCharging.score = weightedScore(reqCharging);
 
-  const reqRangeTrust: Requirement = {
-    id: "req_range_accuracy",
-    workflowId: WORKFLOW_ID,
-    title: "Real-world-accurate range readout, with visible confidence band",
-    description:
-      "Show a range estimate that accounts for temperature, driving style and route, with an explicit confidence band instead of a single optimistic number, to rebuild trust.",
-    category: "range_charging",
-    status: "approved",
-    evidenceLevel: "moderate",
-    assumptions: [],
-    uncertainties: ["Forum sentiment (src_web_2) is directional, not a sized sample."],
-    linkedSignalIds: ["sig_range_trust"],
-    linkedSourceIds: ["src_verb_2", "src_study_1", "src_web_2"],
-    scoreFactors: factorSet({ impact: 70, freq: 65, sales: 60, gap: 50, strategic: 60, effort: 70, evidence: 68 }),
-    score: 0,
-    effort: "medium",
-    createdAt: daysAgo(7),
-    updatedAt: daysAgo(3),
-  };
-  reqRangeTrust.score = weightedScore(reqRangeTrust);
-
-  const reqHealthCert: Requirement = {
-    id: "req_battery_health_cert",
-    workflowId: WORKFLOW_ID,
-    title: "Shareable, OTA-updated battery state-of-health certificate",
-    description:
-      "A certificate customers can export when reselling, so battery health is no longer an invisible risk in used-BEV pricing. Forward-looking bet on used-EV market maturing.",
-    category: "usability",
-    status: "proposed",
-    evidenceLevel: "weak",
-    assumptions: ["Used-BEV resale market develops standardized demand for battery health disclosure by ~2028."],
-    uncertainties: ["No direct verbatim evidence yet; derived from market trend extrapolation, not customer data."],
-    linkedSignalIds: ["sig_bev_growth"],
-    linkedSourceIds: ["src_sales_1", "src_web_3"],
-    scoreFactors: factorSet({ impact: 40, freq: 10, sales: 55, gap: 45, strategic: 70, effort: 55, evidence: 25 }),
-    score: 0,
-    effort: "medium",
-    createdAt: daysAgo(6),
-    updatedAt: daysAgo(6),
-  };
-  reqHealthCert.score = weightedScore(reqHealthCert);
-
-  const requirements = [reqCharging, reqRangeTrust, reqHealthCert];
-
-  // ---------- stakeholders ----------
-  const stakeholders: Stakeholder[] = [
-    { id: "sh_engineering", name: "Mara Voss — Battery Systems Eng.", expertise: "engineering", avatarColor: "#1c69d4" },
-    { id: "sh_sales_cn", name: "Li Wen — Sales, China", expertise: "sales", avatarColor: "#d97706" },
-    { id: "sh_design", name: "Jonas Keller — Design", expertise: "design", avatarColor: "#8b5cf6" },
-    { id: "sh_legal", name: "Amara Johnson — Legal & Regulatory", expertise: "legal_regulatory", avatarColor: "#16a34a" },
-  ];
-
+  const stakeholders: Stakeholder[] = DEFAULT_STAKEHOLDERS;
   const reviews: StakeholderReview[] = [
-    {
-      id: "rev_eng_charging",
-      workflowId: WORKFLOW_ID,
-      stakeholderId: "sh_engineering",
-      requirementId: "req_fast_charging",
-      decision: "approve",
-      expertOpinion:
-        "Sub-20-min is achievable with the next-gen cell chemistry already in validation, but only if the 800V architecture is locked this quarter. Flagging as a schedule risk, not a technical one.",
-      submittedAt: daysAgo(5),
-      aiContextSnapshot: "Signal: DC fast-charging speed lags competitors (184 mentions, strong evidence). Requirement asks for <20min 10-80%.",
-    },
-    {
-      id: "rev_sales_charging",
-      workflowId: WORKFLOW_ID,
-      stakeholderId: "sh_sales_cn",
-      requirementId: "req_fast_charging",
-      decision: "approve",
-      expertOpinion:
-        "China customers cross-shop charging specs explicitly on dealer floors now. This is table stakes for the BEV mix we're targeting, approve without reservation.",
-      submittedAt: daysAgo(4),
-      aiContextSnapshot: "Signal: DC fast-charging speed lags competitors (184 mentions, strong evidence). Requirement asks for <20min 10-80%.",
-    },
-    {
-      id: "rev_legal_charging",
-      workflowId: WORKFLOW_ID,
-      stakeholderId: "sh_legal",
-      requirementId: "req_fast_charging",
-      decision: "reject",
-      expertOpinion:
-        "No regulatory blocker, but marketing any specific charge-time number needs WLTP-style substantiation before publication; flagging so this doesn't ship as a claim without test data.",
-      submittedAt: daysAgo(3),
-      aiContextSnapshot: "Signal: DC fast-charging speed lags competitors (184 mentions, strong evidence). Requirement asks for <20min 10-80%.",
-    },
-    {
-      id: "rev_design_charging",
-      workflowId: WORKFLOW_ID,
-      stakeholderId: "sh_design",
-      requirementId: "req_fast_charging",
-      decision: "pending",
-      expertOpinion: "",
-      submittedAt: null,
-      aiContextSnapshot: "Signal: DC fast-charging speed lags competitors (184 mentions, strong evidence). Requirement asks for <20min 10-80%.",
-    },
-    {
-      id: "rev_eng_range",
-      workflowId: WORKFLOW_ID,
-      stakeholderId: "sh_engineering",
-      requirementId: "req_range_accuracy",
-      decision: "approve",
-      expertOpinion: "Confidence-band UI is a software-only change against existing telemetry. Low risk, approve.",
-      submittedAt: daysAgo(4),
-      aiContextSnapshot: "Signal: range readout trust gap (131 mentions, moderate evidence).",
-    },
+    { id: "rev_eng_charging", workflowId: MOCK_WORKFLOW_ID, stakeholderId: "sh_engineering", requirementId: "req_fast_charging", decision: "approve", expertOpinion: "Achievable with the next-gen cell chemistry already in validation.", submittedAt: daysAgo(5), aiContextSnapshot: "Mock review." },
+    { id: "rev_design_charging", workflowId: MOCK_WORKFLOW_ID, stakeholderId: "sh_design", requirementId: "req_fast_charging", decision: "pending", expertOpinion: "", submittedAt: null, aiContextSnapshot: "Mock review." },
   ];
 
-  // ---------- audit log (pre-existing history, written directly) ----------
   const auditLog: AuditLogEntry[] = [
-    mkLog("workflow_created", "workflow", WORKFLOW_ID, { type: "pm", id: "pm_demo", name: "Product Manager" }, null, { componentId: COMPONENT_BATTERY_ID, market: "Europe" }, "Started the Battery & Charging workflow for the 5 Series successor, Europe market.", daysAgo(9)),
-    mkLog("stage_transition", "stage", "ingest", aiActor(), "pending", "complete", "Ingested 4 datasets: 612 verbatims, equipment list, 4-quarter sales volumes, customer study. 3 malformed verbatim rows flagged and excluded.", daysAgo(9)),
-    mkLog("stage_transition", "stage", "enrich", aiActor(), "pending", "complete", "Enriched with 3 web sources (1 review site, 1 forum, 1 official BMW report).", daysAgo(8)),
-    mkLog("signal_extracted", "requirement", "sig_charge_speed", aiActor(), null, { theme: "DC fast-charging speed lags competitors", frequency: 184 }, "Clustered 184 related verbatims and web mentions into one theme.", daysAgo(8)),
-    mkLog("signal_extracted", "requirement", "sig_range_trust", aiActor(), null, { theme: "Range readout trust gap", frequency: 131 }, "Clustered 131 related verbatims into one theme; flagged possible seasonal confound (winter).", daysAgo(8)),
-    mkLog("requirement_proposed", "requirement", "req_fast_charging", aiActor(), null, { title: reqCharging.title, score: reqCharging.score }, "Derived from sig_charge_speed. Evidence level: strong (first-party + review site + equipment data agree).", daysAgo(7)),
-    mkLog("requirement_proposed", "requirement", "req_range_accuracy", aiActor(), null, { title: reqRangeTrust.title, score: reqRangeTrust.score }, "Derived from sig_range_trust. Evidence level: moderate (forum sentiment not independently sized).", daysAgo(7)),
-    mkLog("requirement_proposed", "requirement", "req_battery_health_cert", aiActor(), null, { title: reqHealthCert.title, score: reqHealthCert.score }, "Derived from market-trend extrapolation (used-BEV growth), not direct customer verbatims. Evidence level: weak, flagged for PM attention.", daysAgo(6)),
-    mkLog(
-      "requirement_challenged",
-      "requirement",
-      "req_fast_charging",
-      pmActor(),
-      { score: 71.2 },
-      { note: "PM pushed back on the first draft" },
-      "PM asked: 'the first draft requirement just said improve charging speed, give me a number grounded in the competitor data, not a vague direction.'",
-      daysAgo(6),
-    ),
-    mkLog(
-      "ai_summary_generated",
-      "workflow",
-      WORKFLOW_ID,
-      aiActor(),
-      null,
-      { note: "revised proposal" },
-      "Re-derived the requirement with an explicit target (<20 min 10-80%) sourced from src_web_1 (Electrek comparison showing competitors at 18 min) and src_equip_1 (our current 28 min). PM's challenge changed the requirement from directional to measurable.",
-      daysAgo(6),
-    ),
-    mkLog("stage_transition", "stage", "stakeholder_review", pmActor(), "pending", "active", "PM sent req_fast_charging and req_range_accuracy to stakeholder review: Engineering, Sales China, Design, Legal.", daysAgo(5)),
-    mkLog("stakeholder_review_submitted", "review", "rev_eng_charging", stakeholderActor("sh_engineering", "Mara Voss — Battery Systems Eng."), { decision: "pending" }, { decision: "approve" }, reviews[0].expertOpinion, daysAgo(5)),
-    mkLog("stakeholder_review_submitted", "review", "rev_eng_range", stakeholderActor("sh_engineering", "Mara Voss — Battery Systems Eng."), { decision: "pending" }, { decision: "approve" }, reviews[4].expertOpinion, daysAgo(4)),
-    mkLog("stakeholder_review_submitted", "review", "rev_sales_charging", stakeholderActor("sh_sales_cn", "Li Wen — Sales, China"), { decision: "pending" }, { decision: "approve" }, reviews[1].expertOpinion, daysAgo(4)),
-    mkLog("stakeholder_review_submitted", "review", "rev_legal_charging", stakeholderActor("sh_legal", "Amara Johnson — Legal & Regulatory"), { decision: "pending" }, { decision: "reject" }, reviews[2].expertOpinion, daysAgo(3)),
-    mkLog("stage_transition", "stage", "stakeholder_review", pmActor(), "active", "complete", "3 of 4 stakeholder reviews in; Design still pending. PM chose to proceed to decision given majority signal.", daysAgo(2)),
-    mkLog("stage_transition", "stage", "pm_decision", pmActor(), "pending", "active", "PM reviewing stakeholder input: 2 approve, 1 reject (process objection, not technical), 1 pending.", daysAgo(2)),
+    mkLog(MOCK_WORKFLOW_ID, "workflow_created", "workflow", MOCK_WORKFLOW_ID, pmActor(), null, { componentId: MOCK_COMPONENT_BATTERY_ID, market: "Europe" }, "Started the Battery & Charging workflow (mock seed — run `npm run ingest` for real data).", daysAgo(9)),
+    mkLog(MOCK_WORKFLOW_ID, "requirement_proposed", "requirement", "req_fast_charging", aiActor(), null, { title: reqCharging.title }, "Mock-seeded draft requirement.", daysAgo(7)),
   ];
 
   const aiSummaries: AISummary[] = [
-    {
-      id: "aisum_decision_trail",
-      workflowId: WORKFLOW_ID,
-      type: "decision_trail",
-      content:
-        "Started from 184 verbatim/web mentions of slow DC charging vs. competitors. First AI draft was directional (\"improve charging speed\"); PM challenged it as not measurable. AI revised using src_web_1 (competitors at 18 min) and src_equip_1 (we're at 28 min) to propose a concrete <20 min target. Sent to 4 stakeholders: Engineering and Sales China approved; Legal rejected on a process ground (charge-time claims need WLTP-style substantiation before marketing use, not a product objection); Design has not responded yet. PM is now deciding whether to approve with a caveat requiring Legal sign-off before any public claim, or wait for Design.",
-      basedOnLogIds: [],
-      generatedAt: daysAgo(1),
-    },
-    {
-      id: "aisum_stakeholder_overview",
-      workflowId: WORKFLOW_ID,
-      type: "stakeholder_overview",
-      content:
-        "3 of 4 stakeholders responded. Engineering confirms technical feasibility conditional on locking the 800V architecture this quarter (schedule risk, not technical risk). Sales China treats this as table-stakes competitive parity, not a nice-to-have. Legal's rejection is narrow: it blocks public marketing claims, not the engineering requirement itself. Design has not yet weighed in — no blocking concern raised elsewhere that would need Design's input, but their review is still open.",
-      basedOnLogIds: [],
-      generatedAt: daysAgo(1),
-    },
-    {
-      id: "aisum_limitations",
-      workflowId: WORKFLOW_ID,
-      type: "limitations",
-      content:
-        "req_battery_health_cert rests on 2 sales/web sources and zero direct customer verbatims — treat as a forward bet, not a validated need. req_range_accuracy's forum evidence (src_web_2) is 47 replies on one thread, not a sized sample; the customer study (n=612) corroborates directionally but wasn't designed to isolate winter effects. Market scope is Europe only; China and US data for this component have not been ingested yet.",
-      basedOnLogIds: [],
-      generatedAt: daysAgo(1),
-    },
+    { id: "aisum_decision_trail", workflowId: MOCK_WORKFLOW_ID, type: "decision_trail", content: "This is placeholder mock data. Copy the real datasets into data-raw/ and run `npm run ingest` to replace this with a real, data-grounded demo (see docs/DATA_SETUP.md).", basedOnLogIds: [], generatedAt: daysAgo(1) },
   ];
 
-  return {
-    vehicles,
-    components,
-    workflows: [workflow],
-    requirements,
-    signals,
-    sources,
-    stakeholders,
-    reviews,
-    auditLog,
-    aiSummaries,
-  };
-
-  // ---- local helpers ----
-  function weightedScore(req: Requirement): number {
-    const totalWeight = req.scoreFactors.reduce((s, f) => s + f.weight, 0) || 1;
-    const weighted = req.scoreFactors.reduce((s, f) => s + f.rawValue * f.weight, 0);
-    return Math.round((weighted / totalWeight) * 10) / 10;
-  }
-}
-
-function aiActor() {
-  return { type: "ai" as const, id: "ai_engine", name: "Requirements Copilot", model: "claude-sonnet-5" };
-}
-function pmActor() {
-  return { type: "pm" as const, id: "pm_demo", name: "Product Manager" };
-}
-function stakeholderActor(id: string, name: string) {
-  return { type: "stakeholder" as const, id, name };
-}
-
-function mkLog(
-  action: AuditLogEntry["action"],
-  targetType: AuditLogEntry["targetType"],
-  targetId: string,
-  actor: AuditLogEntry["actor"],
-  oldValue: unknown,
-  newValue: unknown,
-  rationale: string,
-  timestamp: string,
-): AuditLogEntry {
-  return {
-    id: `log_${nanoid(8)}`,
-    workflowId: WORKFLOW_ID,
-    actor,
-    action,
-    targetType,
-    targetId,
-    oldValue,
-    newValue,
-    rationale,
-    timestamp,
-  };
+  return { vehicles, components, workflows: [workflow], requirements: [reqCharging], signals, sources, stakeholders, reviews, auditLog, aiSummaries };
 }

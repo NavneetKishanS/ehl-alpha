@@ -29,14 +29,14 @@ export function PipelineStrip({ stages }: { stages: Stage[] }) {
               <span className="mt-2 w-24 text-center text-[11px] leading-tight text-neutral-400">
                 {stage.label}
               </span>
-              <div className="pointer-events-none absolute -top-2 left-1/2 z-10 hidden -translate-x-1/2 -translate-y-full whitespace-nowrap rounded-md border border-white/10 bg-neutral-900 px-3 py-2 text-xs shadow-xl group-hover:block">
+              <div className="pointer-events-none absolute -top-2 left-1/2 z-10 hidden -translate-x-1/2 -translate-y-full whitespace-nowrap border border-neutral-700 bg-neutral-900 px-2.5 py-1.5 text-[11px] shadow-xl group-hover:block">
                 <div className="font-semibold text-neutral-100">{stage.label}</div>
-                <div className="text-neutral-400">status: {stage.status} · owner: {stage.owner}</div>
+                <div className="font-mono text-neutral-500">{stage.status} · {stage.owner}</div>
                 {stage.startedAt && (
-                  <div className="text-neutral-500">started {new Date(stage.startedAt).toLocaleString()}</div>
+                  <div className="text-neutral-600">started {new Date(stage.startedAt).toLocaleDateString()}</div>
                 )}
                 {stage.completedAt && (
-                  <div className="text-neutral-500">done {new Date(stage.completedAt).toLocaleString()}</div>
+                  <div className="text-neutral-600">done {new Date(stage.completedAt).toLocaleDateString()}</div>
                 )}
               </div>
             </div>

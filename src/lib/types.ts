@@ -83,6 +83,51 @@ export interface SourceRecord {
   excerpt: string;
   url: string | null; // null for internal datasets
   retrievedAt: string;
+  // Optional metadata, populated when a source is derived from real
+  // ingested data (see scripts/ingest-real-data.ts). Lets the Evidence
+  // Explorer filter without re-parsing the excerpt text.
+  country?: string;
+  engineType?: string;
+  feedbackType?: string;
+}
+
+// ---------- Real ingested datasets (scripts/ingest-real-data.ts output) ----------
+
+// A single row from a Feedback_Explorer dataset, trimmed for the Evidence
+// Explorer table. Not tied to a workflow — these are the raw substrate
+// signals/requirements get derived from, browsable independent of any one
+// component's workflow.
+export interface FeedbackRecord {
+  id: string;
+  vehicleCode: string; // "F70" | "G60" | "G70"
+  country: string;
+  engineType: string; // "ICE" | "BEVE" | "PHEV"
+  feedbackType: string | null; // "Likes" | "Wants" | "Difficult to Use" | "Defect" | null
+  text: string;
+  vfcLevel2: string | null;
+  vfcLevel3: string | null;
+  component: ComponentKey | "general";
+}
+
+export interface SalesVolume {
+  vehicleCode: string;
+  market: string;
+  marketCode: string;
+  volume2024: number;
+  volume2025: number;
+  volume2030: number;
+}
+
+// A category x model customer-study benchmark row. CN/EU rows are a direct
+// 0-10 mean; US rows are reconstructed from a satisfaction-bucket
+// distribution (see ingest script) — methodology is recorded explicitly so
+// the UI/AI never treats the two as equivalent-precision evidence.
+export interface CustomerStudyScore {
+  category: string;
+  model: string; // e.g. "BMW 5 Series G60"
+  region: "CN" | "EU" | "US";
+  mean: number; // normalized 0-10
+  methodology: "direct_mean" | "distribution_derived";
 }
 
 export interface Signal {

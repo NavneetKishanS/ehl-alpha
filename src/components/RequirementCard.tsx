@@ -7,11 +7,11 @@ import { EvidenceBadge } from "./EvidenceBadge";
 import { api } from "@/lib/api-client";
 
 const STATUS_STYLE: Record<Requirement["status"], string> = {
-  proposed: "bg-neutral-700 text-neutral-200",
-  approved: "bg-emerald-500/20 text-emerald-300 border border-emerald-400/30",
-  rejected: "bg-red-500/20 text-red-300 border border-red-400/30",
-  postponed: "bg-amber-500/20 text-amber-300 border border-amber-400/30",
-  challenged: "bg-violet-500/20 text-violet-300 border border-violet-400/30",
+  proposed: "bg-neutral-800 text-neutral-300 border-neutral-700",
+  approved: "bg-emerald-950 text-emerald-300 border-emerald-800",
+  rejected: "bg-red-950 text-red-300 border-red-800",
+  postponed: "bg-amber-950 text-amber-300 border-amber-800",
+  challenged: "bg-violet-950 text-violet-300 border-violet-800",
 };
 
 export function RequirementCard({
@@ -31,6 +31,7 @@ export function RequirementCard({
   const [challengeResult, setChallengeResult] = useState<{ changed: boolean; explanation: string } | null>(null);
 
   const liveScore = computeLiveScore(requirement, weights);
+  const weightsDirty = requirement.scoreFactors.some((f) => Math.abs(weights[f.key] - f.weight) > 0.001);
 
   async function act(status: Requirement["status"]) {
     const needsRationale = status === "rejected" || status === "postponed";
@@ -72,61 +73,58 @@ export function RequirementCard({
   }
 
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
+    <div className="border border-neutral-800 bg-neutral-900/60">
+      <div className="flex items-start justify-between gap-3 border-b border-neutral-800 p-3">
+        <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="font-semibold text-neutral-100">{requirement.title}</h3>
-            <span className={clsx("rounded px-2 py-0.5 text-[11px] font-medium capitalize", STATUS_STYLE[requirement.status])}>
+            <span className={clsx("border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide", STATUS_STYLE[requirement.status])}>
               {requirement.status}
             </span>
-          </div>
-          <p className="mt-1 text-sm text-neutral-400">{requirement.description}</p>
-          <div className="mt-2 flex flex-wrap items-center gap-2">
             <EvidenceBadge level={requirement.evidenceLevel} />
-            <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-neutral-300">
-              {requirement.category.replace(/_/g, " ")}
-            </span>
-            <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-neutral-300">
-              effort: {requirement.effort}
-            </span>
+            <span className="text-[11px] text-neutral-500">{requirement.category.replace(/_/g, " ")}</span>
           </div>
+          <h3 className="mt-1.5 text-sm font-semibold text-neutral-100">{requirement.title}</h3>
+          <p className="mt-1 text-xs leading-relaxed text-neutral-400">{requirement.description}</p>
         </div>
-        <div className="flex flex-col items-end">
-          <div className="text-2xl font-bold tabular-nums text-neutral-100">{liveScore.toFixed(1)}</div>
-          <div className="text-[11px] text-neutral-500">score / 100</div>
+        <div className="flex shrink-0 flex-col items-end">
+          <div className="font-mono text-xl font-bold tabular-nums text-neutral-100">{liveScore.toFixed(1)}</div>
+          <div className="text-[10px] uppercase tracking-wide text-neutral-600">score{weightsDirty ? " · unsaved" : ""}</div>
         </div>
       </div>
 
-      {requirement.assumptions.length > 0 && (
-        <div className="mt-3 rounded-lg border border-sky-400/20 bg-sky-500/5 p-2 text-xs text-sky-200">
-          <span className="font-semibold">Assumption: </span>
-          {requirement.assumptions.join(" ")}
-        </div>
-      )}
-      {requirement.uncertainties.length > 0 && (
-        <div className="mt-2 rounded-lg border border-amber-400/20 bg-amber-500/5 p-2 text-xs text-amber-200">
-          <span className="font-semibold">Uncertainty: </span>
-          {requirement.uncertainties.join(" ")}
+      {(requirement.assumptions.length > 0 || requirement.uncertainties.length > 0) && (
+        <div className="divide-y divide-neutral-800 border-b border-neutral-800">
+          {requirement.assumptions.map((a, i) => (
+            <div key={i} className="flex gap-2 border-l-2 border-sky-600 bg-sky-950/30 px-3 py-1.5 text-[11px] text-sky-200">
+              <span className="shrink-0 font-semibold text-sky-400">ASSUMPTION</span>
+              <span>{a}</span>
+            </div>
+          ))}
+          {requirement.uncertainties.map((u, i) => (
+            <div key={i} className="flex gap-2 border-l-2 border-amber-600 bg-amber-950/20 px-3 py-1.5 text-[11px] text-amber-200">
+              <span className="shrink-0 font-semibold text-amber-400">UNCERTAINTY</span>
+              <span>{u}</span>
+            </div>
+          ))}
         </div>
       )}
 
       <button
         onClick={() => setExpanded((v) => !v)}
-        className="mt-3 text-xs font-medium text-sky-400 hover:text-sky-300"
+        className="w-full border-b border-neutral-800 px-3 py-1.5 text-left text-[11px] font-medium text-neutral-500 hover:bg-neutral-800/50 hover:text-neutral-300"
       >
-        {expanded ? "Hide" : "Show"} score breakdown & factor weights
+        {expanded ? "▾" : "▸"} Score breakdown ({requirement.scoreFactors.length} factors, adjustable weights)
       </button>
 
       {expanded && (
-        <div className="mt-3 space-y-3 rounded-lg border border-white/10 bg-black/20 p-3">
+        <div className="space-y-2.5 border-b border-neutral-800 bg-black/20 p-3">
           {requirement.scoreFactors.map((f) => (
             <div key={f.key}>
-              <div className="flex items-center justify-between text-xs text-neutral-300">
+              <div className="flex items-center justify-between text-[11px] text-neutral-300">
                 <span>
-                  {f.label} <span className="text-neutral-500">(raw {f.rawValue})</span>
+                  {f.label} <span className="font-mono text-neutral-500">raw={f.rawValue}</span>
                 </span>
-                <span className="tabular-nums text-neutral-400">weight {Math.round(weights[f.key] * 100)}%</span>
+                <span className="font-mono tabular-nums text-neutral-400">w={Math.round(weights[f.key] * 100)}%</span>
               </div>
               <input
                 type="range"
@@ -135,40 +133,40 @@ export function RequirementCard({
                 step={0.05}
                 value={weights[f.key]}
                 onChange={(e) => setWeights((w) => ({ ...w, [f.key]: Number(e.target.value) }))}
-                className="w-full accent-bmw-blue"
+                className="h-1 w-full accent-bmw-blue"
               />
-              <p className="text-[11px] text-neutral-500">{f.rationale}</p>
+              <p className="text-[10px] text-neutral-600">{f.rationale}</p>
             </div>
           ))}
           <button
             onClick={saveWeights}
             disabled={pending === "weights"}
-            className="rounded-md bg-bmw-blue px-3 py-1.5 text-xs font-semibold text-white hover:bg-sky-500 disabled:opacity-50"
+            className="bg-bmw-blue px-3 py-1.5 text-xs font-semibold text-white hover:bg-sky-500 disabled:opacity-50"
           >
             {pending === "weights" ? "Saving…" : "Save weights & recompute"}
           </button>
         </div>
       )}
 
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-neutral-800 p-3">
         <button
           onClick={() => act("approved")}
           disabled={!!pending}
-          className="rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-500 disabled:opacity-50"
+          className="bg-emerald-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-600 disabled:opacity-50"
         >
           Approve
         </button>
         <button
           onClick={() => act("rejected")}
           disabled={!!pending}
-          className="rounded-md bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-500 disabled:opacity-50"
+          className="bg-red-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700 disabled:opacity-50"
         >
           Reject
         </button>
         <button
           onClick={() => act("postponed")}
           disabled={!!pending}
-          className="rounded-md bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-500 disabled:opacity-50"
+          className="bg-amber-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-700 disabled:opacity-50"
         >
           Postpone
         </button>
@@ -176,28 +174,28 @@ export function RequirementCard({
           value={rationaleDraft}
           onChange={(e) => setRationaleDraft(e.target.value)}
           placeholder="Rationale (required for reject/postpone)"
-          className="min-w-[220px] flex-1 rounded-md border border-white/10 bg-black/30 px-2 py-1.5 text-xs text-neutral-200 placeholder:text-neutral-600"
+          className="min-w-[220px] flex-1 border border-neutral-700 bg-black/30 px-2 py-1.5 text-xs text-neutral-200 placeholder:text-neutral-600"
         />
       </div>
 
-      <div className="mt-3 border-t border-white/10 pt-3">
+      <div className="p-3">
         <div className="flex items-center gap-2">
           <input
             value={challengeArg}
             onChange={(e) => setChallengeArg(e.target.value)}
             placeholder="Challenge this score/rationale with your own argument…"
-            className="flex-1 rounded-md border border-white/10 bg-black/30 px-2 py-1.5 text-xs text-neutral-200 placeholder:text-neutral-600"
+            className="flex-1 border border-neutral-700 bg-black/30 px-2 py-1.5 text-xs text-neutral-200 placeholder:text-neutral-600"
           />
           <button
             onClick={sendChallenge}
             disabled={pending === "challenge"}
-            className="rounded-md border border-violet-400/40 bg-violet-500/10 px-3 py-1.5 text-xs font-semibold text-violet-200 hover:bg-violet-500/20 disabled:opacity-50"
+            className="border border-violet-700 bg-violet-950 px-3 py-1.5 text-xs font-semibold text-violet-200 hover:bg-violet-900 disabled:opacity-50"
           >
             {pending === "challenge" ? "Re-assessing…" : "Challenge"}
           </button>
         </div>
         {challengeResult && (
-          <p className={clsx("mt-2 text-xs", challengeResult.changed ? "text-emerald-300" : "text-neutral-400")}>
+          <p className={clsx("mt-2 border-l-2 pl-2 text-xs", challengeResult.changed ? "border-emerald-600 text-emerald-300" : "border-neutral-600 text-neutral-400")}>
             {challengeResult.changed ? "Result changed: " : "Result unchanged: "}
             {challengeResult.explanation}
           </p>
