@@ -18,6 +18,7 @@ import type {
   FeedbackRecord,
   CustomerStudyScore,
 } from "./types";
+import type { ChatReply, ChatTurn } from "./pingu/types";
 
 export interface FeedbackPage {
   total: number;
@@ -43,6 +44,13 @@ async function j<T>(res: Response): Promise<T> {
 }
 
 export const api = {
+  chat: (messages: ChatTurn[]) =>
+    fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages }),
+    }).then((r) => j<ChatReply>(r)),
+
   listVehicles: () => fetch("/api/vehicles").then((r) => j<Vehicle[]>(r)),
 
   getVehicle: (id: string) => fetch(`/api/vehicles/${id}`).then((r) => j<Vehicle>(r)),
