@@ -22,6 +22,7 @@ import { AuditLogPanel } from "@/components/AuditLogPanel";
 import { ReviewerRow } from "@/components/ReviewerRow";
 import { EvidenceBadge } from "@/components/EvidenceBadge";
 import { SensitivityView } from "@/components/SensitivityView";
+import { StakeholderMatrix } from "@/components/StakeholderMatrix";
 
 const SENTIMENT_DOT: Record<Signal["sentiment"], string> = {
   positive: "bg-emerald-500",
@@ -158,6 +159,14 @@ export default function WorkflowPage() {
           </section>
 
           <SensitivityView requirements={requirements} />
+
+          <StakeholderMatrix
+            requirements={requirements}
+            reviews={reviews}
+            stakeholders={stakeholders}
+            selectedReqId={selectedReq?.id ?? null}
+            onSelectRequirement={setSelectedReqId}
+          />
 
           {selectedReq && (
             <section className="border border-neutral-800 bg-neutral-900/40 p-3">
