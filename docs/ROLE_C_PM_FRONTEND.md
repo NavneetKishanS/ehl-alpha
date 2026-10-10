@@ -14,9 +14,15 @@ pages before changing anything.
   showing real "N/6 components have an active workflow" counts. Clicking a
   dot with no workflow opens a "create workflow" modal
   (market picker → `POST /api/workflows`).
-- `src/components/CarHotspotViewer.tsx` — **still the placeholder** SVG car
-  silhouette with hotspots positioned by `{xPct, yPct}`. This is the
-  single biggest visual upgrade left — see task 1.
+- `src/components/CarHotspotViewer.tsx` — **superseded, dead code**: a
+  teammate replaced the landing page's car visual with a real 3D viewer
+  (`SketchfabCarViewer.tsx` / `Car3DViewer.tsx` fallback) — a rotatable
+  Sketchfab-hosted BMW model with working hotspots, color picker, and
+  interior/exterior toggle. Nothing imports `CarHotspotViewer.tsx` anymore;
+  safe to delete. Note the landing page also moved to a **light theme**
+  (white bg, BMW logo header) while the rest of the app (this page,
+  stakeholder page, Evidence Explorer) is still dark — team decided to
+  bring the rest of the app to light to match, not yet done.
 - `src/app/workflow/[componentId]/page.tsx` — the PM workflow page: real
   vehicle/component name header (fetched via `api.getComponent`/
   `api.getVehicle`, not parsed from the URL), `PipelineStrip`, AI
@@ -40,16 +46,10 @@ pages before changing anything.
 
 ## Your tasks, in priority order
 
-### 1. Real 360 car viewer — the landing page's headline visual, still a placeholder
-Replace `CarSilhouette` inside `CarHotspotViewer.tsx`. Fastest path: a
-single high-quality static image (front-3/4 view) per vehicle line, with
-the same `{xPct, yPct}` hotspot overlay swapped per vehicle — zero new
-dependencies. A real 360 spin (frame sequence + drag-to-rotate) is the
-stretch version; keep hotspot *positions* driven by data, not hardcoded
-per-frame. The "blue dot = has workflow, gray dot = create new" affordance
-already works — keep it, and note hotspot coordinates may need per-vehicle
-tuning once you're not on a generic silhouette (F70/G60/G70 have different
-proportions).
+### 1. ~~Real car viewer~~ — done
+A real 360 spin (frame sequence + drag-to-rotate) over the current static
+blueprint is a possible stretch upgrade later, but not prioritized — the
+blueprint illustration already solves the "generic placeholder" problem.
 
 ### 2. Pipeline strip + live stage progress
 `PipelineStrip.tsx` already shows stage status with hover tooltips. As
@@ -59,13 +59,16 @@ right now `enrich` is permanently `pending` since there's no web-enrichment
 step yet (see `docs/ROLE_A_BACKEND.md` task 2). Consider a "re-run
 pipeline" button once that lands.
 
-### 3. Sensitivity view (US-4.4, stretch)
-`RequirementCard` already lets the PM drag weight sliders and see the
-score recompute live before saving (`computeLiveScore`). For US-4.4, add a
-view showing which requirements change rank most as weights shift — a
-small rank-change table using the existing `MetricBar` component
-(`src/components/charts/MetricBar.tsx`) is enough, don't reach for a
-charting library.
+### 3. ~~Sensitivity view~~ — done
+`src/components/SensitivityView.tsx`, collapsible section on the workflow
+page right below the requirements list. Re-scores every requirement under
+4 alternate weight profiles (customer-impact-heavy, evidence-heavy,
+sales/competitive-heavy, feasibility-heavy) and shows each one's rank
+under each profile plus a max-swing column, color-coded (green = ranks
+higher, amber = ranks lower). Verified live against the real battery
+workflow: "Frunk" swings #1→#4 under evidence-heavy weighting, "Electric
+Range" swings #3→#1 — a genuinely different picture than the flat current
+ranking suggests.
 
 ### 4. Multi-requirement stakeholder panel
 The stakeholder review panel on the workflow page scopes to one

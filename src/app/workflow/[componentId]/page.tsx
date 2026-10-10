@@ -21,6 +21,7 @@ import { RequirementCard } from "@/components/RequirementCard";
 import { AuditLogPanel } from "@/components/AuditLogPanel";
 import { ReviewerRow } from "@/components/ReviewerRow";
 import { EvidenceBadge } from "@/components/EvidenceBadge";
+import { SensitivityView } from "@/components/SensitivityView";
 
 const SENTIMENT_DOT: Record<Signal["sentiment"], string> = {
   positive: "bg-emerald-500",
@@ -155,6 +156,8 @@ export default function WorkflowPage() {
               )}
             </div>
           </section>
+
+          <SensitivityView requirements={requirements} />
 
           {selectedReq && (
             <section className="border border-neutral-800 bg-neutral-900/40 p-3">
