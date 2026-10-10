@@ -1,0 +1,9 @@
+ne update came in before i merged my pr...pull and check if ok to merge
+
+---
+
+where do you get these data from and why is it same for every stake holder:
+
+---
+
+yeah, filter requirements by stakeholder expertise

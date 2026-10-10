@@ -1,0 +1,50 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4M26T8ZST3D35YAX4NYT14R",
+  "session_id": "cb8c26e5-1642-4704-9388-fdb98b1aa032",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-10T23:26:15.075053Z",
+  "branch": "feat/stakeholder-expertise-filter",
+  "checkpoints_count": 3,
+  "files_touched": [
+    "src/app/stakeholder/[workflowId]/[stakeholderId]/page.tsx",
+    "src/lib/expertiseRelevance.ts"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "cdff83ef6296",
+  "checkpoint_transcript_start": 3591,
+  "transcript_lines_at_start": 3591,
+  "compact_transcript_start": 631,
+  "token_usage": {
+    "input_tokens": 106,
+    "cache_creation_tokens": 34735,
+    "cache_read_tokens": 36965453,
+    "output_tokens": 16464,
+    "api_call_count": 53
+  },
+  "session_metrics": {
+    "turn_count": 21
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-10T23:26:14.517761Z",
+    "agent_lines": 65,
+    "agent_removed": 5,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 65,
+    "total_lines_changed": 70,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
