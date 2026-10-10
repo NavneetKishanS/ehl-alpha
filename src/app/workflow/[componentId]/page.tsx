@@ -26,6 +26,7 @@ import { SignalBreakdown } from "@/components/workflow/SignalBreakdown";
 import { EvidenceMeter, SectionTitle, humanize } from "@/components/workflow/primitives";
 import { SensitivityView } from "@/components/SensitivityView";
 import { StakeholderMatrix } from "@/components/StakeholderMatrix";
+import { RoleSwitcher } from "@/components/RoleSwitcher";
 
 const WORKFLOW_STATUS: Record<Workflow["status"], string> = {
   draft: "bg-neutral-100 text-neutral-700",
@@ -135,13 +136,21 @@ export default function WorkflowPage() {
           {component?.key ?? ""}
         </span>
         <div className="relative mx-auto max-w-[1440px] px-4 pb-24 pt-8 sm:px-8 sm:pt-10">
-          <nav className="flex flex-wrap items-center gap-2 text-[13px] text-neutral-500">
-            <Link href="/" className="hover:text-neutral-900">Vehicles</Link>
-            <span>/</span>
-            <Link href="/" className="hover:text-neutral-900">{vehicle?.name ?? "…"}</Link>
-            <span>/</span>
-            <span className="text-neutral-900">{component?.label ?? "…"}</span>
-          </nav>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <nav className="flex flex-wrap items-center gap-2 text-[13px] text-neutral-500">
+              <Link href="/" className="hover:text-neutral-900">Vehicles</Link>
+              <span>/</span>
+              <Link href="/" className="hover:text-neutral-900">{vehicle?.name ?? "…"}</Link>
+              <span>/</span>
+              <span className="text-neutral-900">{component?.label ?? "…"}</span>
+            </nav>
+            <RoleSwitcher
+              componentId={component?.id ?? ""}
+              workflowId={workflow.id}
+              stakeholders={stakeholders}
+              current={{ type: "pm" }}
+            />
+          </div>
 
           <div className="mt-8 flex flex-wrap items-end justify-between gap-8">
             <div className="max-w-2xl">

@@ -7,6 +7,7 @@ import type { Workflow, Requirement, StakeholderReview, Stakeholder, AISummary, 
 import { EvidenceBadge } from "@/components/EvidenceBadge";
 import { MetricBar } from "@/components/charts/MetricBar";
 import { GroupedBarChart } from "@/components/charts/GroupedBarChart";
+import { RoleSwitcher } from "@/components/RoleSwitcher";
 
 export default function StakeholderPage() {
   const params = useParams<{ workflowId: string; stakeholderId: string }>();
@@ -16,6 +17,7 @@ export default function StakeholderPage() {
   const [requirements, setRequirements] = useState<Requirement[]>([]);
   const [reviews, setReviews] = useState<StakeholderReview[]>([]);
   const [stakeholder, setStakeholder] = useState<Stakeholder | null>(null);
+  const [allStakeholders, setAllStakeholders] = useState<Stakeholder[]>([]);
   const [aiSummaries, setAISummaries] = useState<AISummary[]>([]);
   const [study, setStudy] = useState<CustomerStudyScore[]>([]);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
@@ -25,6 +27,7 @@ export default function StakeholderPage() {
     const [wf, shs] = await Promise.all([api.getWorkflow(params.workflowId), api.listStakeholders()]);
     setWorkflow(wf);
     setStakeholder(shs.find((s) => s.id === params.stakeholderId) ?? null);
+    setAllStakeholders(shs);
     const [reqs, revs, summaries, comp, veh, cs] = await Promise.all([
       api.listRequirements(wf.id),
       api.listReviews(wf.id),
@@ -65,13 +68,26 @@ export default function StakeholderPage() {
   return (
     <main className="mx-auto min-h-screen max-w-3xl px-6 py-10">
       <header className="mb-6 border-b border-neutral-800 pb-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-bmw-blue">Stakeholder review</p>
-        <h1 className="mt-1 text-xl font-bold text-neutral-50">
-          {vehicle?.name ?? "…"} · {component?.label ?? "…"} · {workflow.market}
-        </h1>
-        <p className="mt-1 text-xs text-neutral-500">
-          Signed in as <span className="font-medium text-neutral-300">{stakeholder.name}</span> ({stakeholder.expertise.replace(/_/g, " ")})
-        </p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-bmw-blue">Stakeholder review</p>
+            <h1 className="mt-1 text-xl font-bold text-neutral-50">
+              {vehicle?.name ?? "…"} · {component?.label ?? "…"} · {workflow.market}
+            </h1>
+            <p className="mt-1 text-xs text-neutral-500">
+              Signed in as <span className="font-medium text-neutral-300">{stakeholder.name}</span> ({stakeholder.expertise.replace(/_/g, " ")})
+            </p>
+          </div>
+          {component && (
+            <RoleSwitcher
+              componentId={component.id}
+              workflowId={workflow.id}
+              stakeholders={allStakeholders}
+              current={{ type: "stakeholder", stakeholderId: stakeholder.id }}
+              variant="dark"
+            />
+          )}
+        </div>
       </header>
 
       {decisionTrail && (
