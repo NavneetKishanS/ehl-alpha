@@ -1,0 +1,7 @@
+<task-notification>
+<task-id>b8db6idjy</task-id>
+<tool-use-id>toolu_01WuQ2G7QtnEFEVhe2TeCWMF</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-mitesh-Projects-ehl-alpha/d37aa735-2e3e-44d6-80a4-b881437cd9a7/tasks/b8db6idjy.output</output-file>
+<status>failed</status>
+<summary>Background command "Start test dev server with real key on port 3100" failed with exit code 144</summary>
+</task-notification>
