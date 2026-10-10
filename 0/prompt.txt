@@ -1,0 +1,9 @@
+ok push
+
+---
+
+with the current state of the project, how do i see the pm workflow and the stakeholder's pages so i can see as diff roles and show
+
+---
+
+new update came in...check what's the state and if smth is missing
