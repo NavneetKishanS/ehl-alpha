@@ -33,6 +33,7 @@ export interface Facets {
   components: { value: string; count: number }[];
   feedbackTypes: { value: string; count: number }[];
   countries: { value: string; count: number }[];
+  markets: { value: string; count: number; label: string }[];
 }
 
 async function j<T>(res: Response): Promise<T> {

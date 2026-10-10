@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { hasRealData, loadFeedback } from "@/lib/realData";
+import { countryToMarket, type MarketCode } from "@/lib/market";
 
 // Serves the raw ingested feedback for the Evidence Explorer (US-8.1/8.4
 // style traceability, one level below the aggregated Signal). Filters +
@@ -15,6 +16,7 @@ export async function GET(req: NextRequest) {
   const component = sp.get("component");
   const feedbackType = sp.get("feedbackType");
   const country = sp.get("country");
+  const market = sp.get("market") as MarketCode | null;
   const q = sp.get("q")?.toLowerCase();
   const page = Math.max(1, Number(sp.get("page") ?? "1"));
   const pageSize = Math.min(200, Math.max(1, Number(sp.get("pageSize") ?? "50")));
@@ -24,6 +26,7 @@ export async function GET(req: NextRequest) {
   if (component) rows = rows.filter((r) => r.component === component);
   if (feedbackType) rows = rows.filter((r) => r.feedbackType === feedbackType);
   if (country) rows = rows.filter((r) => r.country === country);
+  if (market) rows = rows.filter((r) => countryToMarket(r.country) === market);
   if (q) rows = rows.filter((r) => r.text.toLowerCase().includes(q) || (r.vfcLevel2 ?? "").toLowerCase().includes(q));
 
   const total = rows.length;
