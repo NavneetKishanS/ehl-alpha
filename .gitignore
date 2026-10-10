@@ -41,7 +41,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# real BMW hackathon datasets — confidential, never commit
+# real BMW hackathon datasets — the raw source files stay out (data-raw/);
+# src/data/*.json (derived/ingested output) is intentionally committed so
+# the team shares identical data — see team decision in session history.
 /data-raw/
-/src/data/*.json
-!/src/data/.gitkeep
