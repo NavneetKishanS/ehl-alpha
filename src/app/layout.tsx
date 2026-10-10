@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+// Self-hosted so the font works offline (Google Fonts fetches can time out on venue Wi-Fi).
+import "@fontsource-variable/inter";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-geist-sans", display: "swap" });
 
 export const metadata: Metadata = {
   title: "BMW Requirements Copilot",
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html lang="en" className="h-full antialiased">
       <body className="min-h-full">{children}</body>
     </html>
   );

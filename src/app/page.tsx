@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { api } from "@/lib/api-client";
 import type { Vehicle, VehicleComponent } from "@/lib/types";
-import { BmwLogo } from "@/components/BmwLogo";
+import { SiteHeader } from "@/components/SiteHeader";
 import { PAINTS, type ViewMode } from "@/lib/carViewer";
 
 // WebGL only runs client-side. Falls back to the local three.js viewer if Sketchfab can't load.
@@ -65,28 +65,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      {/* ---------- Top navigation ---------- */}
-      <header className="sticky top-0 z-40 border-b border-neutral-200 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-4 sm:px-8">
-          <Link href="/" className="flex items-center gap-3">
-            <BmwLogo size={36} />
-            <span className="hidden h-6 w-px bg-neutral-300 sm:block" />
-            <span className="hidden text-[15px] font-semibold tracking-tight sm:block">Requirements Copilot</span>
-          </Link>
-          <nav className="flex items-center gap-1 text-sm">
-            <span className="hidden border-b-2 border-neutral-900 px-3 py-5 font-medium md:block">Vehicles</span>
-            <Link href="/evidence" className="hidden px-3 py-5 text-neutral-600 hover:text-neutral-900 md:block">
-              Evidence Explorer
-            </Link>
-            <Link
-              href="/evidence"
-              className="ml-2 bg-bmw-blue px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#0653b6] md:hidden"
-            >
-              Evidence
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader active="vehicles" />
 
       {/* ---------- Hero: 3D studio ---------- */}
       <section className="relative h-[calc(100svh-4rem)] min-h-[560px] overflow-hidden bg-[radial-gradient(120%_90%_at_50%_35%,#ffffff_0%,#eceeef_45%,#d6d9dc_100%)]">

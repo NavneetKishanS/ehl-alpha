@@ -4,16 +4,10 @@ import { useState } from "react";
 import type { AuditLogEntry } from "@/lib/types";
 import clsx from "clsx";
 
-const ACTOR_COLOR: Record<AuditLogEntry["actor"]["type"], string> = {
-  ai: "text-violet-300 border-violet-700",
-  pm: "text-sky-300 border-sky-700",
-  stakeholder: "text-amber-300 border-amber-700",
-};
-
-const ACTOR_BAR: Record<AuditLogEntry["actor"]["type"], string> = {
-  ai: "border-l-violet-600",
-  pm: "border-l-sky-600",
-  stakeholder: "border-l-amber-600",
+const ACTOR: Record<AuditLogEntry["actor"]["type"], { dot: string; chip: string; label: string }> = {
+  ai: { dot: "bg-bmw-blue", chip: "bg-[#eef4fc] text-bmw-blue", label: "Copilot" },
+  pm: { dot: "bg-neutral-900", chip: "bg-neutral-100 text-neutral-800", label: "PM" },
+  stakeholder: { dot: "bg-amber-500", chip: "bg-amber-50 text-amber-800", label: "Stakeholder" },
 };
 
 // Append-only decision trail. This is the single source of truth every
@@ -26,41 +20,44 @@ export function AuditLogPanel({ entries }: { entries: AuditLogEntry[] }) {
     .sort((a, b) => b.timestamp.localeCompare(a.timestamp));
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="mb-2 flex gap-1">
+    <div className="flex h-full min-h-0 flex-col">
+      <div className="mb-4 flex border border-neutral-200 p-0.5">
         {(["all", "ai", "pm", "stakeholder"] as const).map((f) => (
           <button
             key={f}
             onClick={() => setActorFilter(f)}
             className={clsx(
-              "border px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide",
-              actorFilter === f ? "border-neutral-500 bg-neutral-800 text-neutral-200" : "border-neutral-800 text-neutral-600 hover:text-neutral-400",
+              "flex-1 px-2 py-1.5 text-[11px] font-medium transition-colors",
+              actorFilter === f ? "bg-neutral-900 text-white" : "text-neutral-500 hover:text-neutral-900",
             )}
           >
-            {f}
+            {f === "all" ? "All" : ACTOR[f].label}
           </button>
         ))}
       </div>
-      <div className="flex-1 space-y-1.5 overflow-y-auto pr-1">
-        {sorted.map((entry) => (
-          <div key={entry.id} className={clsx("border-l-2 bg-neutral-900/60 p-2 text-[11px]", ACTOR_BAR[entry.actor.type])}>
-            <div className="mb-0.5 flex items-center justify-between gap-2">
-              <span className={clsx("border px-1 text-[9px] font-semibold uppercase tracking-wide", ACTOR_COLOR[entry.actor.type])}>
-                {entry.actor.type}
-              </span>
-              <span className="font-mono text-[10px] text-neutral-600">
-                {new Date(entry.timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
-              </span>
-            </div>
-            <div className="font-medium text-neutral-300">
-              {entry.actor.name}
-              <span className="font-normal text-neutral-600"> — {formatAction(entry.action)}</span>
-            </div>
-            {entry.rationale && <p className="mt-0.5 text-neutral-500">{entry.rationale}</p>}
-          </div>
-        ))}
-        {sorted.length === 0 && <p className="text-xs text-neutral-600">No activity logged yet.</p>}
-      </div>
+      <ol className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain pr-1">
+        {sorted.map((entry) => {
+          const a = ACTOR[entry.actor.type];
+          return (
+            <li key={entry.id} className="group relative pb-5 pl-6 last:pb-0">
+              <span className="absolute -bottom-1 left-[5px] top-3 w-px bg-neutral-200 group-last:hidden" />
+              <span className={clsx("absolute left-0 top-1 h-[11px] w-[11px] rounded-full ring-4 ring-white", a.dot)} />
+              <div className="flex items-center justify-between gap-2">
+                <span className={clsx("px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em]", a.chip)}>{a.label}</span>
+                <time className="text-[11px] tabular-nums text-neutral-400">
+                  {new Date(entry.timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                </time>
+              </div>
+              <p className="mt-1.5 text-[13px] text-neutral-900">
+                <span className="font-medium">{entry.actor.name}</span>
+                <span className="text-neutral-500"> {formatAction(entry.action)}</span>
+              </p>
+              {entry.rationale && <p className="mt-1 text-[12px] leading-relaxed text-neutral-500">{entry.rationale}</p>}
+            </li>
+          );
+        })}
+        {sorted.length === 0 && <p className="text-[13px] text-neutral-400">No activity logged yet.</p>}
+      </ol>
     </div>
   );
 }
