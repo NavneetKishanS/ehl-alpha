@@ -1,0 +1,53 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4M3SG1ZQYSMX0BGXJFR6PG8",
+  "session_id": "cb8c26e5-1642-4704-9388-fdb98b1aa032",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-10T23:53:56.365889Z",
+  "branch": "feat/evidence-market-filter",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "src/app/api/feedback/facets/route.ts",
+    "src/app/api/feedback/route.ts",
+    "src/app/evidence/page.tsx",
+    "src/lib/api-client.ts",
+    "src/lib/market.ts"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "8453162d5cf3",
+  "checkpoint_transcript_start": 3922,
+  "transcript_lines_at_start": 3922,
+  "compact_transcript_start": 691,
+  "token_usage": {
+    "input_tokens": 104,
+    "cache_creation_tokens": 42807,
+    "cache_read_tokens": 38766717,
+    "output_tokens": 17938,
+    "api_call_count": 52
+  },
+  "session_metrics": {
+    "turn_count": 22
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-10T23:53:55.533863Z",
+    "agent_lines": 88,
+    "agent_removed": 15,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 88,
+    "total_lines_changed": 103,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
