@@ -18,6 +18,7 @@ import type {
   FeedbackRecord,
   CustomerStudyScore,
 } from "./types";
+import type { ChatReply, ChatTurn } from "./pingu/types";
 
 export interface FeedbackPage {
   total: number;
@@ -25,6 +26,21 @@ export interface FeedbackPage {
   pageSize: number;
   rows: FeedbackRecord[];
   noData?: boolean;
+}
+
+// Response of POST /api/requirements/:id/challenge (US-6.3). `changed` and
+// `explanation` are the contract; the rest says exactly what moved.
+export interface ChallengeResult {
+  changed: boolean;
+  explanation: string;
+  verdict?: "upheld" | "partially_upheld" | "not_upheld" | "not_assessed";
+  factorChanges?: { key: string; label: string; oldRawValue: number; newRawValue: number; rationale: string }[];
+  evidenceLevel?: { from: string; to: string } | null;
+  citedSourceIds?: string[];
+  scoreBefore?: number;
+  scoreAfter?: number;
+  model?: string;
+  live?: boolean; // false => AI unavailable, nothing was changed automatically
 }
 
 export interface Facets {
@@ -43,6 +59,13 @@ async function j<T>(res: Response): Promise<T> {
 }
 
 export const api = {
+  chat: (messages: ChatTurn[]) =>
+    fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages }),
+    }).then((r) => j<ChatReply>(r)),
+
   listVehicles: () => fetch("/api/vehicles").then((r) => j<Vehicle[]>(r)),
 
   getVehicle: (id: string) => fetch(`/api/vehicles/${id}`).then((r) => j<Vehicle>(r)),
@@ -88,7 +111,7 @@ export const api = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ argument }),
-    }).then((r) => j<{ changed: boolean; explanation: string }>(r)),
+    }).then((r) => j<ChallengeResult>(r)),
 
   getSignals: (workflowId: string) =>
     fetch(`/api/workflows/${workflowId}/signals`).then((r) => j<{ signals: Signal[]; sources: SourceRecord[] }>(r)),
@@ -98,6 +121,15 @@ export const api = {
 
   getAISummaries: (workflowId: string) =>
     fetch(`/api/workflows/${workflowId}/ai-summaries`).then((r) => j<AISummary[]>(r)),
+
+  // Regenerates decision_trail / stakeholder_overview from the current audit
+  // log; resolves to the summaries that were actually (re)generated.
+  regenerateAISummaries: (workflowId: string, requirementId?: string) =>
+    fetch(`/api/workflows/${workflowId}/ai-summaries`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ requirementId }),
+    }).then((r) => j<AISummary[]>(r)),
 
   listStakeholders: () => fetch("/api/stakeholders").then((r) => j<Stakeholder[]>(r)),
 
