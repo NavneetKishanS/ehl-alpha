@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { api, type Facets, type FeedbackPage } from "@/lib/api-client";
 import type { FeedbackRecord, Vehicle } from "@/lib/types";
 import { SiteHeader } from "@/components/SiteHeader";
+import { countryToMarket } from "@/lib/market";
 
 const PAGE_SIZE = 50;
 
@@ -60,6 +61,7 @@ function EvidenceExplorer() {
   const [vehicleCode, setVehicleCode] = useState(params.get("vehicleCode") ?? "");
   const [component, setComponent] = useState(params.get("component") ?? "");
   const [feedbackType, setFeedbackType] = useState(params.get("feedbackType") ?? "");
+  const [market, setMarket] = useState(params.get("market") ?? "");
   const [country, setCountry] = useState(params.get("country") ?? "");
   const [q, setQ] = useState(params.get("q") ?? "");
   const [debouncedQ, setDebouncedQ] = useState(q);
@@ -82,21 +84,22 @@ function EvidenceExplorer() {
     if (vehicleCode) sp.set("vehicleCode", vehicleCode);
     if (component) sp.set("component", component);
     if (feedbackType) sp.set("feedbackType", feedbackType);
+    if (market) sp.set("market", market);
     if (country) sp.set("country", country);
     if (debouncedQ) sp.set("q", debouncedQ);
     const qs = sp.toString();
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
-  }, [vehicleCode, component, feedbackType, country, debouncedQ, pathname, router]);
+  }, [vehicleCode, component, feedbackType, market, country, debouncedQ, pathname, router]);
 
   const load = useCallback(() => {
     setLoading(true);
     setError(null);
     api
-      .getFeedback({ vehicleCode, component, feedbackType, country, q: debouncedQ, page, pageSize: PAGE_SIZE })
+      .getFeedback({ vehicleCode, component, feedbackType, market, country, q: debouncedQ, page, pageSize: PAGE_SIZE })
       .then(setData)
       .catch((e: Error) => setError(e.message))
       .finally(() => setLoading(false));
-  }, [vehicleCode, component, feedbackType, country, debouncedQ, page]);
+  }, [vehicleCode, component, feedbackType, market, country, debouncedQ, page]);
 
   useEffect(() => {
     load();
@@ -106,7 +109,7 @@ function EvidenceExplorer() {
   useEffect(() => {
     if (!facets) return;
     let cancelled = false;
-    const base = { vehicleCode, component, country, q: debouncedQ, page: 1, pageSize: 1 };
+    const base = { vehicleCode, component, market, country, q: debouncedQ, page: 1, pageSize: 1 };
     const types = facets.feedbackTypes.map((t) => t.value);
     Promise.all([api.getFeedback(base), ...types.map((t) => api.getFeedback({ ...base, feedbackType: t }))])
       .then(([all, ...perType]) => {
@@ -117,7 +120,7 @@ function EvidenceExplorer() {
     return () => {
       cancelled = true;
     };
-  }, [facets, vehicleCode, component, country, debouncedQ]);
+  }, [facets, vehicleCode, component, market, country, debouncedQ]);
 
   const totalPages = data ? Math.max(1, Math.ceil(data.total / PAGE_SIZE)) : 1;
   const grouped = useMemo(() => groupById(data?.rows ?? []), [data]);
@@ -129,6 +132,7 @@ function EvidenceExplorer() {
     vehicleCode && { label: `${vehicleCode} · ${vehicleName(vehicleCode)}`, clear: () => setVehicleCode("") },
     component && { label: COMPONENT_LABEL[component] ?? component, clear: () => setComponent("") },
     feedbackType && { label: feedbackType, clear: () => setFeedbackType("") },
+    market && { label: facets?.markets.find((m) => m.value === market)?.label ?? market, clear: () => setMarket("") },
     country && { label: `${flag(country)} ${country}`, clear: () => setCountry("") },
     debouncedQ && { label: `“${debouncedQ}”`, clear: () => setQ("") },
   ].filter(Boolean) as { label: string; clear: () => void }[];
@@ -137,6 +141,7 @@ function EvidenceExplorer() {
     setVehicleCode("");
     setComponent("");
     setFeedbackType("");
+    setMarket("");
     setCountry("");
     setQ("");
   }
@@ -174,7 +179,7 @@ function EvidenceExplorer() {
           <dl className="mt-10 grid max-w-4xl grid-cols-2 gap-y-6 sm:grid-cols-4">
             <Kpi label="Customer verbatims" value={facets ? totalVerbatims.toLocaleString() : "…"} />
             <Kpi label="Models" value={facets ? String(facets.vehicleCodes.length) : "…"} />
-            <Kpi label="Markets" value={facets ? String(facets.countries.length) : "…"} />
+            <Kpi label="Markets" value={facets ? String(facets.markets.length) : "…"} />
             <Kpi label="Classified" value={facets && totalVerbatims ? `${Math.round((classified / totalVerbatims) * 100)}%` : "…"} />
           </dl>
         </div>
@@ -218,8 +223,8 @@ function EvidenceExplorer() {
               </div>
             </div>
 
-            {/* Search + country */}
-            <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_220px_auto]">
+            {/* Search + market + country */}
+            <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_180px_180px_auto]">
               <label className="relative block">
                 <span className="sr-only">Search feedback</span>
                 <svg viewBox="0 0 20 20" className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -234,17 +239,35 @@ function EvidenceExplorer() {
                 />
               </label>
               <select
+                value={market}
+                onChange={(e) => {
+                  setMarket(e.target.value);
+                  setCountry(""); // avoid confusing zero-result combos like market=US + country=GB
+                }}
+                className="w-full border border-neutral-300 bg-white px-3 py-3 text-[14px] text-neutral-900 outline-none focus:border-neutral-900"
+                aria-label="Market"
+              >
+                <option value="">All markets</option>
+                {facets?.markets.map((m) => (
+                  <option key={m.value} value={m.value}>
+                    {m.label} ({m.count.toLocaleString()})
+                  </option>
+                ))}
+              </select>
+              <select
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
                 className="w-full border border-neutral-300 bg-white px-3 py-3 text-[14px] text-neutral-900 outline-none focus:border-neutral-900"
                 aria-label="Country"
               >
-                <option value="">All markets</option>
-                {facets?.countries.map((c) => (
-                  <option key={c.value} value={c.value}>
-                    {flag(c.value)} {c.value} ({c.count.toLocaleString()})
-                  </option>
-                ))}
+                <option value="">All countries</option>
+                {facets?.countries
+                  .filter((c) => !market || countryToMarket(c.value) === market)
+                  .map((c) => (
+                    <option key={c.value} value={c.value}>
+                      {flag(c.value)} {c.value} ({c.count.toLocaleString()})
+                    </option>
+                  ))}
               </select>
               <button
                 onClick={clearAll}
