@@ -91,7 +91,13 @@ export default function LandingPage() {
         </p>
       )}
 
-      {components.length > 0 && <CarHotspotViewer components={components} onSelect={handleSelect} />}
+      {components.length > 0 && (
+        <CarHotspotViewer
+          components={components}
+          vehicleCode={vehicle?.id.replace("veh_", "").toUpperCase()}
+          onSelect={handleSelect}
+        />
+      )}
 
       <div className="mt-8 grid w-full grid-cols-2 gap-2 sm:grid-cols-3">
         {components.map((c) => (
