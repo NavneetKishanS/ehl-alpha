@@ -13,17 +13,21 @@
     "ingest": "tsx scripts/ingest-real-data.ts"
   },
   "dependencies": {
+    "@react-three/drei": "^9.114.0",
+    "@react-three/fiber": "^8.17.10",
     "clsx": "^2.1.1",
     "nanoid": "^5.0.9",
     "next": "14.2.35",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "three": "^0.169.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/three": "^0.169.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^8",
     "eslint-config-next": "14.2.35",
