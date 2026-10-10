@@ -10,6 +10,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { RoleSwitcher } from "@/components/RoleSwitcher";
 import { Chip, EvidenceMeter, ScoreRing, SectionTitle, STATUS_CHIP, humanize } from "@/components/workflow/primitives";
 import { StudyComparison } from "@/components/workflow/StudyComparison";
+import { isCategoryRelevant, isRelevantToStakeholder } from "@/lib/expertiseRelevance";
 
 const DECISION_STYLE: Record<StakeholderReview["decision"], { chip: string; label: string }> = {
   approve: { chip: "bg-emerald-50 text-emerald-700", label: "Approved" },
@@ -31,6 +32,7 @@ export default function StakeholderPage() {
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [busyId, setBusyId] = useState<string | null>(null);
   const [notFound, setNotFound] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   const refresh = useCallback(async () => {
     try {
@@ -95,6 +97,11 @@ export default function StakeholderPage() {
   const studyByCategory = groupBy(study, (r) => r.category);
   const ranked = [...requirements].sort((a, b) => b.score - a.score);
   const reviewFor = (reqId: string) => reviews.find((r) => r.requirementId === reqId);
+  // Only show requirements in this stakeholder's domain, plus anything explicitly assigned to them (see lib/expertiseRelevance).
+  const assignedIds = new Set(reviews.map((r) => r.requirementId));
+  const relevant = ranked.filter((r) => isRelevantToStakeholder(r.category, stakeholder.expertise, assignedIds.has(r.id)));
+  const visible = showAll ? ranked : relevant;
+  const hiddenCount = ranked.length - relevant.length;
   const generalReviews = reviews.filter((r) => !r.requirementId || !requirements.some((q) => q.id === r.requirementId));
   const submitted = reviews.filter((r) => r.decision !== "pending").length;
   const pending = reviews.length - submitted;
@@ -231,15 +238,27 @@ export default function StakeholderPage() {
 
         <section>
           <SectionTitle
-            eyebrow="Requirements & evidence"
-            title={`Draft requirements (${requirements.length})`}
-            aside={<p className="text-[13px] text-neutral-500">Requirements assigned to you have a review form underneath.</p>}
+            eyebrow={`Relevant to ${humanize(stakeholder.expertise)}`}
+            title={`Draft requirements (${visible.length}${hiddenCount > 0 && !showAll ? ` of ${ranked.length}` : ""})`}
+            aside={
+              hiddenCount > 0 ? (
+                <button
+                  onClick={() => setShowAll((v) => !v)}
+                  className="border border-neutral-300 bg-white px-4 py-2 text-[13px] font-medium text-neutral-800 transition-colors hover:border-neutral-900"
+                >
+                  {showAll ? `Hide ${hiddenCount} outside your domain` : `Show all ${ranked.length} (${hiddenCount} hidden as not relevant)`}
+                </button>
+              ) : (
+                <p className="text-[13px] text-neutral-500">Requirements assigned to you have a review form underneath.</p>
+              )
+            }
           />
           <div className="space-y-5">
-            {ranked.map((req, i) => (
+            {visible.map((req) => (
               <RequirementReviewCard
                 key={req.id}
-                rank={i + 1}
+                rank={ranked.indexOf(req) + 1}
+                inDomain={isCategoryRelevant(req.category, stakeholder.expertise)}
                 requirement={req}
                 review={reviewFor(req.id)}
                 draft={drafts[reviewFor(req.id)?.id ?? ""]}
@@ -257,6 +276,14 @@ export default function StakeholderPage() {
                 <ReviewForm review={rv} draft={drafts[rv.id]} onDraft={(id, v) => setDrafts((d) => ({ ...d, [id]: v }))} busy={busyId === rv.id} onSubmit={submit} />
               </div>
             ))}
+            {requirements.length > 0 && visible.length === 0 && (
+              <div className="border border-dashed border-neutral-300 bg-white p-10 text-center text-[14px] text-neutral-500">
+                None of these requirements fall in your domain.{" "}
+                <button onClick={() => setShowAll(true)} className="font-medium text-bmw-blue hover:underline">
+                  Show all {ranked.length}
+                </button>
+              </div>
+            )}
             {requirements.length === 0 && (
               <div className="border border-dashed border-neutral-300 bg-white p-10 text-center text-[14px] text-neutral-500">No requirements derived yet.</div>
             )}
@@ -309,6 +336,7 @@ export default function StakeholderPage() {
 
 function RequirementReviewCard({
   rank,
+  inDomain,
   requirement,
   review,
   draft,
@@ -317,6 +345,7 @@ function RequirementReviewCard({
   onSubmit,
 }: {
   rank: number;
+  inDomain: boolean;
   requirement: Requirement;
   review?: StakeholderReview;
   draft?: string;
@@ -346,6 +375,9 @@ function RequirementReviewCard({
               <EvidenceMeter level={requirement.evidenceLevel} />
             </span>
             {review && <Chip className={DECISION_STYLE[review.decision].chip}>{DECISION_STYLE[review.decision].label}</Chip>}
+            {review && !inDomain && (
+              <Chip className="bg-neutral-900 text-white">Assigned to you · outside your domain</Chip>
+            )}
           </div>
           <ScoreRing score={requirement.score} />
         </div>
@@ -401,7 +433,9 @@ function RequirementReviewCard({
       {review ? (
         <ReviewForm review={review} draft={draft} onDraft={onDraft} busy={busy} onSubmit={onSubmit} />
       ) : (
-        <p className="border-t border-neutral-100 px-5 py-4 text-[13px] text-neutral-400 sm:px-6">Not assigned to you · shown for context.</p>
+        <p className="border-t border-neutral-100 px-5 py-4 text-[13px] text-neutral-400 sm:px-6">
+          {inDomain ? "Not assigned to you · shown for context." : "Outside your domain · shown because “Show all” is on."}
+        </p>
       )}
     </article>
   );
