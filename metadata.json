@@ -1,0 +1,50 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4KNHCM1CJRZVQFSFRS5NY14",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".env.local.example",
+    ".gitignore",
+    "README.md",
+    "docs/MILESTONES.md",
+    "docs/PROJECT_BRIEF.md",
+    "docs/ROLE_A_BACKEND.md",
+    "docs/ROLE_B_AI.md",
+    "docs/ROLE_C_PM_FRONTEND.md",
+    "docs/ROLE_D_STAKEHOLDER_TRUST.md",
+    "package-lock.json",
+    "package.json",
+    "src/app/layout.tsx",
+    "src/app/page.tsx",
+    "src/app/stakeholder/[workflowId]/[stakeholderId]/page.tsx",
+    "src/app/workflow/[componentId]/page.tsx",
+    "src/components/AuditLogPanel.tsx",
+    "src/components/EvidenceBadge.tsx",
+    "src/components/PipelineStrip.tsx",
+    "src/components/RequirementCard.tsx",
+    "src/components/ReviewerRow.tsx",
+    "src/lib/ai.ts",
+    "src/lib/api-client.ts",
+    "src/lib/db.ts",
+    "src/lib/seed.ts",
+    "src/lib/types.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 628,
+    "cache_creation_tokens": 554292,
+    "cache_read_tokens": 84458497,
+    "output_tokens": 237244,
+    "api_call_count": 314
+  }
+}
