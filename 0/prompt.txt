@@ -1,0 +1,21 @@
+check the stakeholder page and evidence explorer too
+
+---
+
+commit and push to a new branch and create pr
+
+---
+
+going forward, use a branch per change
+
+---
+
+where does the entire project stand now?
+
+---
+
+what is the status as per project requirements and criteria?
+
+---
+
+make a dropdown on top corner to set view(pm workflow view, stakeholder view) so i can navigate between roles
