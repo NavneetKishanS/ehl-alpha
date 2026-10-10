@@ -8,6 +8,7 @@ import { EvidenceBadge } from "@/components/EvidenceBadge";
 import { MetricBar } from "@/components/charts/MetricBar";
 import { GroupedBarChart } from "@/components/charts/GroupedBarChart";
 import { RoleSwitcher } from "@/components/RoleSwitcher";
+import { isRelevantToStakeholder } from "@/lib/expertiseRelevance";
 
 export default function StakeholderPage() {
   const params = useParams<{ workflowId: string; stakeholderId: string }>();
@@ -22,6 +23,7 @@ export default function StakeholderPage() {
   const [study, setStudy] = useState<CustomerStudyScore[]>([]);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   const refresh = useCallback(async () => {
     const [wf, shs] = await Promise.all([api.getWorkflow(params.workflowId), api.listStakeholders()]);
@@ -64,6 +66,10 @@ export default function StakeholderPage() {
 
   const decisionTrail = aiSummaries.find((s) => s.type === "decision_trail");
   const studyByCategory = groupBy(study, (r) => r.category);
+  const assignedIds = new Set(reviews.map((r) => r.requirementId));
+  const relevantRequirements = requirements.filter((r) => isRelevantToStakeholder(r.category, stakeholder.expertise, assignedIds.has(r.id)));
+  const visibleRequirements = showAll ? requirements : relevantRequirements;
+  const hiddenCount = requirements.length - relevantRequirements.length;
 
   return (
     <main className="mx-auto min-h-screen max-w-3xl px-6 py-10">
@@ -120,15 +126,32 @@ export default function StakeholderPage() {
       )}
 
       <section className="mb-5 border border-neutral-800 bg-neutral-900/40 p-3">
-        <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
-          Requirements, PM requirements &amp; evidence
-        </h2>
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
+            Requirements relevant to {stakeholder.expertise.replace(/_/g, " ")}
+          </h2>
+          {hiddenCount > 0 && (
+            <button
+              onClick={() => setShowAll((v) => !v)}
+              className="font-mono text-[10px] text-sky-400 hover:text-sky-300"
+            >
+              {showAll ? `Hide ${hiddenCount} outside your domain` : `Show all ${requirements.length} (${hiddenCount} hidden as not relevant)`}
+            </button>
+          )}
+        </div>
         <div className="space-y-2">
-          {requirements.map((req) => (
+          {visibleRequirements.map((req) => (
             <div key={req.id} className="border border-neutral-800 bg-black/20 p-2.5">
               <div className="flex items-center justify-between gap-2">
                 <h3 className="text-xs font-medium text-neutral-200">{req.title}</h3>
-                <EvidenceBadge level={req.evidenceLevel} />
+                <div className="flex shrink-0 items-center gap-1.5">
+                  {assignedIds.has(req.id) && (
+                    <span className="border border-amber-700 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-amber-400">
+                      Assigned to you
+                    </span>
+                  )}
+                  <EvidenceBadge level={req.evidenceLevel} />
+                </div>
               </div>
               <p className="mt-1 text-[11px] text-neutral-500">{req.description}</p>
               <div className="mt-1.5 flex gap-3 font-mono text-[10px] text-neutral-600">
