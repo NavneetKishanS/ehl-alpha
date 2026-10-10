@@ -1,0 +1,11 @@
+# Python deps for the document-parsing package (`parsing/`).
+# Install into a venv:  uv venv .venv-parsing && uv pip install -r requirements-parsing.txt
+docling>=2.137.0
+openai>=1.40.0
+python-dotenv>=1.0.0
+Pillow>=10.0.0
+pypdf>=5.0.0
+cryptography>=3.1
+requests>=2.32.0
+pytest>=8.0.0
+reportlab>=4.0.0

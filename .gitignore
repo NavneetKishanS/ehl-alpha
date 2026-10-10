@@ -31,6 +31,8 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
+.env
+.env.local
 .env*
 !.env*.example
 
@@ -45,3 +47,17 @@ next-env.d.ts
 # src/data/*.json (derived/ingested output) is intentionally committed so
 # the team shares identical data — see team decision in session history.
 /data-raw/
+/data/
+/src/data/*.json
+!/src/data/.gitkeep
+
+# Python document-parsing pipeline
+.venv-parsing/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+/output/
+tests/fixtures/sample.pdf
