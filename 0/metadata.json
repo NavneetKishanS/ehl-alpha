@@ -1,0 +1,58 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4KSH55THBNRQJTTYG48V33K",
+  "session_id": "cb8c26e5-1642-4704-9388-fdb98b1aa032",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-10T20:54:34.832019Z",
+  "branch": "main",
+  "checkpoints_count": 2,
+  "save_step_count": 1,
+  "files_touched": [
+    "src/app/page.tsx",
+    "src/components/CarHotspotViewer.tsx"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "01b3aa2cbfc2",
+  "checkpoint_transcript_start": 1863,
+  "transcript_lines_at_start": 1863,
+  "compact_transcript_start": 329,
+  "token_usage": {
+    "input_tokens": 50,
+    "cache_creation_tokens": 425828,
+    "cache_read_tokens": 11213584,
+    "output_tokens": 12128,
+    "api_call_count": 25
+  },
+  "session_metrics": {
+    "turn_count": 3
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-10T20:54:34.325968Z",
+    "agent_lines": 137,
+    "agent_removed": 32,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 137,
+    "total_lines_changed": 169,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 137,
+      "agent_lines_removed": 32
+    }
+  ]
+}
