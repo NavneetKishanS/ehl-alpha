@@ -1,0 +1,87 @@
+@"/Users/navneetkishansrinivasan/Downloads/BMW_Hackathon_Briefing_Short.pdf" @"/Users/navneetkishansrinivasan/Downloads/261010_BMW_Product_Management_Key_Note.pptx"
+alright we're working on this challenge by BMW. I'll give you all details(docs, our idea, etc)...we're 4 devs and we have about 15-17 hours. so once i give you all details, give 4 roles and detailed context mds so all of them can work on it along with their agents(claude code, codex, etc)..we need milestones too so we’re aligned…
+so we’re working on a product management workflow systems for automotive..
+so we need 3 views: PM view, stakeholder view, landing page for PM
+so when a user lands on the landing page(REF):
+
+* you see a bmw 5 series(360 view), with dots on each component(windows, interior, exterior, steering, engine, battery)
+* when you click on a dot, it should open a pm workflow page if it exists and if not you can create a new pm workflow
+
+so when you click on the pm workflow page(let’s say battery):
+
+* we see a page like this(ref wireframe) where you see a workflow pipeline, capa investigation state(similar to the chart from git actions ),
+
+
+whenever the state is at the stakeholder’s input the stakeholder should see the page on their side like this where they have summary and additional data(from actual data sources in either charts, PM requirements, AI summaries from data), form to fill their input and just say yes or no..
+but everytime a PM disagrees and asks for changes the ai summary should update with what was asked, what we said was feasible and what we decided, how the pm reacted and what changes they asked(this can use the logs i previously mentioned; logs are absolutely necessary)
+every state of decision by every stake holder and every pm decision etc has to be logged for a doc trail that can be shown in the side bar and also we might use ai to summarise that
+on the stakeholders side they see the summaries and thier past decisions and PM’s replies and enter their expert review in the form and click on approve/not approve, this decision and the reasoning goes to the pm’s workflow for the component. we have multiple stakeholders(experts) fill their approvals(sort of like PR reviewers), the PM looks at it(possibly even an ai overview of who says what and the decisions), the PM then continues to approve/agree/disagree/dismiss
+
+….now help me make a first v0 and then define roles, context so we can start working...check the user story too: Epic 1: Ingestion and enrichment
+US-1.1 (Must) As a PM, I want to upload the four provided datasets (verbatims, equipment list, sales volumes, customer study) for a vehicle and market, so that everything is analysed in one place.
+AC: each record gets a source ID, dataset type, vehicle, market and import timestamp; malformed rows are flagged, not silently dropped.
+US-1.2 (Must) As a PM, I want the app to enrich the data with structured web knowledge (competitor equipment, reviews, forums, press, market trends, BMW Annual Report figures), so that I see gaps and trends the internal data can’t show.
+AC: every web item stores URL, retrieval date and source type; I can filter by source reliability.
+US-1.3 (Should) As a PM, I want the source reliability of each item (first-party, official, review site, forum) to be rated and shown, so that weak evidence isn’t treated like strong evidence.
+US-1.4 (Could) As an Admin, I want to add a new data source type through configuration rather than code, so that the app isn’t a one-off.
+Epic 2: Signal extraction
+US-2.1 (Must) As a PM, I want recurring complaints and unmet needs extracted from customer verbatims and clustered by theme, so that I see what customers raise most often.
+AC: each cluster shows frequency, sentiment, sample verbatims and the sources behind it.
+US-2.2 (Must) As a PM, I want to see what customers love and must not lose, so that a new generation doesn’t remove strengths.
+US-2.3 (Must) As a PM, I want competitor advantages identified by comparing our equipment list to competitors’, so that I see where we are behind.
+US-2.4 (Should) As a PM, I want customer-study ratings linked to verbatim themes, so that I can check whether what people say matches how they rate.
+US-2.5 (Should) As a PM, I want market and technology trends extracted from web and report sources, so that requirements look ahead and not only back.
+US-2.6 (Must) As a PM, I want every signal linked to its source records, so that I can open the original evidence in one click.
+US-2.7 (Should) As a PM, I want contradictory signals flagged (e.g. verbatims say “too many screens” while ratings favour the display), so that I resolve conflicts deliberately.
+Epic 3: Requirement derivation
+US-3.1 (Must) As a PM, I want the AI to turn signals into clear, actionable, customer-facing requirements, so that I get a draft list rather than raw findings.
+AC: each has a unique ID, description, linked findings and sources, evidence level, assumptions and uncertainties, and status “Proposed”.
+US-3.2 (Must) As a PM, I want related signals consolidated into one requirement (and duplicates merged), so that the list isn’t bloated.
+AC: the merge is visible and reversible.
+US-3.3 (Must) As a PM, I want a requirement’s category (comfort, space, usability, infotainment/digital, design and quality perception, driving experience, range/charging, variants/packages), so that I can navigate the list.
+US-3.4 (Must) As a PM, I want regulatory, homologation, engineering and pricing items kept out of the list, so that scope stays customer-facing.
+AC: out-of-scope findings are parked in a “Not a customer requirement” bucket with a reason.
+US-3.5 (Should) As a PM, I want a rough feasibility/effort indication per requirement, so that I can use it as a prioritization factor without doing a business case.
+US-3.6 (Should) As a PM, I want future-facing assumptions stated per requirement (e.g. “charging infrastructure improves by 2030”), so that I can see what must hold for it to stay valid.
+Epic 4: Prioritization and scoring
+US-4.1 (Must) As a PM, I want each requirement scored with an explainable logic (e.g. customer impact, frequency, sales relevance, competitive gap, strategic fit, effort, evidence strength), so that I can defend the ranking.
+AC: the score breakdown shows each factor, its weight and its input evidence.
+US-4.2 (Must) As a PM, I want to adjust factor weights and see the ranking update live, so that I can test different strategies.
+US-4.3 (Must) As a PM, I want an evidence level (strong/moderate/weak) shown next to every score, so that a high score on thin evidence isn’t mistaken for certainty.
+US-4.4 (Should) As a PM, I want a sensitivity view showing which requirements change rank most when weights change, so that I see how fragile the ranking is.
+US-4.5 (Should) As a PM, I want conflicting signals and trade-offs explained in the rationale, so that I understand how the AI resolved them.
+Epic 5: Market and variant adaptation
+US-5.1 (Must) As a PM, I want to select vehicle, derivative and market and see requirements for that scope, so that I can demo one derivative in one market.
+US-5.2 (Should) As a PM, I want requirements compared across markets (e.g. climate, usage, culture driven differences), so that I can balance regional needs.
+US-5.3 (Should) As a PM, I want powertrain-specific and region-specific sales weighting applied to scores, so that high-volume segments count more.
+US-5.4 (Could) As an Admin, I want to onboard another BMW model or market by configuration (datasets, weights, taxonomy), so that the app is reusable.
+Epic 6: Human-in-the-loop decisions
+US-6.1 (Must) As a PM, I want to approve, reject, edit, postpone or challenge any requirement, so that I stay in control.
+AC: reject, challenge and postpone require a rationale.
+US-6.2 (Must) As a PM, I want to see the evidence and rationale next to each decision, so that I decide on facts.
+US-6.3 (Must) As a PM, I want to challenge a score or rationale and have the AI re-assess with my argument, so that disagreement improves the output.
+AC: the AI states whether the challenge changes the result, and why.
+US-6.4 (Must) As a Reviewer, I want mandatory review gates (e.g. before a requirement moves from “Proposed” to “Approved”, and for low-evidence or high-impact items), so that risky decisions are never autonomous.
+US-6.5 (Should) As a PM, I want to add my own requirement or evidence manually, so that I can bring in knowledge the data lacks.
+Epic 7: Honesty and uncertainty
+US-7.1 (Must) As a PM, I want the app to show where evidence is missing, thin or contradictory, so that I can trust what it does claim.
+US-7.2 (Must) As a PM, I want low-confidence conclusions surfaced prominently (a flag and a “needs your decision” queue), so that uncertainty reaches me instead of being buried.
+US-7.3 (Should) As a PM, I want a “limitations” panel per vehicle and market (e.g. only 40 verbatims for market X), so that I know the data’s reach.
+Epic 8: Audit trail and traceability
+US-8.1 (Must) As a Reviewer, I want an end-to-end trace from a requirement back through scoring, consolidation, signals and source records, so that I can verify where it came from.
+US-8.2 (Must) As a Reviewer, I want every change to content, score, priority, evidence or status logged with who or what initiated it, timestamp, old and new value, and rationale, so that history can be reconstructed.
+US-8.3 (Must) As a Reviewer, I want AI actions and human actions distinguished (including model and version), so that I know what was autonomous.
+US-8.4 (Should) As a Reviewer, I want to filter the audit log by requirement, actor, action type and date, and export it, so that I can answer audit questions quickly.
+US-8.5 (Should) As a Reviewer, I want the audit log append-only, so that history cannot be silently rewritten.
+Epic 9: Workflow and long-running process
+US-9.1 (Must) As a PM, I want a defined workflow (ingest, enrich, extract, derive, score, review, decide) with each step marked autonomous, AI-supported or human-only, so that responsibilities are clear.
+US-9.2 (Should) As a PM, I want to re-run the pipeline when new data arrives (new verbatims, a competitor launch) and see what changed versus the last run, so that the roughly two-year process stays current.
+US-9.3 (Should) As a PM, I want to see how a requirement’s score and status evolved over time, so that I can explain shifts to stakeholders.
+US-9.4 (Could) As a PM, I want to export approved requirements to engineering tools (CSV/Jira), so that Engineers can act on them.
+US-9.5 (Could) As an Engineer, I want a read-only view of approved requirements with their rationale, so that I understand the customer intent behind them.
+Mapping to the evaluation criteria
+Decision and scoring logic: Epic 4, US-7.1
+Workflow and human decision-making: Epic 6, US-9.1
+Traceability and auditability: Epic 8, US-2.6
+Solution quality, usability, feasibility: Epics 3 and 5, US-4.2
+Innovation, scalability, business impact: US-1.4, US-5.4, US-9.2
