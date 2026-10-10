@@ -10,7 +10,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
 }
 
 ::-webkit-scrollbar {
@@ -20,4 +20,9 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #2a3242;
   border-radius: 4px;
+}
+
+@keyframes loadbar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
 }
