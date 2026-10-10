@@ -42,6 +42,19 @@ For the real data (strongly recommended — see
 npm run ingest
 ```
 
+## Run with Docker
+
+```bash
+docker compose up --build               # web app on http://localhost:3000
+docker compose run --rm ingest          # ./data xlsx/PDF -> src/data/*.json
+docker compose run --rm parse --pdf data/BMW-Group-Report-2025-en.pdf --pages 25-40 --out output
+docker compose run --rm pytest          # parsing tests
+```
+
+`ingest`, `parse` and `pytest` are in the `tools` profile, so `up` only starts
+the web app. The repo is bind-mounted, so `.env.local`, `data/`, `src/data/`
+and `output/` stay on your machine and no secrets go into an image.
+
 ## Project structure
 
 ```

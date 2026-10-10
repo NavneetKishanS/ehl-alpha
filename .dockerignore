@@ -1,0 +1,16 @@
+.git
+.venv*/
+node_modules
+.next
+output
+data
+data-raw
+.pytest_cache
+__pycache__
+.env
+.env.*
+!.env*.example
+.codex
+.cursor
+.entire
+.claude

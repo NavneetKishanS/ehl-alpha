@@ -1,0 +1,64 @@
+# Local stack for the BMW Requirements Copilot.
+#
+#   docker compose up --build                  # web app on http://localhost:3000
+#   docker compose run --rm ingest             # xlsx/PDF in ./data -> src/data/*.json
+#   docker compose run --rm parse --pdf data/BMW-Group-Report-2025-en.pdf --pages 25-40 --out output
+#   docker compose run --rm pytest             # parsing tests
+#
+# Secrets: nothing is baked in. The repo is bind-mounted, so Next.js and the
+# Python code read your gitignored .env.local exactly as they do outside Docker.
+name: ehl-alpha
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/node.Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      WATCHPACK_POLLING: "true"   # reliable hot reload on bind mounts
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      - next_cache:/app/.next
+    restart: unless-stopped
+
+  # One-off: converts the raw BMW datasets into src/data/*.json (host files).
+  # The script reads data-raw/, so ./data is mounted there read-only.
+  ingest:
+    profiles: ["tools"]
+    build:
+      context: .
+      dockerfile: docker/node.Dockerfile
+    command: ["npm", "run", "ingest"]
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      - ./data:/app/data-raw:ro
+
+  # One-off: Docling PDF parsing. Pass CLI args after the service name.
+  parse:
+    profiles: ["tools"]
+    build:
+      context: .
+      dockerfile: docker/parsing.Dockerfile
+    entrypoint: ["python", "-m", "parsing.run"]
+    command: ["--help"]
+    volumes:
+      - .:/app
+      - hf_cache:/cache/huggingface
+
+  pytest:
+    profiles: ["tools"]
+    build:
+      context: .
+      dockerfile: docker/parsing.Dockerfile
+    entrypoint: ["python", "-m", "pytest", "-q"]
+    volumes:
+      - .:/app
+
+volumes:
+  node_modules:
+  next_cache:
+  hf_cache:
