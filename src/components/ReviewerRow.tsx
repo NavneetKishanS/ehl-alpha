@@ -3,32 +3,32 @@ import type { Stakeholder, StakeholderReview } from "@/lib/types";
 
 // PR-reviewer-style row: who, their decision, and their written rationale.
 export function ReviewerRow({ review, stakeholder }: { review: StakeholderReview; stakeholder?: Stakeholder }) {
-  const decisionStyle = {
-    approve: "border-emerald-800 text-emerald-300",
-    reject: "border-red-800 text-red-300",
-    pending: "border-neutral-700 text-neutral-500",
+  const decision = {
+    approve: { chip: "bg-emerald-50 text-emerald-700", label: "Approved" },
+    reject: { chip: "bg-red-50 text-red-700", label: "Rejected" },
+    pending: { chip: "bg-neutral-100 text-neutral-500", label: "Pending" },
   }[review.decision];
 
   return (
-    <div className="flex items-start gap-2.5 border border-neutral-800 bg-neutral-900/60 p-2.5">
+    <div className="flex items-start gap-3 border-b border-neutral-100 py-3 last:border-b-0">
       <span
-        className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center text-[10px] font-bold text-white"
-        style={{ backgroundColor: stakeholder?.avatarColor ?? "#555" }}
+        className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold text-white"
+        style={{ backgroundColor: stakeholder?.avatarColor ?? "#9ca3af" }}
       >
         {(stakeholder?.name ?? "?").slice(0, 1)}
       </span>
       <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-medium text-neutral-200">{stakeholder?.name ?? "Unknown"}</span>
-          <span className="text-[10px] uppercase tracking-wide text-neutral-600">{stakeholder?.expertise.replace(/_/g, " ")}</span>
-          <span className={clsx("ml-auto border px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide", decisionStyle)}>
-            {review.decision}
-          </span>
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <span className="text-[13px] font-medium text-neutral-900">{stakeholder?.name ?? "Unknown"}</span>
+          {stakeholder && !stakeholder.name.includes("—") && (
+            <span className="text-[11px] capitalize text-neutral-400">{stakeholder.expertise.replace(/_/g, " ")}</span>
+          )}
+          <span className={clsx("ml-auto px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em]", decision.chip)}>{decision.label}</span>
         </div>
         {review.expertOpinion ? (
-          <p className="mt-1 text-[11px] text-neutral-400">{review.expertOpinion}</p>
+          <p className="mt-1 text-[13px] leading-relaxed text-neutral-600">{review.expertOpinion}</p>
         ) : (
-          <p className="mt-1 text-[11px] italic text-neutral-600">Awaiting response…</p>
+          <p className="mt-1 text-[12px] italic text-neutral-400">Awaiting response…</p>
         )}
       </div>
     </div>
