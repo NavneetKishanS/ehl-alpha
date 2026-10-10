@@ -1,0 +1,1743 @@
+{
+  "req_f70_exterior_1": {
+    "requirementId": "req_f70_exterior_1",
+    "workflowId": "wf_f70_exterior",
+    "title": "Reduce friction: Vehicle key",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:38:55.797Z",
+    "competitive_gap": {
+      "value": 70,
+      "rationale": "The competitive_gap baseline is 70, based on the internal customer study where the BMW 1 Series scores 8.48/10 versus the best sibling model at 9.83/10 on related categories. No customer verbatims make a concrete, on-topic comparison between the BMW 1 Series key experience and an external competitor; competitor brands are mentioned, but not in direct comparison to the vehicle key. Therefore, the baseline is retained.",
+      "citedSourceIds": [
+        "src_F70-1192"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links vehicle key usability or exterior design simplification to a named strategic focus or flagship priority. The closest relevant strategy is the general emphasis on quality and customer experience (bmwgr25-p45-quality), but this is not specific enough to warrant a higher score. Thus, the neutral baseline is appropriate.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_battery_0": {
+    "requirementId": "req_f70_battery_0",
+    "workflowId": "wf_f70_battery",
+    "title": "Reduce friction: High voltage battery",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:38:56.092Z",
+    "competitive_gap": {
+      "value": 26,
+      "rationale": "The baseline customer study shows the BMW 1 Series scoring 9.30/10 on fuel economy/energy efficiency, outperforming sibling BMW models (e.g., 7.68/10 for the 7 Series). No customer verbatims provide a concrete, on-topic comparison to external competitors regarding high voltage battery friction or packaging. Therefore, the score remains at the baseline, indicating BMW leads internally but with no external evidence to justify moving the score.",
+      "citedSourceIds": [
+        "src_F70-1915",
+        "src_F70-0706",
+        "src_F70-1076",
+        "src_F70-1942"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 85,
+      "rationale": "Reducing friction related to the high voltage battery directly supports BMW Group's strategic focus on electromobility, customer experience, and the rollout of Gen6 battery technology, as described in the 2025 Group Report. The NEUE KLASSE and Gen6 battery are named flagship priorities, and improving battery usability aligns with these goals, especially in the EU market where electrification is a growth driver.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p46-neue-klasse",
+        "bmwgr25-p54-gen6-battery",
+        "bmwgr25-p55-charging-experience",
+        "bmwgr25-p263-market-outlook"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_exterior_0": {
+    "requirementId": "req_f70_exterior_0",
+    "workflowId": "wf_f70_exterior",
+    "title": "Reduce friction: Wheels / tires",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:38:56.150Z",
+    "competitive_gap": {
+      "value": 70,
+      "rationale": "The baseline customer study shows the BMW 1 Series scoring 8.48/10 on related categories versus the best sibling model at 9.83/10, indicating a notable gap within BMW's own lineup. No customer verbatims provide a concrete, on-topic comparison of wheels/tires versus external competitors; competitor mentions focus on other features (e.g., tech, build quality, extras). Therefore, the score remains at the formula baseline, as there is no evidence to move it up or down based on external competition.",
+      "citedSourceIds": [
+        "src_F70-0096",
+        "src_F70-0694",
+        "src_F70-0239",
+        "src_F70-1365",
+        "src_F70-1585",
+        "src_F70-0801",
+        "src_F70-0961",
+        "src_F70-1192",
+        "src_F70-0714",
+        "src_F70-1915",
+        "src_F70-1076"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "None of the supplied BMW Group Report 2025 excerpts explicitly link wheels/tires or friction reduction in this area to a named strategic focus or flagship priority. The closest relevant focus is on overall quality and customer satisfaction, but this is general and not specific to this requirement. Therefore, the score remains neutral at 50.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_battery_1": {
+    "requirementId": "req_f70_battery_1",
+    "workflowId": "wf_f70_battery",
+    "title": "Deliver what customers are asking for: Electric Range",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:38:57.013Z",
+    "competitive_gap": {
+      "value": 26,
+      "rationale": "The baseline customer study shows the BMW 1 Series (EU) scoring 9.30/10 on fuel economy/energy efficiency, outperforming its closest BMW sibling (7.68/10 for the 7 Series). No customer verbatims provide a concrete, on-topic comparison of electric range with external competitors; mentions of Audi, Jaguar, Mercedes, and MINI are either about other attributes or lack direct comparison on range. Therefore, the score remains at the baseline, indicating BMW leads among its own models but with no evidence of a gap versus external brands.",
+      "citedSourceIds": [
+        "src_F70-0706",
+        "src_F70-1076",
+        "src_F70-1942",
+        "src_F70-1915"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 85,
+      "rationale": "Electric range is directly aligned with BMW Group's strategic focus on electromobility and the rollout of Gen6 battery technology, which specifically targets increased range and efficiency (bmwgr25-p46-focus, bmwgr25-p54-gen6-battery). The NEUE KLASSE and Gen6 e-drive are named as major strategic initiatives, and range is highlighted as a flagship improvement. The European market is a priority for electrification due to regulatory and subsidy momentum (bmwgr25-p263-market-outlook).",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p54-gen6-battery",
+        "bmwgr25-p263-market-outlook"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_exterior_2": {
+    "requirementId": "req_f70_exterior_2",
+    "workflowId": "wf_f70_exterior",
+    "title": "Deliver what customers are asking for: Digital Key",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:38:59.243Z",
+    "competitive_gap": {
+      "value": 70,
+      "rationale": "The baseline customer study shows the BMW 1 Series scoring 8.48/10 on related categories, while the best sibling model scores 9.83/10, indicating a moderate gap within BMW's own lineup. No customer verbatims make a concrete, on-topic comparison between BMW's Digital Key and external competitors, so the score remains at the formula baseline.",
+      "citedSourceIds": [
+        "src_F70-1192"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 70,
+      "rationale": "BMW Group Report 2025 highlights digitalisation as a strategic focus and emphasizes customer expectations for digital ecosystems and seamless integration into daily life. While Digital Key is not named as a flagship, it directly supports the digitalisation focus and customer-centric experience for the European market.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p42-digital-expectations"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_exterior_3": {
+    "requirementId": "req_f70_exterior_3",
+    "workflowId": "wf_f70_exterior",
+    "title": "Protect this strength in the next generation: Body equipment, overall technology",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:02.014Z",
+    "competitive_gap": {
+      "value": 75,
+      "rationale": "The baseline (BMW vs. sibling models) is 70, based on a notable gap in customer study scores (BMW 1 Series 8.48/10 vs. best sibling 9.83/10). Multiple verbatims make concrete, on-topic comparisons to competitors (VW, Volvo, Mercedes), often stating that features standard on those brands are missing or bundled in BMW, and that build quality or equipment is inferior in specific respects (e.g., src_F70-0239, src_F70-1365, src_F70-0801, src_F70-0961, src_F70-0714). This supports a moderate-to-high gap, so I move the score up to 75.",
+      "citedSourceIds": [
+        "src_F70-0239",
+        "src_F70-1365",
+        "src_F70-0801",
+        "src_F70-0961",
+        "src_F70-0714"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 65,
+      "rationale": "Protecting and improving body equipment and overall technology directly supports BMW Group's stated focus on quality and reliability as key factors for customer satisfaction and economic success (bmwgr25-p45-quality). While not a flagship priority, this requirement aligns with the holistic quality programme and the company's emphasis on customer experience, especially in Europe where quality expectations are high. No evidence it works against any strategic direction.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_interior_0": {
+    "requirementId": "req_f70_interior_0",
+    "workflowId": "wf_f70_interior",
+    "title": "Reduce friction: Audio mode, sound",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:04.471Z",
+    "competitive_gap": {
+      "value": 69,
+      "rationale": "The baseline customer study shows the BMW 1 Series scoring 8.40/10 on related categories versus the best sibling model at 9.69/10, indicating a notable gap within BMW's own lineup. No customer verbatims make a concrete, on-topic comparison to external competitors regarding audio mode or sound quality, so the baseline is used without adjustment.",
+      "citedSourceIds": [
+        "src_F70-1587",
+        "src_F70-0706",
+        "src_F70-1130",
+        "src_F70-0961",
+        "src_F70-1948",
+        "src_F70-1477"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt directly links audio mode or sound quality to a named strategic focus or flagship priority. The closest relevant strategy is the general emphasis on quality and customer experience, but this is not specific enough to warrant a higher score. Therefore, the default neutral value is appropriate.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_interior_1": {
+    "requirementId": "req_f70_interior_1",
+    "workflowId": "wf_f70_interior",
+    "title": "Reduce friction: Luggage compartment",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:06.950Z",
+    "competitive_gap": {
+      "value": 69,
+      "rationale": "The baseline competitive_gap score of 69 is supported by the internal customer study, which shows the BMW 1 Series F70 scoring 7.50/10 for 'Ease of loading/unloading luggage' and 7.07/10 for 'Luggage capacity', both trailing the best sibling model (BMW 7 Series G70: 8.67 and 7.41, respectively). No customer verbatims provide a concrete, on-topic comparison to external competitors for luggage compartment usability; mentions of VW Golf and Audi are present but do not specify a direct comparison for this requirement. Therefore, the baseline is retained.",
+      "citedSourceIds": [
+        "src_F70-0961"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links luggage compartment usability or interior storage improvements to a named strategic focus or flagship priority. The closest relevant statement is the general emphasis on customer experience and quality (bmwgr25-p45-quality), but this does not elevate the requirement above neutral. Thus, the default neutral score is appropriate.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_interior_2": {
+    "requirementId": "req_f70_interior_2",
+    "workflowId": "wf_f70_interior",
+    "title": "Deliver what customers are asking for: Air conditioning, setting",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:09.525Z",
+    "competitive_gap": {
+      "value": 69,
+      "rationale": "The competitive_gap score remains at the formula baseline of 69, as there is no concrete, on-topic comparison to external competitors in the supplied verbatims. The baseline is based on the internal customer study, where the BMW 1 Series scores 8.40/10 versus the best sibling model at 9.69/10 on related interior categories, indicating a moderate gap to close within the BMW lineup. No verbatim makes a direct comparison to competitor air conditioning or climate control features.",
+      "citedSourceIds": [
+        "src_F70-0706",
+        "src_F70-1130",
+        "src_F70-1587",
+        "src_F70-0961",
+        "src_F70-1948",
+        "src_F70-1477"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "There is no explicit mention of air conditioning or cabin comfort settings as a strategic focus or flagship priority in the BMW Group Report 2025 excerpts. The closest relevant statements emphasize quality, reliability, and customer-centricity, but do not specifically elevate air conditioning settings as a direct strategic lever. Therefore, the score remains neutral at 50.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality",
+        "bmwgr25-p46-focus"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_interior_3": {
+    "requirementId": "req_f70_interior_3",
+    "workflowId": "wf_f70_interior",
+    "title": "Protect this strength in the next generation: Seats",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:11.965Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "The competitive_gap baseline (69) is derived from internal BMW model comparisons, not external competitors. No customer verbatims make a concrete, on-topic comparison of BMW 1 Series seats to competitor seats; mentions of Audi, VW, and Ford are either about other features or general impressions, not seat comfort or quality. Therefore, the score should revert to parity (50) as there is no usable evidence of a gap versus external competitors.",
+      "citedSourceIds": [
+        "src_F70-0706",
+        "src_F70-1130",
+        "src_F70-1587",
+        "src_F70-0961",
+        "src_F70-1948",
+        "src_F70-1477"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt directly links seat comfort or interior seating to a named strategic focus or flagship priority. The report emphasizes digitalization, electromobility, and sustainability, but seats/interior comfort are not explicitly called out. Therefore, the score remains neutral (50).",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_windows_0": {
+    "requirementId": "req_f70_windows_0",
+    "workflowId": "wf_f70_windows",
+    "title": "Reduce friction: Exterior rearview mirror",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:14.195Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "The customer study shows the BMW 1 Series scores 8.89/10 on all-round visibility, slightly ahead of the best sibling model (8.64/10 for the 5 Series). No customer verbatims make concrete, on-topic comparisons to external competitors. Therefore, the baseline of 50 (parity or no usable evidence) is appropriate.",
+      "citedSourceIds": [],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links exterior rearview mirror improvements to a named strategic focus or flagship priority. The closest relevant focus is on digitalisation and quality, but these are not directly tied to this requirement. Therefore, the neutral baseline of 50 is maintained.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_windows_1": {
+    "requirementId": "req_f70_windows_1",
+    "workflowId": "wf_f70_windows",
+    "title": "Reduce friction: Panorama glass roof",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:17.190Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "The baseline customer study shows the BMW 1 Series scoring slightly higher (8.89/10) than its best sibling (8.64/10) on related categories, indicating parity or a slight lead within BMW models. No customer verbatims make concrete, on-topic comparisons to external competitors, so the score remains at the baseline.",
+      "citedSourceIds": [],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links panorama glass roofs or related comfort features to a named strategic focus or flagship priority. The closest relevant focus areas are digitalisation, electromobility, and sustainability, none of which directly reference this requirement.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_windows_2": {
+    "requirementId": "req_f70_windows_2",
+    "workflowId": "wf_f70_windows",
+    "title": "Deliver what customers are asking for: Side window, open / close",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:19.272Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "The baseline customer study shows the BMW 1 Series scoring slightly above its best sibling model on related categories (8.89 vs. 8.64), and there are no customer verbatims making concrete, on-topic comparisons to external competitors. Therefore, there is no evidence of a competitive gap or lead, so the score remains at parity.",
+      "citedSourceIds": [],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links side window open/close functionality to any named strategic focus or flagship priority. The strategic focus areas are digitalisation, electromobility, and sustainability, none of which are directly served by this requirement. Thus, the score is neutral.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_steering_0": {
+    "requirementId": "req_f70_steering_0",
+    "workflowId": "wf_f70_steering",
+    "title": "Reduce friction: Touch screen, operation",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:21.799Z",
+    "competitive_gap": {
+      "value": 58,
+      "rationale": "The competitive_gap baseline is 58, based on an internal customer study showing the BMW 1 Series scoring 8.63/10 versus the best sibling model at 9.17/10 for related usability categories. No customer verbatims make a concrete, on-topic comparison between BMW's touchscreen operation and external competitors; mentions of other brands are either general or refer to unrelated features (e.g., surround camera, build quality, or infotainment speed). Therefore, the score remains at the baseline, as there is no evidence BMW is clearly behind or ahead of external competitors on touchscreen operation.",
+      "citedSourceIds": [
+        "src_F70-0248",
+        "src_F70-1585"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 85,
+      "rationale": "Improving touchscreen usability directly supports BMW Group's strategic focus on digitalisation and customer-centric digital experiences, as outlined in the NEUE KLASSE rollout and Panoramic iDrive initiatives. The requirement aligns with the push for advanced, user-friendly digital interfaces and is highly relevant for the European market, where digitalisation is a core focus. The Panoramic iDrive and new UI/UX are named flagship priorities, justifying a score above 85.",
+      "citedSourceIds": [
+        "bmwgr25-p46-neue-klasse",
+        "bmwgr25-p53-panoramic-idrive",
+        "bmwgr25-p42-digital-expectations"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_steering_1": {
+    "requirementId": "req_f70_steering_1",
+    "workflowId": "wf_f70_steering",
+    "title": "Reduce friction: ConnectedDrive and Infotainment, overall technology",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:24.225Z",
+    "competitive_gap": {
+      "value": 58,
+      "rationale": "The baseline customer study shows the BMW 1 Series scoring 8.63/10 on related technology categories, slightly behind the best sibling model at 9.17/10. No customer verbatims provide concrete, on-topic comparisons indicating that competitors (non-BMW brands) are clearly better or worse in ConnectedDrive and Infotainment usability. Therefore, the score remains at the formula baseline, reflecting a moderate gap within BMW's own lineup, but no substantiated evidence of a larger external gap.",
+      "citedSourceIds": [
+        "src_F70-1585",
+        "src_F70-0583"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 85,
+      "rationale": "This requirement directly supports BMW Group's strategic focus on digitalisation and customer-centric technology, as outlined in the Group Report (bmwgr25-p46-focus, bmwgr25-p42-digital-expectations). It also aligns with the NEUE KLASSE rollout, which prioritises advanced digital interfaces and user experience (bmwgr25-p46-neue-klasse, bmwgr25-p53-panoramic-idrive). Improving ConnectedDrive and Infotainment usability is central to these flagship priorities for the coming product cycle in Europe.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p42-digital-expectations",
+        "bmwgr25-p46-neue-klasse",
+        "bmwgr25-p53-panoramic-idrive"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_steering_2": {
+    "requirementId": "req_f70_steering_2",
+    "workflowId": "wf_f70_steering",
+    "title": "Deliver what customers are asking for: Controller operation",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:26.461Z",
+    "competitive_gap": {
+      "value": 58,
+      "rationale": "The baseline score of 58 is supported by the internal customer study, where the BMW 1 Series scores 8.63/10 versus the best sibling model at 9.17/10 for related cockpit/control categories. No customer verbatims provide a concrete, on-topic comparison to external competitors regarding controller operation, so the baseline is retained. The only relevant mention is [src_F70-1585], which notes Mercedes uses a touchpad, but does not make a direct quality comparison. Basis: evidence.",
+      "citedSourceIds": [
+        "src_F70-1585"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 70,
+      "rationale": "The requirement aligns with BMW Group's strategic focus on digitalisation and customer-centric cockpit experiences, as outlined in [bmwgr25-p46-focus] and [bmwgr25-p46-neue-klasse]. However, controller operation is not named as a flagship priority like Panoramic iDrive or the Heart of Joy control unit, so the score remains at the baseline of 70. Basis: evidence.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p46-neue-klasse"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_steering_3": {
+    "requirementId": "req_f70_steering_3",
+    "workflowId": "wf_f70_steering",
+    "title": "Protect this strength in the next generation: Drive, driving dynamics and chassis, overall technology",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:29.640Z",
+    "competitive_gap": {
+      "value": 58,
+      "rationale": "The baseline competitive_gap score of 58 is supported by the internal customer study, which shows the BMW 1 Series scoring 8.63/10 on related categories versus the best sibling model at 9.17/10. While several verbatims mention competitor brands (Audi, Mercedes, VW, Jaguar), only a few make direct, on-topic comparisons. Some note the 1 Series is better than a previous Mercedes AMG ([src_F70-0801]), while others say previous VW or Mercedes models were preferred in certain aspects ([src_F70-0248], [src_F70-1585]). However, the majority of feedback is positive about BMW's driving dynamics, and there is no strong, consistent evidence that competitors are clearly ahead. Therefore, the score remains close to the baseline, reflecting a modest gap to close within the BMW portfolio, not versus external competitors.",
+      "citedSourceIds": [
+        "src_F70-0801",
+        "src_F70-0248",
+        "src_F70-1585"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 70,
+      "rationale": "This requirement directly supports BMW Group's strategic focus on driving experience and technology, as outlined in the 2025 Group Report. The NEUE KLASSE rollout and the Heart of Joy control unit are specifically intended to enhance driving dynamics and overall technology ([bmwgr25-p46-neue-klasse]). The focus on both electromobility and continued refinement of combustion engines ([bmwgr25-p46-drivetrain-choice]) aligns with the need to protect BMW's core strength in driving dynamics for the European market, where electrification is a key growth driver ([bmwgr25-p263-market-outlook]). The score reflects a direct, but not flagship, alignment with stated strategy.",
+      "citedSourceIds": [
+        "bmwgr25-p46-neue-klasse",
+        "bmwgr25-p46-drivetrain-choice",
+        "bmwgr25-p263-market-outlook"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_engine_0": {
+    "requirementId": "req_f70_engine_0",
+    "workflowId": "wf_f70_engine",
+    "title": "Reduce friction: Transmission",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:32.419Z",
+    "competitive_gap": {
+      "value": 55,
+      "rationale": "The competitive_gap baseline is 55, based on the internal customer study showing the BMW 1 Series (EU) scoring 8.61/10 on related categories versus the best sibling model at 8.94/10. No customer verbatims make a concrete, on-topic comparison to external competitors' transmissions, so the score remains at the baseline. The available competitor mentions do not specifically compare transmission performance or feel.",
+      "citedSourceIds": [
+        "src_F70-0622",
+        "src_F70-0801"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "There is no explicit strategic-priority signal for transmission friction reduction in the supplied BMW Group Report 2025 excerpts. While the report highlights drivetrain innovation and quality as general focus areas, it does not specifically prioritize transmission improvements for the 1 Series or the European market. Therefore, the score remains neutral at 50.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_engine_1": {
+    "requirementId": "req_f70_engine_1",
+    "workflowId": "wf_f70_engine",
+    "title": "Reduce friction: Automatic engine start-stop function (MSA)",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:34.685Z",
+    "competitive_gap": {
+      "value": 55,
+      "rationale": "The baseline customer study shows the BMW 1 Series scoring 8.61/10 on related categories versus the best sibling model at 8.94/10, indicating a minor gap within BMW's own lineup. No customer verbatims make a concrete, on-topic comparison to external competitors regarding the automatic engine start-stop function, so the score remains at the baseline.",
+      "citedSourceIds": [
+        "src_F70-0096",
+        "src_F70-0622",
+        "src_F70-0801",
+        "src_F70-0583"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links the automatic engine start-stop function to a named strategic focus or flagship priority. The closest relevant statements emphasize drivetrain efficiency and customer experience, but do not specifically mention MSA or similar features. Therefore, the score remains neutral.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p46-drivetrain-choice",
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_engine_2": {
+    "requirementId": "req_f70_engine_2",
+    "workflowId": "wf_f70_engine",
+    "title": "Deliver what customers are asking for: Engine acoustics / engine sound",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:36.789Z",
+    "competitive_gap": {
+      "value": 55,
+      "rationale": "The competitive_gap baseline is 55, based on the internal customer study showing the BMW 1 Series (EU) scores 8.61/10 on related categories versus the best sibling model at 8.94/10. No customer verbatims make a concrete, on-topic comparison to external competitors regarding engine acoustics or sound, so the baseline is retained. The few competitor mentions (src_F70-0801, src_F70-0622) do not provide direct, relevant comparisons for this requirement.",
+      "citedSourceIds": [
+        "src_F70-0801",
+        "src_F70-0622"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links engine acoustics or sound to a named strategic focus or flagship priority. The strategic_fit baseline of 50 is therefore appropriate, as this requirement neither directly supports nor conflicts with stated BMW Group strategy for the EU market.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p46-drivetrain-choice"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_f70_engine_3": {
+    "requirementId": "req_f70_engine_3",
+    "workflowId": "wf_f70_engine",
+    "title": "Protect this strength in the next generation: Drivetrain",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:39.232Z",
+    "competitive_gap": {
+      "value": 55,
+      "rationale": "The competitive_gap score remains at the formula baseline of 55, as there is no concrete, on-topic comparison in the supplied verbatims that directly evaluates the BMW 1 Series drivetrain against external competitors. The only relevant mention ([src_F70-0801]) compares the 1 Series favorably to a previous Mercedes AMG in handling and driving, but this is not specific to the drivetrain and is only a single instance. The baseline is based on internal BMW sibling model comparisons, where the 1 Series scores slightly below the best sibling (8.61 vs. 8.94).",
+      "citedSourceIds": [
+        "src_F70-0801"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 65,
+      "rationale": "The requirement to protect drivetrain strength aligns directly with BMW Group's stated strategic focus on drivetrains, including both electromobility and continued refinement of combustion engines ([bmwgr25-p46-focus], [bmwgr25-p46-drivetrain-choice]). While not a flagship priority, maintaining drivetrain excellence is explicitly named as a strategic focus area for the Group, especially relevant for the European market where drivetrain mix and efficiency remain key.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p46-drivetrain-choice"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_battery_0": {
+    "requirementId": "req_g60_battery_0",
+    "workflowId": "wf_g60_battery",
+    "title": "Reduce friction: Electric Range",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:43.358Z",
+    "competitive_gap": {
+      "value": 78,
+      "rationale": "The baseline customer study shows the BMW 5 Series (EU) scores 7.45/10 on energy efficiency, significantly behind the best sibling model (BMW 1 Series at 9.30/10). No customer verbatims provide a direct, concrete comparison of BMW 5 Series range to external competitors; most references to Tesla, Hyundai, or Mercedes are about charging experience or quality, not direct range comparisons. Therefore, the baseline score of 78 is retained, based on internal sibling comparison only.",
+      "citedSourceIds": [
+        "src_G60-0195",
+        "src_G60-0500",
+        "src_G60-1559",
+        "src_G60-0148"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 85,
+      "rationale": "Improving electric range directly supports BMW Group's strategic focus on electromobility and is explicitly linked to the Gen6 e-drive and battery technology rollout, which promises a 30% range increase (bmwgr25-p46-drivetrain-choice, bmwgr25-p54-gen6-battery). The NEUE KLASSE rollout and Gen6 battery are flagship priorities for the next product cycle, and the European market is expected to drive BEV growth (bmwgr25-p263-market-outlook).",
+      "citedSourceIds": [
+        "bmwgr25-p46-drivetrain-choice",
+        "bmwgr25-p54-gen6-battery",
+        "bmwgr25-p46-neue-klasse",
+        "bmwgr25-p263-market-outlook"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_battery_1": {
+    "requirementId": "req_g60_battery_1",
+    "workflowId": "wf_g60_battery",
+    "title": "Reduce friction: Public charging / external providers",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:46.216Z",
+    "competitive_gap": {
+      "value": 78,
+      "rationale": "The baseline customer study shows the BMW 5 Series (EU) scoring 7.45/10 on energy efficiency and related charging categories, significantly behind the best sibling model (BMW 1 Series, 9.30/10). Multiple US verbatims make concrete, on-topic comparisons to Tesla and Hyundai, with several stating that Tesla's public charging experience is superior and easier to use (e.g., src_G60-0273, src_G60-0500, src_G60-1559, src_G60-0148). However, these are mostly US-based, and there are no EU-specific competitor comparisons, so the score remains at the formula baseline, which already reflects a substantial gap within BMW's own lineup.",
+      "citedSourceIds": [
+        "src_G60-0273",
+        "src_G60-0500",
+        "src_G60-1559",
+        "src_G60-0148"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 80,
+      "rationale": "Improving public charging experience directly supports BMW Group's strategic focus on electromobility and customer-centric charging (bmwgr25-p46-focus, bmwgr25-p55-charging-experience). The Group explicitly highlights customer-friendly charging infrastructure as essential for BEV adoption in Europe, where electrification is a key growth driver (bmwgr25-p263-market-outlook). This requirement is well-aligned with stated priorities, though not a flagship like Gen6 battery or Panoramic iDrive.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p55-charging-experience",
+        "bmwgr25-p263-market-outlook"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_battery_2": {
+    "requirementId": "req_g60_battery_2",
+    "workflowId": "wf_g60_battery",
+    "title": "Deliver what customers are asking for: Frunk",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:48.674Z",
+    "competitive_gap": {
+      "value": 78,
+      "rationale": "The baseline customer study for the EU shows the BMW 5 Series (7.45/10) is significantly behind the best sibling model (BMW 1 Series at 9.30/10) on related categories, indicating a notable gap. Only one verbatim ([src_G60-2173]) makes a concrete, on-topic comparison to a competitor (Tesla) regarding the frunk, but this is from a US customer, not EU. Since there is no EU-specific competitor comparison, the score remains at the formula baseline, supported by internal evidence.",
+      "citedSourceIds": [
+        "src_G60-2173"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 70,
+      "rationale": "The requirement aligns with BMW Group's stated focus on electromobility and customer-centric innovation, as outlined in the 2025 Group Report. However, the frunk is not named as a flagship priority, nor is it directly linked to a core strategic technology like Gen6 batteries or Panoramic iDrive. The score reflects alignment with the broader electrification and customer experience strategy, but not a top-tier priority.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p55-charging-experience"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_battery_3": {
+    "requirementId": "req_g60_battery_3",
+    "workflowId": "wf_g60_battery",
+    "title": "Protect this strength in the next generation: Wallbox, charging / home charging",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:51.135Z",
+    "competitive_gap": {
+      "value": 78,
+      "rationale": "The competitive_gap baseline is 78, based on a customer study showing the BMW 5 Series (EU) scores 7.45/10 on energy efficiency/charging versus the best sibling BMW model at 9.30/10. No EU customer verbatims provide concrete, on-topic comparisons to external competitors; most competitor mentions are from US customers and do not directly compare home charging experience in the EU context. Therefore, the baseline is retained, as required by the scoring rules.",
+      "citedSourceIds": [
+        "src_G60-0605",
+        "src_G60-0148"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 85,
+      "rationale": "Home charging and Wallbox improvements directly support BMW Group's strategic focus on electromobility and customer charging experience, as outlined in the 2025 Group Report (bmwgr25-p46-focus, bmwgr25-p54-gen6-battery, bmwgr25-p55-charging-experience). These are named priorities for the NEUE KLASSE and Gen6 e-drive rollout, especially relevant for Europe, where electrification is a major growth driver (bmwgr25-p263-market-outlook).",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p54-gen6-battery",
+        "bmwgr25-p55-charging-experience",
+        "bmwgr25-p263-market-outlook"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_exterior_0": {
+    "requirementId": "req_g60_exterior_0",
+    "workflowId": "wf_g60_exterior",
+    "title": "Reduce friction: Vehicle, lock / unlock",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:53.379Z",
+    "competitive_gap": {
+      "value": 54,
+      "rationale": "The baseline customer study shows the BMW 5 Series scoring 8.75/10 versus the best sibling model at 9.01/10 on related categories, indicating near-parity within BMW's own lineup. No customer verbatims make a concrete, on-topic comparison between BMW and external competitors regarding lock/unlock friction; competitor mentions are either about other features or general brand switching, not direct lock/unlock comparisons.",
+      "citedSourceIds": [
+        "src_G60-2424",
+        "src_G60-0410",
+        "src_G60-3654",
+        "src_G60-0466",
+        "src_G60-0278",
+        "src_G60-1101",
+        "src_G60-1323",
+        "src_G60-1758",
+        "src_G60-0495",
+        "src_G60-0293",
+        "src_G60-1175",
+        "src_G60-0831"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt directly links lock/unlock usability or exterior access design to a named strategic focus or flagship priority. The closest relevant themes are general quality and digitalisation, but these are not explicitly tied to lock/unlock improvements, so the score remains neutral.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality",
+        "bmwgr25-p46-focus",
+        "bmwgr25-p42-digital-expectations"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_exterior_1": {
+    "requirementId": "req_g60_exterior_1",
+    "workflowId": "wf_g60_exterior",
+    "title": "Reduce friction: Door, open / close",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:55.227Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "The baseline customer study shows the BMW 5 Series scoring 8.75/10 on related categories, only slightly behind the best sibling model at 9.01/10. No customer verbatims provide concrete, on-topic comparisons to external competitors regarding door open/close friction or usability. Therefore, the score remains at parity, as there is no usable evidence of a significant competitive gap.",
+      "citedSourceIds": [
+        "src_G60-0293",
+        "src_G60-1758"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 65,
+      "rationale": "Improving door open/close usability directly supports BMW Group's stated strategic focus on quality and reliability as key factors for customer satisfaction (bmwgr25-p45-quality). While not a flagship priority, this requirement aligns with the 'Passion for Perfection' quality programme and the emphasis on customer experience in the EU market.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_exterior_2": {
+    "requirementId": "req_g60_exterior_2",
+    "workflowId": "wf_g60_exterior",
+    "title": "Protect this strength in the next generation: Body equipment, overall technology",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:57.375Z",
+    "competitive_gap": {
+      "value": 54,
+      "rationale": "The baseline customer study shows the BMW 5 Series is close to its best sibling model in Europe (8.75/10 vs. 9.01/10), indicating near-parity within BMW. No customer verbatims provide concrete, on-topic comparisons where competitors are described as clearly better or worse in body equipment or overall technology. Therefore, the score remains at the baseline, reflecting no clear evidence of a significant competitive gap versus external brands.",
+      "citedSourceIds": [
+        "src_G60-0410",
+        "src_G60-2424"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt directly names body equipment or overall technology as a strategic focus or flagship priority. While quality and reliability are mentioned as important (bmwgr25-p45-quality), there is no explicit link to this requirement as a strategic priority for the next generation 5 Series in Europe. Thus, the score remains neutral.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_interior_0": {
+    "requirementId": "req_g60_interior_0",
+    "workflowId": "wf_g60_interior",
+    "title": "Reduce friction: non-contact trunk lid opening",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:39:59.720Z",
+    "competitive_gap": {
+      "value": 75,
+      "rationale": "The baseline customer study shows the BMW 5 Series G60 scoring 8.01/10 on relevant interior/cargo categories, while the best sibling model (BMW 7 Series G70) scores 9.69/10. No customer verbatims make a concrete, on-topic comparison to external competitors for non-contact trunk lid opening, so the baseline score stands. This indicates a significant gap to close within BMW's own lineup, but not necessarily versus external brands.",
+      "citedSourceIds": [],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links non-contact trunk lid opening or trunk usability to a named strategic focus or flagship priority. The closest relevant focus is on quality and customer experience (bmwgr25-p45-quality), but this is general and does not elevate the requirement above neutral. No evidence suggests it works against strategy.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_interior_1": {
+    "requirementId": "req_g60_interior_1",
+    "workflowId": "wf_g60_interior",
+    "title": "Reduce friction: Luggage compartment",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:03.410Z",
+    "competitive_gap": {
+      "value": 75,
+      "rationale": "The baseline customer study shows the BMW 5 Series G60 scores 7.24/10 for 'Ease of loading/unloading luggage' and 7.54/10 for 'Luggage capacity,' both trailing the best sibling (BMW 7 Series G70: 8.67/10 and 7.41/10, respectively). No customer verbatims provide concrete, on-topic comparisons to external competitors for luggage compartment usability or capacity, so the baseline is retained.",
+      "citedSourceIds": [],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No supplied BMW Group Report 2025 excerpt names luggage compartment usability or capacity as a strategic focus or flagship priority. The closest relevant focus is on overall customer experience and quality, but there is no explicit link to luggage compartment improvements for the European market.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_interior_2": {
+    "requirementId": "req_g60_interior_2",
+    "workflowId": "wf_g60_interior",
+    "title": "Deliver what customers are asking for: Seat massage",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:05.679Z",
+    "competitive_gap": {
+      "value": 75,
+      "rationale": "The baseline competitive_gap score of 75 is supported by the internal customer study: the BMW 5 Series G60 scores 8.01/10 on related comfort/interior categories, while the best sibling model (EU 7 Series G70) scores 9.69/10, indicating a significant gap within BMW's own lineup. No customer verbatims provide concrete, on-topic comparisons to external competitors for seat massage, so the baseline is retained.",
+      "citedSourceIds": [],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "There is no explicit mention of seat massage or enhanced seat comfort as a strategic focus in the supplied BMW Group Report 2025 excerpts. The report's comfort and quality themes are general and do not elevate this feature to a strategic or flagship priority, so the neutral baseline of 50 is appropriate.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_interior_3": {
+    "requirementId": "req_g60_interior_3",
+    "workflowId": "wf_g60_interior",
+    "title": "Protect this strength in the next generation: Seats",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:07.719Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "The baseline competitive_gap score is 75, based on BMW 5 Series scoring lower than the best sibling model (BMW 7 Series) in internal customer studies for seating comfort and related interior metrics. However, there are no customer verbatims making concrete, on-topic comparisons to external competitors regarding seat comfort or quality. Therefore, the score remains at 50, reflecting parity or lack of usable external evidence.",
+      "citedSourceIds": [
+        "src_G60-0038",
+        "src_G60-3064"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No supplied BMW Group Report 2025 excerpt explicitly names seats or interior comfort as a strategic focus or flagship priority. While quality and customer experience are mentioned as important, there is no direct link to seats as a strategic lever for the next generation. Therefore, the score is neutral.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_windows_0": {
+    "requirementId": "req_g60_windows_0",
+    "workflowId": "wf_g60_windows",
+    "title": "Reduce friction: Exterior rearview mirror",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:09.447Z",
+    "competitive_gap": {
+      "value": 54,
+      "rationale": "The baseline customer study shows the BMW 5 Series scores 8.64/10 on all-round visibility, slightly below the best sibling model (BMW 1 Series at 8.89/10), but there are no customer verbatims making concrete, on-topic comparisons to external competitors regarding exterior rearview mirror usability. Therefore, the score remains at the baseline, reflecting slight internal lag but no evidence of a significant external gap.",
+      "citedSourceIds": [
+        "src_G60-2424",
+        "src_G60-2457"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No supplied BMW Group Report 2025 excerpt explicitly links exterior rearview mirror comfort or usability to a named strategic focus or flagship priority. The closest relevant themes are general customer-centricity and quality, but these are not specific enough to warrant a higher score.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality",
+        "bmwgr25-p46-focus"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_windows_1": {
+    "requirementId": "req_g60_windows_1",
+    "workflowId": "wf_g60_windows",
+    "title": "Reduce friction: Interior mirror, garage door opener",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:11.610Z",
+    "competitive_gap": {
+      "value": 54,
+      "rationale": "The competitive_gap score remains at the formula baseline of 54, as there is no concrete, on-topic comparison to external competitors in the supplied verbatims. The only competitor mentions (src_G60-2424, src_G60-2457) relate to app integration and remote parking, not the interior mirror or garage door opener. The internal customer study shows the 5 Series is close to the best sibling model (8.64 vs. 8.89/10), indicating near-parity within BMW models.",
+      "citedSourceIds": [
+        "src_G60-2424",
+        "src_G60-2457"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt directly links interior mirror or garage door opener usability to a named strategic focus or flagship priority. The closest relevant themes are digitalisation and customer experience, but these are not explicitly tied to this requirement. Therefore, the score remains neutral at 50.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p42-digital-expectations"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_windows_2": {
+    "requirementId": "req_g60_windows_2",
+    "workflowId": "wf_g60_windows",
+    "title": "Deliver what customers are asking for: Panorama glass roof",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:13.750Z",
+    "competitive_gap": {
+      "value": 54,
+      "rationale": "The competitive_gap score remains at the formula baseline of 54 because there is no direct, on-topic comparison to external competitors in the supplied verbatims regarding the panorama glass roof. The only competitor mentions relate to app functionality and remote parking, not glass roofs. The baseline is based on a small gap to the best sibling BMW model in customer study data (8.64 vs. 8.89).",
+      "citedSourceIds": [
+        "src_G60-2424",
+        "src_G60-2457"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links panorama glass roofs to a named strategic focus or flagship priority. The closest strategic themes are customer-centricity and quality, but these are generic and do not specifically elevate this requirement. Therefore, the score remains neutral at 50.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_windows_3": {
+    "requirementId": "req_g60_windows_3",
+    "workflowId": "wf_g60_windows",
+    "title": "Protect this strength in the next generation: Sun protection",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:15.609Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "The baseline customer study shows the BMW 5 Series scores 8.64/10 on all-round visibility, just behind the best sibling model at 8.89/10, indicating near-parity within the BMW lineup. No customer verbatims make a concrete, on-topic comparison of sun protection with external competitors, so the score remains at the baseline. Assumption is that competitors do not close this gap before launch, but no evidence suggests BMW is behind or ahead externally.",
+      "citedSourceIds": [
+        "src_G60-2424",
+        "src_G60-2457"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links sun protection or window comfort features to a named strategic focus or flagship priority. The report's strategic areas emphasize electrification, digitalization, and sustainability, but do not mention comfort or sun protection as a direct priority for the European market.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p46-neue-klasse"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_steering_0": {
+    "requirementId": "req_g60_steering_0",
+    "workflowId": "wf_g60_steering",
+    "title": "Reduce friction: ConnectedDrive and Infotainment, overall technology",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:19.452Z",
+    "competitive_gap": {
+      "value": 78,
+      "rationale": "The baseline (59) is based on BMW's own model comparison, but multiple customer verbatims make direct, on-topic comparisons to competitor infotainment and connected tech. Several customers explicitly state that systems in Tesla ([src_G60-0895], [src_G60-3758]), Cadillac ([src_G60-1858]), Lexus ([src_G60-0349]), and Mercedes ([src_G60-2424]) are more intuitive, easier to use, or offer features BMW lacks. Only one verbatim ([src_G60-2986]) claims BMW's navigation is superior to Tesla, but the majority of direct comparisons are unfavorable. This volume and specificity of negative competitive comparison justifies a significant move above the baseline, into the 65-85 range.",
+      "citedSourceIds": [
+        "src_G60-0895",
+        "src_G60-1858",
+        "src_G60-0349",
+        "src_G60-3758",
+        "src_G60-2424",
+        "src_G60-2986"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 85,
+      "rationale": "Improving ConnectedDrive and infotainment usability directly serves BMW Group's named strategic focus on digitalisation and customer-centric technology (bmwgr25-p46-focus, bmwgr25-p42-digital-expectations). The NEUE KLASSE rollout and Panoramic iDrive (bmwgr25-p46-neue-klasse, bmwgr25-p53-panoramic-idrive) are flagship priorities for the coming years, with a strong emphasis on seamless, intuitive digital experiences. For the EU market, this aligns with both customer expectations and BMW's growth strategy (bmwgr25-p263-market-outlook, bmwgr25-p79-series-deliveries).",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p42-digital-expectations",
+        "bmwgr25-p46-neue-klasse",
+        "bmwgr25-p53-panoramic-idrive",
+        "bmwgr25-p263-market-outlook",
+        "bmwgr25-p79-series-deliveries"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_steering_1": {
+    "requirementId": "req_g60_steering_1",
+    "workflowId": "wf_g60_steering",
+    "title": "Reduce friction: Apple CarPlay",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:21.809Z",
+    "competitive_gap": {
+      "value": 59,
+      "rationale": "The competitive_gap baseline is 59, based on an internal customer study comparing the BMW 5 Series to its best sibling model (8.61/10 vs. 9.18/10) on related usability categories. No customer verbatims provide a concrete, on-topic comparison of Apple CarPlay usability in BMW versus external competitors; competitor mentions are either general or about other features. Therefore, the baseline score stands, as there is no direct evidence of BMW being behind or ahead of competitors on this requirement.",
+      "citedSourceIds": [
+        "src_G60-0895",
+        "src_G60-1858"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 70,
+      "rationale": "The requirement to reduce friction in Apple CarPlay usability aligns with BMW Group's stated strategic focus on digitalisation and customer-centric digital ecosystems (bmwgr25-p46-focus, bmwgr25-p42-digital-expectations). However, it is not named as a flagship priority nor is Apple CarPlay specifically called out, so the baseline of 70 is appropriate. This is supported by the report's emphasis on seamless integration and digital experience for European customers.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p42-digital-expectations"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_steering_2": {
+    "requirementId": "req_g60_steering_2",
+    "workflowId": "wf_g60_steering",
+    "title": "Deliver what customers are asking for: Night Vision",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:23.849Z",
+    "competitive_gap": {
+      "value": 59,
+      "rationale": "The baseline customer study shows the BMW 5 Series scoring 8.61/10 versus the best sibling model at 9.18/10 on related cockpit categories, indicating a moderate gap within the BMW lineup. No customer verbatims make a concrete, on-topic comparison to external competitors regarding Night Vision, so the score remains at the formula baseline.",
+      "citedSourceIds": [
+        "src_G60-0349",
+        "src_G60-0715"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 70,
+      "rationale": "The requirement aligns with BMW Group's stated focus on digitalisation and advanced driver assistance (bmwgr25-p46-focus, bmwgr25-p42-digital-expectations, bmwgr25-p54-driver-assistance). Night Vision directly supports enhanced safety and digital cockpit features, which are part of the Group's strategic direction, but it is not named as a flagship priority.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p42-digital-expectations",
+        "bmwgr25-p54-driver-assistance"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_steering_3": {
+    "requirementId": "req_g60_steering_3",
+    "workflowId": "wf_g60_steering",
+    "title": "Protect this strength in the next generation: Handling / Riding",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:26.107Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "The baseline customer study shows the BMW 5 Series is slightly behind the best sibling model (8.61 vs. 9.18/10), but there are no concrete, on-topic customer verbatims comparing BMW handling/riding to external competitors. Mentions of other brands are either about features, tech, or general satisfaction, not direct handling comparisons. Therefore, the score remains at parity per guidelines.",
+      "citedSourceIds": [
+        "src_G60-0030",
+        "src_G60-0692",
+        "src_G60-0715",
+        "src_G60-1175",
+        "src_G60-2543",
+        "src_G60-3064"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 70,
+      "rationale": "Protecting handling/riding aligns with BMW Group's strategic focus on vehicle performance and customer experience, as highlighted in the NEUE KLASSE rollout and the 'Heart of Joy' control unit, which aims to enhance the driving experience. However, handling/riding is not named as a flagship priority, so the score is set at 70, reflecting direct but not top-tier strategic alignment.",
+      "citedSourceIds": [
+        "bmwgr25-p46-neue-klasse",
+        "bmwgr25-p46-focus"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_engine_0": {
+    "requirementId": "req_g60_engine_0",
+    "workflowId": "wf_g60_engine",
+    "title": "Reduce friction: Automatic engine start-stop function (MSA)",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:27.943Z",
+    "competitive_gap": {
+      "value": 67,
+      "rationale": "The competitive_gap score is set at 67, matching the formula baseline derived from the internal customer study: the BMW 5 Series scores 8.21/10 versus the best sibling model at 9.34/10 on related categories. No customer verbatims make a concrete, on-topic comparison to external competitors regarding the automatic engine start-stop function, so the baseline is not adjusted.",
+      "citedSourceIds": [],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links the automatic engine start-stop function (MSA) to a named strategic focus or flagship priority. While there is general emphasis on drivetrain efficiency and customer experience, there is no direct mention of MSA or similar features, so the score remains neutral at 50.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p46-drivetrain-choice"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_engine_1": {
+    "requirementId": "req_g60_engine_1",
+    "workflowId": "wf_g60_engine",
+    "title": "Reduce friction: Operate selector lever",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:29.978Z",
+    "competitive_gap": {
+      "value": 67,
+      "rationale": "The competitive_gap score is set at 67, matching the formula baseline derived from the internal customer study: the BMW 5 Series scores 8.21/10 on related categories versus the best sibling model at 9.34/10. No customer verbatims make a concrete, on-topic comparison to external competitors regarding the selector lever, so the baseline is retained.",
+      "citedSourceIds": [
+        "src_G60-0129",
+        "src_G60-3654",
+        "src_G60-2080"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 65,
+      "rationale": "Improving the selector lever to reduce friction and enhance ease of use aligns with BMW Group's strategic focus on customer-centricity, quality, and driving experience (bmwgr25-p45-quality, bmwgr25-p46-focus). While not a flagship priority, it directly supports the stated aim of providing the best customer experience and maintaining high quality and reliability, especially in a core European market.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality",
+        "bmwgr25-p46-focus"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_engine_2": {
+    "requirementId": "req_g60_engine_2",
+    "workflowId": "wf_g60_engine",
+    "title": "Deliver what customers are asking for: Fuel filler flap , open / close",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:32.080Z",
+    "competitive_gap": {
+      "value": 67,
+      "rationale": "The competitive_gap baseline is 67, based on the internal customer study showing the BMW 5 Series scoring 8.21/10 versus the best sibling model at 9.34/10 on related categories. No customer verbatims provide a concrete, on-topic comparison to external competitors regarding the fuel filler flap, so the score remains at the baseline. This is supported by the absence of relevant competitor mentions in the supplied verbatims.",
+      "citedSourceIds": [
+        "src_G60-0129",
+        "src_G60-3654",
+        "src_G60-2080"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links fuel filler flap usability to a named strategic focus or flagship priority. The closest relevant statements emphasize overall customer experience and quality, but do not specifically address this component. Therefore, the score remains neutral at 50.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g60_engine_3": {
+    "requirementId": "req_g60_engine_3",
+    "workflowId": "wf_g60_engine",
+    "title": "Protect this strength in the next generation: Drivetrain",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:34.491Z",
+    "competitive_gap": {
+      "value": 67,
+      "rationale": "The baseline score of 67 is supported by the internal customer study, which shows the BMW 5 Series in Europe scoring 8.21/10 on acceleration versus the best sibling model (BMW 1 Series) at 9.34/10. No external competitor comparisons are present in the verbatims for the EU market, so the score remains at the formula baseline. This is based on evidence from the supplied customer study and absence of qualifying competitor mentions.",
+      "citedSourceIds": [
+        "src_G60-0129",
+        "src_G60-3654",
+        "src_G60-2080"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 65,
+      "rationale": "Drivetrain is explicitly named as a strategic focus area for BMW Group, with emphasis on both electromobility and continued refinement of combustion engines. The NEUE KLASSE rollout and Gen6 e-drive are highlighted as key initiatives, and the report stresses drivetrain choice and performance as central to BMW's future. This requirement directly supports these named strategic directions for Europe, where electrified vehicle growth is a priority.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p46-neue-klasse",
+        "bmwgr25-p46-drivetrain-choice",
+        "bmwgr25-p263-market-outlook"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_battery_0": {
+    "requirementId": "req_g70_battery_0",
+    "workflowId": "wf_g70_battery",
+    "title": "Reduce friction: Electric Range",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:38.484Z",
+    "competitive_gap": {
+      "value": 55,
+      "rationale": "The baseline is 50 due to no direct customer-study category match. However, several US verbatims make concrete, on-topic comparisons to competitor brands: one customer explicitly traded in an Audi e-tron for longer BMW range (src_G70-0336), while another expects BMW to match or exceed advertised range and expresses disappointment when actual range is lower (src_G70-0488). There are also references to Tesla and Mercedes, but these are either neutral or slightly positive for BMW (src_G70-1507, src_G70-0991). One customer compares to a Lincoln Navigator's 500-mile range, but this is a combustion vehicle, not a BEV (src_G70-1906). Overall, the evidence suggests BMW is close to parity but with some customer expectation pressure to improve, justifying a slight increase above baseline.",
+      "citedSourceIds": [
+        "src_G70-0336",
+        "src_G70-0488",
+        "src_G70-0991",
+        "src_G70-1507",
+        "src_G70-1906"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 85,
+      "rationale": "BMW Group Report 2025 repeatedly highlights electric range as a flagship priority: Gen6 batteries are stated to increase range by 30% (bmwgr25-p54-gen6-battery), and the NEUE KLASSE rollout is positioned as setting new standards for efficiency and range (bmwgr25-p46-neue-klasse). Range improvement is directly tied to the Group's electromobility strategy and is a core focus for the coming product cycle. This is especially relevant for the US, where range anxiety is a key customer concern and regulatory support is expected to decrease (bmwgr25-p263-market-outlook).",
+      "citedSourceIds": [
+        "bmwgr25-p54-gen6-battery",
+        "bmwgr25-p46-neue-klasse",
+        "bmwgr25-p46-drivetrain-choice",
+        "bmwgr25-p55-charging-experience",
+        "bmwgr25-p263-market-outlook"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_battery_1": {
+    "requirementId": "req_g70_battery_1",
+    "workflowId": "wf_g70_battery",
+    "title": "Reduce friction: Public charging / external providers",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:41.409Z",
+    "competitive_gap": {
+      "value": 65,
+      "rationale": "Multiple US customer verbatims make direct, on-topic comparisons to competitors, especially Tesla and Mercedes, regarding public charging access and reliability. Several customers explicitly request access to the Tesla Supercharger network ([src_G70-2063], [src_G70-0523]), and one notes that charging issues are not unique to BMW but also affect Mercedes ([src_G70-0421]). The desire for Tesla access and the perception that BMW's current public charging partnerships (e.g., Electrify America) are insufficient indicate that BMW is seen as lagging behind Tesla in this area. This justifies moving the score above the neutral baseline.",
+      "citedSourceIds": [
+        "src_G70-2063",
+        "src_G70-0523",
+        "src_G70-0421"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 85,
+      "rationale": "The requirement directly serves BMW Group's stated strategic focus on improving the customer charging experience and enabling widespread electromobility ([bmwgr25-p55-charging-experience]). The Group's 2025 report highlights customer-friendly charging infrastructure as critical for BEV adoption, and the NEUE KLASSE/Gen6 initiatives specifically target faster, more convenient charging ([bmwgr25-p54-gen6-battery], [bmwgr25-p46-drivetrain-choice]). This is a flagship priority for the next product cycle.",
+      "citedSourceIds": [
+        "bmwgr25-p55-charging-experience",
+        "bmwgr25-p54-gen6-battery",
+        "bmwgr25-p46-drivetrain-choice"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_battery_2": {
+    "requirementId": "req_g70_battery_2",
+    "workflowId": "wf_g70_battery",
+    "title": "Deliver what customers are asking for: High-voltage charging power socket",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:43.995Z",
+    "competitive_gap": {
+      "value": 65,
+      "rationale": "The baseline is 50 due to lack of direct competitor benchmarking in the customer study. However, multiple US verbatims explicitly request compatibility with Tesla charging stations (e.g., src_G70-0472, src_G70-2063, src_G70-0523), and Tesla is named as a concrete point of comparison for charging access and infrastructure. This indicates that BMW is perceived as lagging behind Tesla in this area by a meaningful subset of customers, justifying a moderate gap score above parity.",
+      "citedSourceIds": [
+        "src_G70-0472",
+        "src_G70-2063",
+        "src_G70-0523"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 80,
+      "rationale": "The requirement directly supports BMW Group's strategic focus on electromobility, improved charging experience, and customer-centric innovation as outlined in the 2025 Group Report (bmwgr25-p46-focus, bmwgr25-p54-gen6-battery, bmwgr25-p55-charging-experience). While not a flagship like Gen6 battery or Panoramic iDrive, enabling broader charging compatibility is a clear, named strategic direction for the US market.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p54-gen6-battery",
+        "bmwgr25-p55-charging-experience"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_battery_3": {
+    "requirementId": "req_g70_battery_3",
+    "workflowId": "wf_g70_battery",
+    "title": "Protect this strength in the next generation: Wallbox, charging / home charging",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:46.234Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "No customer verbatims make a concrete, on-topic comparison between BMW's home charging/wallbox experience and competitors. The only relevant mention ([src_G70-2216]) compares home charging times with a previous Mercedes, but both are described as similarly slow, not indicating a gap. The formula baseline of 50 (neutral) is therefore retained, as there is no evidence BMW is ahead or behind on this requirement.",
+      "citedSourceIds": [
+        "src_G70-2216"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 85,
+      "rationale": "Home charging and wallbox solutions are directly aligned with BMW Group's strategic focus on electromobility and customer charging experience, as highlighted in [bmwgr25-p46-focus], [bmwgr25-p46-drivetrain-choice], and [bmwgr25-p55-charging-experience]. These excerpts emphasize the importance of a customer-friendly charging infrastructure and the centrality of electrification to BMW's strategy. This is a flagship priority for the next generation, especially in the US market where home charging is critical.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p46-drivetrain-choice",
+        "bmwgr25-p55-charging-experience"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_exterior_0": {
+    "requirementId": "req_g70_exterior_0",
+    "workflowId": "wf_g70_exterior",
+    "title": "Reduce friction: Exterior",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:48.228Z",
+    "competitive_gap": {
+      "value": 56,
+      "rationale": "The baseline customer study shows the BMW 7 Series scoring 7.60/10 on overall exterior styling in the US, slightly below the best sibling (BMW 5 Series at 7.97/10). No customer verbatims provide concrete, on-topic comparisons to external competitors regarding exterior quality or fading issues, so the baseline is retained.",
+      "citedSourceIds": [
+        "src_G70-0654",
+        "src_G70-0368",
+        "src_G70-0397"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links exterior design quality or durability to a named strategic focus or flagship priority. While quality and reliability are mentioned as important (bmwgr25-p45-quality), there is no direct or elevated strategic emphasis on exterior friction reduction for the US market.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_exterior_1": {
+    "requirementId": "req_g70_exterior_1",
+    "workflowId": "wf_g70_exterior",
+    "title": "Reduce friction: Door, open / close",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:50.368Z",
+    "competitive_gap": {
+      "value": 56,
+      "rationale": "The baseline customer study shows the US BMW 7 Series scoring 7.60/10 on overall exterior styling versus 7.97/10 for the best sibling model (BMW 5 Series G60). No customer verbatims make a concrete, on-topic comparison to external competitors regarding door open/close ease or speed. Therefore, the score remains at the formula baseline, reflecting a moderate gap relative to BMW's own lineup, not the broader market.",
+      "citedSourceIds": [
+        "src_G70-0468",
+        "src_G70-2942"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt directly links door open/close ease or automation to a named strategic focus such as digitalisation, electromobility, or flagship technologies. The closest relevant focus is on overall quality and customer experience, but this is generic and not specific to this requirement. Thus, the score remains neutral.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_exterior_2": {
+    "requirementId": "req_g70_exterior_2",
+    "workflowId": "wf_g70_exterior",
+    "title": "Deliver what customers are asking for: Wheels / tires",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:52.933Z",
+    "competitive_gap": {
+      "value": 56,
+      "rationale": "The baseline customer study shows the BMW 7 Series scoring 7.60/10 on overall exterior styling versus the best sibling model at 7.97/10, indicating a moderate gap within BMW's own lineup. Only one verbatim ([src_G70-0397]) makes a concrete, on-topic comparison to a competitor (Mercedes) regarding wheel/tire handling, but it does not clearly state that Mercedes is better—just that BMW should handle it similarly. No other verbatims provide direct, relevant competitor comparisons for wheels/tires. Therefore, the score remains at the baseline of 56, as there is no strong evidence of a significant gap versus external competitors.",
+      "citedSourceIds": [
+        "src_G70-0397"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links wheel/tire design or customer-driven wheel/tire requests to a named strategic focus or flagship priority. The closest relevant focus is on quality and customer satisfaction ([bmwgr25-p45-quality]), but this is generic and not specific to wheels/tires. Therefore, the score remains neutral at 50.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_exterior_3": {
+    "requirementId": "req_g70_exterior_3",
+    "workflowId": "wf_g70_exterior",
+    "title": "Protect this strength in the next generation: Exterior design",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:40:55.376Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "The baseline customer study shows the 7 Series slightly behind the 5 Series among BMW models in the US (7.60 vs. 7.97), but there is no concrete, on-topic evidence in the verbatims that competitors like Mercedes or Audi are perceived as superior in exterior design. Several verbatims explicitly state that customers chose BMW over Mercedes for appearance ([src_G70-0368]) or switched from Mercedes because of the new styling ([src_G70-0654]). No verbatim claims a competitor is better in exterior design. Therefore, the score remains at parity (50), as there is no usable evidence of a competitive gap versus external brands.",
+      "citedSourceIds": [
+        "src_G70-0654",
+        "src_G70-0368"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "None of the supplied BMW Group Report 2025 excerpts name exterior design as a strategic focus or flagship priority. The NEUE KLASSE rollout mentions a new design language, but this is not called out as a direct strategic priority for the US market or for exterior design specifically. Therefore, the score remains neutral (50), as there is no explicit link to stated strategy.",
+      "citedSourceIds": [
+        "bmwgr25-p46-neue-klasse"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_interior_0": {
+    "requirementId": "req_g70_interior_0",
+    "workflowId": "wf_g70_interior",
+    "title": "Reduce friction: Vehicle, climatization",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:10.437Z",
+    "competitive_gap": {
+      "value": 70,
+      "rationale": "Verbatims provide direct, on-topic comparisons: src_G70-0195 states Mercedes has a much better system for cooling the vehicle, and src_G70-1319 highlights Tesla's Dog Mode as a superior feature for maintaining cabin temperature. These indicate that at least two major competitors are perceived as clearly better in this area by US customers. No verbatims indicate BMW leads or is at parity for climatization performance. The score is raised from the neutral baseline to reflect these concrete, negative comparisons.",
+      "citedSourceIds": [
+        "src_G70-0195",
+        "src_G70-1319"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 55,
+      "rationale": "No BMW Group Report 2025 excerpt directly names cabin climatization as a strategic focus or flagship priority. However, bmwgr25-p45-quality emphasizes quality and reliability as key factors for customer satisfaction and economic success, which is somewhat served by improving a major comfort defect. This is a slight positive adjustment from the neutral baseline, but not a direct strategic fit.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_interior_1": {
+    "requirementId": "req_g70_interior_1",
+    "workflowId": "wf_g70_interior",
+    "title": "Reduce friction: Seating, ventilate / heat",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:10.526Z",
+    "competitive_gap": {
+      "value": 70,
+      "rationale": "One US verbatim directly compares BMW's ventilated seats unfavorably to the Genesis G90, stating they are 'significantly better' in the Genesis (src_G70-0322). No other verbatims make a direct negative comparison for ventilated/heated seating, but this clear, on-topic competitor reference justifies moving above the neutral baseline. Other competitor mentions are either positive for BMW or not about seat ventilation/heat. Thus, the gap is moderate but not extreme.",
+      "citedSourceIds": [
+        "src_G70-0322"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links seating comfort, ventilation, or heating to a named strategic focus or flagship priority. The closest relevant focus is on overall customer experience and quality (bmwgr25-p45-quality), but this is generic and does not elevate the requirement above neutral. No evidence of conflict with strategy either.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_interior_2": {
+    "requirementId": "req_g70_interior_2",
+    "workflowId": "wf_g70_interior",
+    "title": "Deliver what customers are asking for: Remote interior camera (My BMW App / MINI App)",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:10.543Z",
+    "competitive_gap": {
+      "value": 65,
+      "rationale": "One US verbatim ([src_G70-0339]) makes a concrete, on-topic comparison: the customer explicitly requests a live interior camera view via the My BMW App and states that Tesla already provides this capability. No other verbatims mention competitors offering this feature, but this single direct comparison is sufficient to move the score above parity, indicating a moderate competitive gap to close.",
+      "citedSourceIds": [
+        "src_G70-0339"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 70,
+      "rationale": "The requirement aligns with BMW Group's stated strategic focus on digitalisation and seamless integration of digital ecosystems (bmwgr25-p46-focus, bmwgr25-p42-digital-expectations). While not a flagship priority, remote interior camera functionality directly supports the goal of enhancing the digital customer experience and app integration, which are highlighted as key expectations and focus areas for the future. No evidence suggests it works against any stated direction.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p42-digital-expectations"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_interior_3": {
+    "requirementId": "req_g70_interior_3",
+    "workflowId": "wf_g70_interior",
+    "title": "Protect this strength in the next generation: Interior design",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:10.617Z",
+    "competitive_gap": {
+      "value": 35,
+      "rationale": "Multiple US customer verbatims make direct, positive comparisons to Mercedes, Audi, Lincoln, and Tesla, stating the BMW 7 Series interior is superior or at least on par with these competitors (e.g., 'the interior of this vehicle is far nicer than any other vehicle he has ever been in', 'more comfortable than her previous Mercedes S-Class', 'a step up from their former Tesla', 'the interior is exceptional and really feels like a unique place to sit'). Only a few isolated feature mentions (e.g., Mercedes thigh massage, Lincoln full body massage) suggest minor gaps, but overall, the evidence points to BMW leading or at parity in interior design for this segment.",
+      "citedSourceIds": [
+        "src_G70-0378",
+        "src_G70-0741",
+        "src_G70-1246",
+        "src_G70-2455",
+        "src_G70-0492"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly names interior design or cabin luxury as a strategic focus or flagship priority for the US market. The report emphasizes digitalization, electrification, and quality, but does not directly link interior design to these strategic pillars. Therefore, the score remains neutral, as there is no stated link.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_windows_0": {
+    "requirementId": "req_g70_windows_0",
+    "workflowId": "wf_g70_windows",
+    "title": "Reduce friction: Panorama glass roof",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:12.652Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "No customer verbatims make a concrete, on-topic comparison between the BMW 7 Series panorama glass roof and a competitor's equivalent. The only competitor mentions (Cadillac, Mercedes) relate to rear sun shade and rear defroster features, not the panorama glass roof. Therefore, the score remains at the neutral baseline.",
+      "citedSourceIds": [
+        "src_G70-1785",
+        "src_G70-3199",
+        "src_G70-2336"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No excerpt from the BMW Group Report 2025 explicitly links the panorama glass roof or comfort features like it to a named strategic focus or flagship priority. The closest strategic areas are digitalisation, electromobility, and Panoramic iDrive, but these do not mention glass roof innovations. Thus, the score remains neutral.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p53-panoramic-idrive"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_windows_1": {
+    "requirementId": "req_g70_windows_1",
+    "workflowId": "wf_g70_windows",
+    "title": "Reduce friction: Sun protection",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:14.667Z",
+    "competitive_gap": {
+      "value": 70,
+      "rationale": "Two US verbatims ([src_G70-1785], [src_G70-3199]) make concrete, on-topic comparisons to Cadillac, stating that Cadillac offers a camera-based solution for rear visibility when sunshades are in use, which BMW lacks. No baseline from internal BMW model comparisons is available for this component, so the score is moved up to reflect a clear competitive gap based on customer-reported Cadillac features.",
+      "citedSourceIds": [
+        "src_G70-1785",
+        "src_G70-3199"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt directly links sun protection or rear window shade usability to a named strategic focus or flagship priority. The closest relevant focus is on customer experience and quality ([bmwgr25-p45-quality]), but this is general and not specific to sun protection. Therefore, the score remains neutral.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_windows_2": {
+    "requirementId": "req_g70_windows_2",
+    "workflowId": "wf_g70_windows",
+    "title": "Deliver what customers are asking for: Interior rearview mirror",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:16.852Z",
+    "competitive_gap": {
+      "value": 75,
+      "rationale": "Multiple US customer verbatims explicitly compare the BMW 7 Series to Cadillac, stating Cadillac offers a rearview mirror with a camera view that BMW lacks. Two verbatims ([src_G70-3199], [src_G70-1785]) directly describe Cadillac's implementation as superior and desirable, specifically for situations where the rear window is blocked. No verbatims make a similar comparison for other brands or indicate BMW leads. This clear, on-topic competitor comparison justifies moving well above the neutral baseline.",
+      "citedSourceIds": [
+        "src_G70-3199",
+        "src_G70-1785"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt directly links interior rearview mirror features or camera integration to a named strategic focus such as digitalisation, Panoramic iDrive, or customer experience priorities. The requirement does not conflict with any stated direction, but also does not serve a flagship or named focus area for the US market.",
+      "citedSourceIds": [],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_windows_3": {
+    "requirementId": "req_g70_windows_3",
+    "workflowId": "wf_g70_windows",
+    "title": "Protect this strength in the next generation: Roof",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:19.170Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "There is no customer-study category matched to the roof component, and no verbatims make a concrete, on-topic comparison between BMW and competitor roof quality or features. The baseline of 50 (neutral) is maintained, as the only competitor mentions relate to rear sun shades, rearview cameras, and rear defrosters, not the roof itself.",
+      "citedSourceIds": [
+        "src_G70-1785",
+        "src_G70-3199",
+        "src_G70-2390",
+        "src_G70-2336"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt directly links roof quality or features to a named strategic focus or flagship priority. The closest relevant theme is the general emphasis on quality and reliability, but this is not specific enough to raise the score above neutral. No evidence suggests roof features work against any stated direction.",
+      "citedSourceIds": [
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_steering_0": {
+    "requirementId": "req_g70_steering_0",
+    "workflowId": "wf_g70_steering",
+    "title": "Reduce friction: ConnectedDrive and Infotainment, overall technology",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:22.204Z",
+    "competitive_gap": {
+      "value": 70,
+      "rationale": "The baseline is 50 due to lack of direct BMW-to-BMW customer study evidence for ConnectedDrive/Infotainment. However, multiple US verbatims make concrete, on-topic comparisons to competitor infotainment systems: src_G70-1468 states Lexus systems are more user-friendly, src_G70-3608 praises Mercedes' control layout as easier, and src_G70-0996 notes a learning curve compared to Mercedes. Only one positive comparison is made (BMW navigation superior to Range Rover, src_G70-2707), but the majority of direct comparisons indicate BMW is behind key competitors in perceived usability. Therefore, the score is raised to 70, reflecting a moderate competitive gap.",
+      "citedSourceIds": [
+        "src_G70-1468",
+        "src_G70-3608",
+        "src_G70-0996",
+        "src_G70-2707"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 85,
+      "rationale": "Improving ConnectedDrive and infotainment usability directly serves BMW Group's named strategic focus on digitalisation and customer-centric technology (bmwgr25-p46-focus, bmwgr25-p42-digital-expectations). The NEUE KLASSE rollout and Panoramic iDrive (bmwgr25-p46-neue-klasse, bmwgr25-p53-panoramic-idrive) are flagship priorities for the next generation, with a strong emphasis on seamless digital experience and over-the-air updates. This requirement is highly aligned with these priorities, especially for the US market where digital experience is a key differentiator.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p42-digital-expectations",
+        "bmwgr25-p46-neue-klasse",
+        "bmwgr25-p53-panoramic-idrive"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_steering_1": {
+    "requirementId": "req_g70_steering_1",
+    "workflowId": "wf_g70_steering",
+    "title": "Reduce friction: Touch screen, operation",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:24.973Z",
+    "competitive_gap": {
+      "value": 70,
+      "rationale": "The baseline is neutral (50) due to lack of direct customer-study comparison, but src_G70-1468 provides a concrete, on-topic comparison: a US customer finds the BMW infotainment system less user friendly than Lexus, specifically citing too many steps and complexity. This is direct evidence of a competitive gap in touch screen operation usability. Only one verbatim makes this explicit comparison, so the score is raised moderately above parity, but not into the highest range.",
+      "citedSourceIds": [
+        "src_G70-1468"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 85,
+      "rationale": "Improving touch screen usability directly supports BMW Group's strategic focus on digitalisation and customer-centric digital experiences (bmwgr25-p46-focus, bmwgr25-p42-digital-expectations). It is also closely aligned with the rollout of Panoramic iDrive and new UI/UX technologies as a flagship priority for the NEUE KLASSE (bmwgr25-p46-neue-klasse, bmwgr25-p53-panoramic-idrive). This makes the requirement a direct enabler of a named, high-priority strategic direction.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p42-digital-expectations",
+        "bmwgr25-p46-neue-klasse",
+        "bmwgr25-p53-panoramic-idrive"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_steering_2": {
+    "requirementId": "req_g70_steering_2",
+    "workflowId": "wf_g70_steering",
+    "title": "Deliver what customers are asking for: Night Vision",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:27.427Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "There is no direct evidence from customer verbatims comparing BMW's Night Vision feature to competitors, nor is there a relevant customer-study category for this component. The baseline of 50 (parity or no usable evidence) is maintained, as the only mentions of competitors in the verbatims relate to other features (infotainment, autonomous driving, etc.), not Night Vision. No concrete, on-topic competitor comparison is present.",
+      "citedSourceIds": [
+        "src_G70-0308",
+        "src_G70-0996",
+        "src_G70-1468",
+        "src_G70-2707",
+        "src_G70-2630",
+        "src_G70-3608",
+        "src_G70-0146",
+        "src_G70-2310",
+        "src_G70-3548",
+        "src_G70-0692",
+        "src_G70-2236",
+        "src_G70-3774"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 65,
+      "rationale": "Night Vision aligns with BMW Group's strategic focus on digitalisation and forward-looking technologies, as outlined in the 2025 report. While not a flagship priority, it supports the goal of enhancing customer experience and safety through advanced driver assistance and digital features, especially relevant for the US market. This is a direct but not flagship fit.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p42-digital-expectations",
+        "bmwgr25-p54-driver-assistance"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_steering_3": {
+    "requirementId": "req_g70_steering_3",
+    "workflowId": "wf_g70_steering",
+    "title": "Protect this strength in the next generation: Handling / Riding",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:29.479Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "There is no direct evidence from customer verbatims comparing BMW 7 Series handling/riding to competitors. The only competitor mentions relate to infotainment, driver assistance, or other cockpit features, not handling or ride quality. The baseline of 50 is maintained due to lack of concrete, on-topic competitor comparisons.",
+      "citedSourceIds": [
+        "src_G70-0308",
+        "src_G70-0996",
+        "src_G70-1468",
+        "src_G70-2707",
+        "src_G70-2630",
+        "src_G70-3608",
+        "src_G70-0146",
+        "src_G70-2310",
+        "src_G70-3548",
+        "src_G70-0692",
+        "src_G70-2236",
+        "src_G70-3774"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 70,
+      "rationale": "Protecting handling/riding aligns with BMW Group's strategic focus on vehicle performance and customer experience, as outlined in the NEUE KLASSE rollout and quality/reliability initiatives. However, it is not named as a flagship priority, so the baseline of 70 is appropriate.",
+      "citedSourceIds": [
+        "bmwgr25-p46-neue-klasse",
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_engine_0": {
+    "requirementId": "req_g70_engine_0",
+    "workflowId": "wf_g70_engine",
+    "title": "Reduce friction: Automatic engine start-stop function (MSA)",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:31.389Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "The formula baseline is 50 due to lack of direct customer-study data comparing BMW to competitors on the automatic engine start-stop function (MSA). Only one verbatim ([src_G70-1435]) makes a concrete, on-topic comparison, noting that Porsche also has the feature and that it is similarly irritating there, which does not indicate a competitive gap for BMW. No other verbatims provide direct competitor comparisons for this function.",
+      "citedSourceIds": [
+        "src_G70-1435"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 50,
+      "rationale": "No BMW Group Report 2025 excerpt explicitly links the automatic engine start-stop function (MSA) to a named strategic focus or flagship priority. While efficiency and customer experience are general themes ([bmwgr25-p46-focus],[bmwgr25-p45-quality]), there is no direct mention of MSA or similar features as a strategic priority for the US market or the 7 Series. Therefore, the neutral baseline of 50 is maintained.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p45-quality"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_engine_1": {
+    "requirementId": "req_g70_engine_1",
+    "workflowId": "wf_g70_engine",
+    "title": "Reduce friction: Transmission",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:33.468Z",
+    "competitive_gap": {
+      "value": 50,
+      "rationale": "No customer verbatims provide a concrete, on-topic comparison between BMW's transmission friction or auto stop-start experience and that of competitors. The only relevant mention ([src_G70-1435]) notes that Porsche also has an irritating auto stop feature, suggesting this is not a unique BMW disadvantage. The formula baseline is neutral due to lack of external competitor data.",
+      "citedSourceIds": [
+        "src_G70-1435"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 65,
+      "rationale": "Reducing friction in the transmission directly supports BMW Group's stated focus on customer-centric driving experience and quality (bmwgr25-p46-focus, bmwgr25-p45-quality). While not a flagship priority, it aligns with the emphasis on refining combustion engine technologies and delivering the best customer experience, especially for the US market where drivetrain mix volatility is expected (bmwgr25-p46-drivetrain-choice, bmwgr25-p46-bev-target).",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p45-quality",
+        "bmwgr25-p46-drivetrain-choice",
+        "bmwgr25-p46-bev-target"
+      ],
+      "basis": "evidence"
+    }
+  },
+  "req_g70_engine_2": {
+    "requirementId": "req_g70_engine_2",
+    "workflowId": "wf_g70_engine",
+    "title": "Protect this strength in the next generation: Drivetrain",
+    "model": "gpt-4.1",
+    "generatedAt": "2026-10-10T22:41:35.625Z",
+    "competitive_gap": {
+      "value": 35,
+      "rationale": "The baseline is 50 due to lack of direct competitor benchmarking, but multiple US verbatims (e.g., src_G70-0740) explicitly state that BMW is a driver's car and that customers return to BMW for its unique driving experience, with no competitor cited as superior. No verbatim indicates a competitor leads in drivetrain experience. This supports a clear BMW lead, so the score is set at 35.",
+      "citedSourceIds": [
+        "src_G70-0740"
+      ],
+      "basis": "evidence"
+    },
+    "strategic_fit": {
+      "value": 75,
+      "rationale": "BMW Group Report 2025 (bmwgr25-p46-focus, bmwgr25-p46-drivetrain-choice) names drivetrains as a strategic focus, emphasizing both electromobility and continued refinement of combustion engines, with customer choice across all drivetrain types. Protecting drivetrain strength directly supports this focus, especially for the US market where drivetrain mix volatility is expected.",
+      "citedSourceIds": [
+        "bmwgr25-p46-focus",
+        "bmwgr25-p46-drivetrain-choice"
+      ],
+      "basis": "evidence"
+    }
+  }
+}

@@ -123,6 +123,43 @@ touches `scripts/ingest-real-data.ts`, which they own.
   rather than regenerating them live on every page load — the seeded
   narrative is already your fallback if a live call fails mid-demo.
 
+## Implementation status
+
+Tasks 1-4 are implemented. Every function has a labeled deterministic
+fallback (`model: "deterministic-fallback"`), so the app still works without
+`OPENAI_API_KEY`. Fallback text never overwrites a seeded or model-written
+summary.
+
+- **Decision trail** (`summarizeDecisionTrail`, strong model) is regenerated
+  from the audit log after every challenge, PM status change and stakeholder
+  review. You can also trigger it with `POST /api/workflows/:id/ai-summaries`
+  (`api.regenerateAISummaries`). `listAISummaries()` now returns newest first,
+  so the UI shows the latest summary.
+- **Challenge** (`reassessChallenge`, strong model, structured output) may
+  only move the judgment factors (`competitive_gap`, `strategic_fit`,
+  `effort_inverse`), and may only *downgrade* the evidence level. The
+  data-derived factors stay formula-only. Changes are applied via
+  `db.updateScoreFactors()` and logged with exact before/after values. The
+  response adds `factorChanges`, `scoreBefore`/`scoreAfter`, `model` and
+  `live` to `{ changed, explanation }`.
+- **Stakeholder overview** (`summarizeStakeholderReviews`, fast model) labels
+  each objection as a process or product objection. It is regenerated on
+  every review submission.
+- **`competitive_gap` / `strategic_fit`** are precomputed by
+  `npm run ai:factors`, which writes `src/data/ai-judgment-factors.json`.
+  The cache is applied at seed time (`src/lib/aiFactors.ts`).
+  - Grounding: real verbatims that name competitors, plus BMW Group Report
+    2025 excerpts (`src/lib/strategyContext.ts`).
+  - Cited sources are linked to the requirement, and the formula baseline
+    stays visible in the rationale.
+  - Re-run the script after a re-ingest. Entries whose requirement title
+    changed are ignored.
+- Model overrides: `OPENAI_MODEL_STRONG` (default `gpt-4.1`) and
+  `OPENAI_MODEL_FAST` (default `gpt-4.1-mini`). `OPENAI_BASE_URL` is honored.
+- Not done: task 5 (optional; the doc advises against it) and task 6
+  (contradiction flagging). Task 6 lives in `scripts/ingest-real-data.ts`,
+  which Role A is actively changing.
+
 ## Files you own
 
 ```
