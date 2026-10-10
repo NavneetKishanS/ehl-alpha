@@ -250,6 +250,49 @@ export function updateWeights(
   return req;
 }
 
+// Applies an AI re-assessment (e.g. after a PM challenge) to a requirement's
+// score inputs and evidence level, recomputes the score, and logs the exact
+// before/after values.
+export function updateScoreFactors(
+  requirementId: string,
+  changes: {
+    factorUpdates: { key: string; rawValue: number; rationale: string }[];
+    evidenceLevel?: Requirement["evidenceLevel"];
+  },
+  actor: Actor,
+  rationale: string,
+): Requirement {
+  const req = getRequirement(requirementId);
+  if (!req) throw new Error("requirement not found");
+  const snapshot = () => ({
+    score: req.score,
+    evidenceLevel: req.evidenceLevel,
+    factors: Object.fromEntries(req.scoreFactors.map((f) => [f.key, f.rawValue])),
+  });
+  const before = snapshot();
+
+  req.scoreFactors = req.scoreFactors.map((f) => {
+    const update = changes.factorUpdates.find((u) => u.key === f.key);
+    return update ? { ...f, rawValue: update.rawValue, rationale: update.rationale } : f;
+  });
+  if (changes.evidenceLevel) req.evidenceLevel = changes.evidenceLevel;
+  req.score = recomputeScore(req);
+  req.updatedAt = new Date().toISOString();
+
+  logAction({
+    workflowId: req.workflowId,
+    actor,
+    action: "score_recomputed",
+    targetType: "requirement",
+    targetId: req.id,
+    oldValue: before,
+    newValue: snapshot(),
+    rationale,
+  });
+
+  return req;
+}
+
 // ---------- signals / sources ----------
 
 export function listSignals(workflowId: string): Signal[] {
@@ -307,11 +350,15 @@ export function submitReview(
 
 // ---------- AI summaries ----------
 
+// Newest first, so `summaries.find((s) => s.type === ...)` in the UI always
+// picks up the latest regenerated summary rather than the seeded one.
 export function listAISummaries(workflowId: string): AISummary[] {
-  return store.aiSummaries.filter((s) => s.workflowId === workflowId);
+  return store.aiSummaries
+    .filter((s) => s.workflowId === workflowId)
+    .sort((a, b) => b.generatedAt.localeCompare(a.generatedAt));
 }
 
-export function addAISummary(summary: Omit<AISummary, "id" | "generatedAt">): AISummary {
+export function addAISummary(summary: Omit<AISummary, "id" | "generatedAt">, model = "gpt-4.1"): AISummary {
   const full: AISummary = {
     ...summary,
     id: `aisum_${nanoid(8)}`,
@@ -321,7 +368,7 @@ export function addAISummary(summary: Omit<AISummary, "id" | "generatedAt">): AI
 
   logAction({
     workflowId: summary.workflowId,
-    actor: { type: "ai", id: "ai_engine", name: "Requirements Copilot", model: "claude-sonnet-5" },
+    actor: { type: "ai", id: "ai_engine", name: "Requirements Copilot", model },
     action: "ai_summary_generated",
     targetType: "workflow",
     targetId: summary.workflowId,

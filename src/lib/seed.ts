@@ -34,6 +34,7 @@ import {
   type RawSignal,
 } from "./realData";
 import { pickCandidates, titleFor, descriptionFor, assumptionsFor, evidenceLevelFor, categoryFor, buildScoreFactors, type Candidate } from "./deriveRequirements";
+import { applyJudgmentCache } from "./aiFactors";
 
 export function buildSeed() {
   return hasRealData() ? buildRealSeed() : buildMockSeed();
@@ -247,6 +248,9 @@ function buildRealSeed() {
       });
     }
   }
+
+  // LLM-assessed competitive_gap / strategic_fit, if `npm run ai:factors` has been run (Role B).
+  applyJudgmentCache({ requirements, sources, auditLog, feedbackById });
 
   return { vehicles, components, workflows, requirements, signals, sources, stakeholders, reviews, auditLog, aiSummaries };
 }
