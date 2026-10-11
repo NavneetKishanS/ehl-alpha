@@ -1,6 +1,7 @@
 "use client";
 
 import clsx from "clsx";
+import { StakeholderAvatar } from "@/components/StakeholderAvatar";
 import type { Requirement, Stakeholder, StakeholderReview } from "@/lib/types";
 
 // At-a-glance reviewer x requirement grid — the thing a PM actually wants
@@ -47,12 +48,7 @@ export function StakeholderMatrix({
               <th className="py-2 pr-3 font-medium">Requirement</th>
               {columns.map((s) => (
                 <th key={s.id} className="px-2 py-2 text-center font-medium" title={s.name}>
-                  <span
-                    className="mx-auto flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold text-white"
-                    style={{ backgroundColor: s.avatarColor }}
-                  >
-                    {s.name.slice(0, 1)}
-                  </span>
+                  <StakeholderAvatar stakeholder={s} size={26} className="mx-auto" />
                 </th>
               ))}
             </tr>

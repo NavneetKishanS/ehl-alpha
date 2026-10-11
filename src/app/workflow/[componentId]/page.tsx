@@ -18,6 +18,7 @@ import type {
   Vehicle,
 } from "@/lib/types";
 import { SiteHeader } from "@/components/SiteHeader";
+import { StakeholderAvatar } from "@/components/StakeholderAvatar";
 import { PipelineStrip } from "@/components/PipelineStrip";
 import { RequirementCard } from "@/components/RequirementCard";
 import { AuditLogPanel } from "@/components/AuditLogPanel";
@@ -294,12 +295,8 @@ export default function WorkflowPage() {
                   <div className="flex items-center gap-3 text-[13px] text-neutral-500">
                     <span className="flex -space-x-2">
                       {stakeholders.slice(0, 4).map((s) => (
-                        <span
-                          key={s.id}
-                          className="flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold text-white opacity-40 ring-2 ring-white"
-                          style={{ backgroundColor: s.avatarColor }}
-                        >
-                          {s.name.slice(0, 1)}
+                        <span key={s.id} className="rounded-full opacity-50 ring-2 ring-white">
+                          <StakeholderAvatar stakeholder={s} size={28} />
                         </span>
                       ))}
                     </span>

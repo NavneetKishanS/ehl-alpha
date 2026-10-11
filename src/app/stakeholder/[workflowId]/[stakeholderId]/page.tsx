@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { api } from "@/lib/api-client";
 import type { Workflow, Requirement, StakeholderReview, Stakeholder, AISummary, VehicleComponent, Vehicle, CustomerStudyScore } from "@/lib/types";
 import { SiteHeader } from "@/components/SiteHeader";
+import { StakeholderAvatar } from "@/components/StakeholderAvatar";
 import { RoleSwitcher } from "@/components/RoleSwitcher";
 import { Chip, EvidenceMeter, ScoreRing, SectionTitle, STATUS_CHIP, humanize } from "@/components/workflow/primitives";
 import { StudyComparison } from "@/components/workflow/StudyComparison";
@@ -157,12 +158,7 @@ export default function StakeholderPage() {
 
             {/* Reviewer identity */}
             <div className="flex items-center gap-4 border border-neutral-200 bg-white/80 px-5 py-4 backdrop-blur">
-              <span
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-lg font-semibold text-white"
-                style={{ backgroundColor: stakeholder.avatarColor }}
-              >
-                {stakeholder.name.slice(0, 1)}
-              </span>
+              <StakeholderAvatar stakeholder={stakeholder} size={56} />
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-500">Reviewing as</p>
                 <p className="text-[15px] font-medium text-neutral-900">{firstName}</p>

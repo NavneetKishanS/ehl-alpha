@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { StakeholderAvatar } from "@/components/StakeholderAvatar";
 import type { Stakeholder, StakeholderReview } from "@/lib/types";
 
 // PR-reviewer-style row: who, their decision, and their written rationale.
@@ -11,12 +12,7 @@ export function ReviewerRow({ review, stakeholder }: { review: StakeholderReview
 
   return (
     <div className="flex items-start gap-3 border-b border-neutral-100 py-3 last:border-b-0">
-      <span
-        className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold text-white"
-        style={{ backgroundColor: stakeholder?.avatarColor ?? "#9ca3af" }}
-      >
-        {(stakeholder?.name ?? "?").slice(0, 1)}
-      </span>
+      <StakeholderAvatar stakeholder={stakeholder} size={36} className="mt-0.5" />
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <span className="text-[13px] font-medium text-neutral-900">{stakeholder?.name ?? "Unknown"}</span>
@@ -28,7 +24,7 @@ export function ReviewerRow({ review, stakeholder }: { review: StakeholderReview
         {review.expertOpinion ? (
           <p className="mt-1 text-[13px] leading-relaxed text-neutral-600">{review.expertOpinion}</p>
         ) : (
-          <p className="mt-1 text-[12px] italic text-neutral-400">Awaiting response…</p>
+          <p className="mt-1 text-[12px] text-neutral-500">Awaiting response</p>
         )}
       </div>
     </div>
