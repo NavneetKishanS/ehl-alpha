@@ -189,7 +189,7 @@ export default function LandingPage() {
       )}
 
       {/* ---------- Components ---------- */}
-      <section className="mx-auto max-w-[1440px] px-4 py-14 sm:px-8 sm:py-20">
+      <section id="components" className="mx-auto max-w-[1440px] scroll-mt-16 px-4 py-14 sm:px-8 sm:py-20">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
             <h2 className="text-3xl font-light tracking-tight sm:text-4xl">Vehicle components</h2>
