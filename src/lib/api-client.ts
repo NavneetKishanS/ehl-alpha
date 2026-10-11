@@ -124,6 +124,9 @@ export const api = {
   getSignals: (workflowId: string) =>
     fetch(`/api/workflows/${workflowId}/signals`).then((r) => j<{ signals: Signal[]; sources: SourceRecord[] }>(r)),
 
+  generateSignalOverview: (signalId: string) =>
+    fetch(`/api/signals/${signalId}/overview`, { method: "POST" }).then((r) => j<NonNullable<Signal["aiOverview"]>>(r)),
+
   getAuditLog: (workflowId: string) =>
     fetch(`/api/workflows/${workflowId}/audit-log`).then((r) => j<AuditLogEntry[]>(r)),
 

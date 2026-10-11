@@ -139,6 +139,9 @@ export interface Signal {
   sampleVerbatims: string[];
   sourceIds: string[];
   contradicts: string[]; // other signal ids this one conflicts with
+  // Generated on demand (first expand on the workflow page), then cached
+  // here so re-opening the theme doesn't re-call the model.
+  aiOverview?: { content: string; model: string; live: boolean; generatedAt: string };
 }
 
 export type EvidenceLevel = "strong" | "moderate" | "weak";
@@ -248,7 +251,7 @@ export interface AuditLogEntry {
   workflowId: string;
   actor: Actor;
   action: AuditAction;
-  targetType: "workflow" | "requirement" | "stage" | "review";
+  targetType: "workflow" | "requirement" | "stage" | "review" | "signal";
   targetId: string;
   oldValue: unknown;
   newValue: unknown;

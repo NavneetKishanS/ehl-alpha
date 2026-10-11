@@ -321,6 +321,53 @@ export async function summarizeStakeholderReviews(input: StakeholderOverviewInpu
 }
 
 // ===========================================================================
+// 2b. Signal overview — "what customers are saying" in one paragraph
+// ===========================================================================
+//
+// Generated on demand (one call per theme, the first time a PM expands it
+// on the workflow page), not precomputed for all ~550 signals up front —
+// that would be ~550 calls nobody asked for. Cached on the Signal once
+// generated (src/lib/db.ts), so re-opening the same theme is free.
+
+export interface SignalOverviewInput {
+  theme: string;
+  frequency: number;
+  sentiment: Signal["sentiment"];
+  quotes: string[]; // real verbatim excerpts, the only thing the model may draw on
+}
+
+const SIGNAL_OVERVIEW_SYSTEM = `You write a short "customers are saying" summary for one feedback theme in a BMW product-requirements tool — the same job an Amazon "AI-generated review summary" does for a product's reviews, but for one specific theme inside a much larger dataset.
+
+Write exactly 2-3 sentences, plain prose, no markdown, no bullet points. Synthesize the real quotes given — do not invent any detail, number, or complaint not present in them. If the quotes disagree with each other, say so in one clause rather than picking a side. End with the practical takeaway for a PM in a few words, not a full sentence restating the theme name.`;
+
+/**
+ * One theme's worth of real verbatims -> a short synthesized summary, in
+ * the style of a retail "AI review summary". Falls back to a frequency/
+ * sentiment-derived sentence (no model opinion) if the call fails.
+ */
+export async function summarizeSignalOverview(input: SignalOverviewInput): Promise<AIText> {
+  const { theme, frequency, sentiment, quotes } = input;
+  if (quotes.length === 0) {
+    return { text: `${frequency} verbatims tagged "${theme}", no quotable excerpts captured at ingest.`, model: FALLBACK_MODEL, live: false };
+  }
+  const user = `THEME: ${theme}\nMENTIONS: ${frequency}\nDOMINANT SENTIMENT: ${sentiment}\n\nQUOTES\n${quotes.map((q, i) => `${i + 1}. "${trimText(q, 300)}"`).join("\n")}`;
+
+  try {
+    const model = fastModel();
+    const text = await generateText(model, SIGNAL_OVERVIEW_SYSTEM, user, 150);
+    return { text, model, live: true };
+  } catch (e) {
+    fallbackReason(e);
+    const sentimentWord = { positive: "praise", negative: "complaints", mixed: "mixed reactions", neutral: "mentions" }[sentiment];
+    return {
+      text: `${frequency} customers raised "${theme}", mostly ${sentimentWord}. Representative: "${trimText(quotes[0], 180)}"`,
+      model: FALLBACK_MODEL,
+      live: false,
+    };
+  }
+}
+
+// ===========================================================================
 // 3. Challenge re-assessment (US-6.3)
 // ===========================================================================
 
