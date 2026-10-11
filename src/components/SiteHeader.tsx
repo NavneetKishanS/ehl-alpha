@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { BmwLogo } from "@/components/BmwLogo";
 import { HelpTutorial } from "@/components/HelpTutorial";
 
-type Tab = "vehicles" | "workflow" | "evidence";
+type Tab = "vehicles" | "workflow" | "evidence" | "about";
 
 const LAST_WORKFLOW_KEY = "ehl:lastWorkflow";
 const NO_WORKFLOW_HREF = "/#components";
@@ -31,6 +31,7 @@ export function SiteHeader({ active, workflowHref }: { active: Tab; workflowHref
     { key: "vehicles", href: "/", label: "Vehicles" },
     { key: "workflow", href: workflowHref ?? lastWorkflow ?? NO_WORKFLOW_HREF, label: "Workflow" },
     { key: "evidence", href: "/evidence", label: "Evidence Explorer" },
+    { key: "about", href: "/about", label: "About" },
   ];
 
   return (
