@@ -316,7 +316,7 @@ export default function StakeholderPage() {
 
       <footer className="border-t border-neutral-200 bg-white">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3 px-4 py-6 text-xs text-neutral-500 sm:px-8">
-          <span>BMW Group · Requirements Copilot · TUM Hackathon prototype</span>
+          <span>BMW Group · PM Kompass · TUM Hackathon prototype</span>
           {component && (
             <Link href={`/workflow/${component.id}`} className="hover:text-neutral-900">
               ← Back to PM workflow view

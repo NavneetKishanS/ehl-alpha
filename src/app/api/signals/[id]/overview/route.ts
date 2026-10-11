@@ -23,7 +23,7 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
   const updated = cacheSignalOverview(
     signal.id,
     { content: result.text, model: result.model, live: result.live },
-    { type: "ai", id: "ai_engine", name: "Requirements Copilot", model: result.model },
+    { type: "ai", id: "ai_engine", name: "PM Kompass", model: result.model },
   );
 
   return NextResponse.json(updated.aiOverview);

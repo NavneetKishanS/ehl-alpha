@@ -40,7 +40,7 @@ export function SiteHeader({ active, workflowHref }: { active: Tab; workflowHref
           <Link href="/" className="flex items-center gap-3">
             <BmwLogo size={36} />
             <span className="hidden h-6 w-px bg-neutral-300 sm:block" />
-            <span className="hidden text-[15px] font-semibold tracking-tight sm:block">Requirements Copilot</span>
+            <span className="hidden text-[15px] font-semibold tracking-tight sm:block">PM Kompass</span>
           </Link>
           <nav className="flex items-center gap-1 text-sm">
             {tabs.map((t) => (
