@@ -34,6 +34,7 @@ export function RequirementCard({
   const [preview, setPreview] = useState<DecisionDraft | null>(null);
   const [record, setRecord] = useState<DecisionRecord | null>(null);
   const [pdfOpen, setPdfOpen] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   // Signed decisions are kept in this browser; drop one that no longer matches the status.
   useEffect(() => {
@@ -46,6 +47,23 @@ export function RequirementCard({
 
   const liveScore = computeLiveScore(requirement, weights);
   const weightsDirty = requirement.scoreFactors.some((f) => Math.abs(weights[f.key] - f.weight) > 0.001);
+
+  const decided = requirement.status === "approved" || requirement.status === "rejected" || requirement.status === "postponed";
+  // Once decided, the panel turns into a read-only summary until the PM chooses to edit.
+  const showForm = !decided || editing;
+
+  function startEdit() {
+    setRationaleDraft(record?.reason ?? "");
+    setDueDate(record?.dueDate ?? "");
+    setPriority(record?.priority ?? null);
+    setShowErrors(false);
+    setEditing(true);
+  }
+
+  function cancelEdit() {
+    setEditing(false);
+    setShowErrors(false);
+  }
 
   const today = new Date().toISOString().slice(0, 10);
   const missing = { dueDate: !dueDate, priority: !priority, reason: !rationaleDraft.trim() };
@@ -84,6 +102,7 @@ export function RequirementCard({
       setPriority(null);
       setShowErrors(false);
       setPreview(null);
+      setEditing(false);
     } finally {
       setPending(null);
     }
@@ -234,10 +253,17 @@ export function RequirementCard({
 
       {/* Decision */}
       <div className="border-t border-neutral-100 px-6 py-5" onClick={(e) => e.stopPropagation()}>
+        {showForm ? (
         <div className="border border-neutral-200 bg-neutral-50/70 p-5">
           <div className="mb-4 flex items-baseline justify-between gap-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bmw-blue">PM decision</p>
-            <p className="text-[12px] text-neutral-500">All fields required</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bmw-blue">{editing ? "Edit decision" : "PM decision"}</p>
+            {editing ? (
+              <button onClick={cancelEdit} className="text-[12px] font-medium text-neutral-600 underline-offset-2 hover:text-neutral-900 hover:underline">
+                Cancel edit
+              </button>
+            ) : (
+              <p className="text-[12px] text-neutral-500">All fields required</p>
+            )}
           </div>
 
           <div className="grid gap-4 md:grid-cols-[minmax(0,220px)_minmax(0,1fr)]">
@@ -323,6 +349,14 @@ export function RequirementCard({
             </div>
           </div>
         </div>
+        ) : (
+          <DecisionSummary
+            status={requirement.status as DecisionAction}
+            record={record}
+            onEdit={startEdit}
+            onPreview={() => setPdfOpen(true)}
+          />
+        )}
 
         {pdfOpen && record && <PdfPreviewModal record={record} onClose={() => setPdfOpen(false)} />}
 
@@ -429,5 +463,84 @@ function FieldLabel({ label, error, as = "label", children }: { label: string; e
       </span>
       {children}
     </Tag>
+  );
+}
+
+const DECIDED_STYLE: Record<DecisionAction, { chip: string; label: string; bar: string }> = {
+  approved: { chip: "bg-emerald-50 text-emerald-700", label: "Approved", bar: "bg-emerald-600" },
+  postponed: { chip: "bg-amber-50 text-amber-800", label: "Postponed", bar: "bg-amber-500" },
+  rejected: { chip: "bg-red-50 text-red-700", label: "Rejected", bar: "bg-red-600" },
+};
+
+// Read-only view of the signed decision, shown instead of the form once decided.
+function DecisionSummary({
+  status,
+  record,
+  onEdit,
+  onPreview,
+}: {
+  status: DecisionAction;
+  record: DecisionRecord | null;
+  onEdit: () => void;
+  onPreview: () => void;
+}) {
+  const st = DECIDED_STYLE[status];
+  const signedAt = record
+    ? new Date(record.signedAt).toLocaleString(undefined, { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })
+    : null;
+  return (
+    <div className="relative border border-neutral-200 bg-white p-5">
+      <span className={clsx("absolute inset-y-0 left-0 w-[3px]", st.bar)} />
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bmw-blue">PM decision</p>
+          <span className={clsx("px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em]", st.chip)}>{st.label}</span>
+        </div>
+        <div className="flex gap-2">
+          {record && (
+            <button onClick={onPreview} className="border border-neutral-300 bg-white px-4 py-2 text-[13px] font-medium text-neutral-800 transition-colors hover:border-neutral-900">
+              View PDF
+            </button>
+          )}
+          <button onClick={onEdit} className="flex items-center gap-2 bg-neutral-900 px-4 py-2 text-[13px] font-medium text-white transition-colors hover:bg-black">
+            <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <path d="M11 2.5l2.5 2.5L6 12.5H3.5V10z" />
+            </svg>
+            Edit decision
+          </button>
+        </div>
+      </div>
+
+      {record ? (
+        <>
+          <dl className="mt-4 grid grid-cols-1 gap-px bg-neutral-200 sm:grid-cols-3">
+            <div className="bg-white py-3 pr-4 sm:pl-0">
+              <dt className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-500">Priority</dt>
+              <dd className="mt-1 flex items-center gap-2 text-[14px] text-neutral-900">
+                <span className={clsx("h-2.5 w-2.5 rounded-full", PRIORITY[record.priority].dot)} />
+                {PRIORITY[record.priority].label}
+              </dd>
+            </div>
+            <div className="bg-white px-0 py-3 sm:px-4">
+              <dt className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-500">Review due</dt>
+              <dd className="mt-1 text-[14px] text-neutral-900">{formatDue(record.dueDate)}</dd>
+            </div>
+            <div className="bg-white px-0 py-3 sm:px-4">
+              <dt className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-500">Signed by</dt>
+              <dd className="mt-1 text-[14px] text-neutral-900">
+                {record.signedBy}
+                <span className="block text-[12px] text-neutral-500">{signedAt}</span>
+              </dd>
+            </div>
+          </dl>
+          <div className="mt-3 border-t border-neutral-100 pt-3">
+            <p className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-500">Reason for action</p>
+            <p className="mt-1 whitespace-pre-wrap text-[14px] leading-relaxed text-neutral-800">{record.reason}</p>
+          </div>
+        </>
+      ) : (
+        <p className="mt-3 text-[13px] text-neutral-500">This decision is recorded in the audit trail. Edit it to add a due date, priority and signature.</p>
+      )}
+    </div>
   );
 }
