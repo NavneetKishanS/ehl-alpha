@@ -1,0 +1,25 @@
+resolve conflits on the pr
+
+---
+
+give project desc in <300 chars
+
+---
+
+give tech stack separated by comma
+
+---
+
+check PR 28 status
+
+---
+
+merged it now quickly fix photos
+
+---
+
+@"/Users/navneetkishansrinivasan/Downloads/shiv.heic" @"/Users/navneetkishansrinivasan/Downloads/raj_vasani.heic"
+
+---
+
+now push and make pr
