@@ -1,0 +1,5 @@
+its merged, now help me quickly deploy ...maybe vercel or smth
+
+---
+
+setup ci/cd on gh actions
