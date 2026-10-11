@@ -3,6 +3,8 @@
 AI-assisted product requirement derivation, prioritization and human-in-the-loop
 review for BMW's "AI for Product Decision Making" hackathon challenge.
 
+**Live demo:** https://ehl-alpha.vercel.app
+
 Read [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md) first — it has the challenge,
 our concept, and how user stories map to what's built. Then
 [`docs/DATA_SETUP.md`](docs/DATA_SETUP.md) to get the real datasets running
@@ -18,11 +20,14 @@ locally. Then read your role doc in `docs/`.
   `npm run ingest` — see [`docs/DATA_SETUP.md`](docs/DATA_SETUP.md). Falls
   back to a small hand-written mock if the real data isn't present locally,
   so nobody is blocked.
-- AI layer (`src/lib/ai.ts`) targets **OpenAI** (the team's budget). Every
-  function is currently a deterministic mock so the app works end-to-end
-  with no API key; requirement scoring itself is already real/deterministic
-  from the ingested data (see `src/lib/deriveRequirements.ts`) — the mocked
-  functions are the narrative/summary layer on top. See
+- AI layer (`src/lib/ai.ts`) calls **OpenAI** live when `OPENAI_API_KEY` is
+  set, and falls back to a deterministic templated response otherwise, so the
+  app always works end-to-end even with no API key. Requirement scoring
+  itself is real/deterministic from the ingested data (see
+  `src/lib/deriveRequirements.ts`); the AI layer is the narrative/summary and
+  judgment-call layer on top (decision trail, stakeholder review overview,
+  PM-challenge re-assessment, per-theme "what customers are saying"
+  overviews, competitive-gap/strategic-fit scoring). See
   [`docs/ROLE_B_AI.md`](docs/ROLE_B_AI.md).
 
 ## Setup
@@ -55,6 +60,13 @@ docker compose run --rm pytest          # parsing tests
 the web app. The repo is bind-mounted, so `.env.local`, `data/`, `src/data/`
 and `output/` stay on your machine and no secrets go into an image.
 
+## CI/CD
+
+`.github/workflows/ci.yml` runs `tsc --noEmit`, `next lint` and `npm run build`
+on every push to `main` and every PR. Deploys are handled by Vercel's native
+GitHub integration (not GitHub Actions) — pushes to `main` promote to
+production, PRs get their own preview URL.
+
 ## Project structure
 
 ```
@@ -65,7 +77,7 @@ src/
     seed.ts              # assembles real workflows from src/data/*.json, or falls back to a mock
     realData.ts          # loader for the ingested JSON fixtures
     deriveRequirements.ts # deterministic requirement derivation + scoring from real data
-    ai.ts                # mocked AI functions (Role B replaces internals, targets OpenAI)
+    ai.ts                # live OpenAI calls with deterministic fallback when no API key is set
     api-client.ts        # typed fetch wrappers — frontend only talks to the API through here
   app/
     page.tsx                                # landing page (car hotspots, vehicle switcher)
@@ -79,8 +91,9 @@ src/
 scripts/
   ingest-real-data.ts    # offline pipeline: data-raw/*.xlsx,*.PDF -> src/data/*.json
   lib/componentMap.ts    # maps BMW's 226 real VFC feedback categories onto our 6 components
-data-raw/                # gitignored — the real BMW datasets, copy your own in
-src/data/                # gitignored — ingest script output, regenerate with `npm run ingest`
+data-raw/                # gitignored — the raw BMW dataset files, copy your own in
+src/data/                # ingest script output (committed — see "Known tradeoffs" below);
+                          # regenerate with `npm run ingest`
 ```
 
 ## Demo data
@@ -99,9 +112,9 @@ BMW 5 Series, enough to demo the mechanics with placeholder numbers.
 ## Known tradeoffs (intentional, for a 15-17h build)
 
 - In-memory store, not a real DB. Swap-out point is clearly marked in `db.ts`.
-- AI narrative layer (`ai.ts`) is mocked with templated text, not live OpenAI
-  calls, by default — scoring itself is already real/deterministic. Swap-out
-  points are documented in `ai.ts` and `docs/ROLE_B_AI.md`.
+- AI narrative/judgment layer (`ai.ts`) calls OpenAI live and falls back to
+  templated text if no API key is configured — scoring itself is always
+  real/deterministic. Documented in `ai.ts` and `docs/ROLE_B_AI.md`.
 - Equipment PDF parsing stops at section-level text chunks, not a structured
   per-trim feature matrix — see the "known gap" note in `docs/DATA_SETUP.md`.
 - `competitive_gap`/`sales_relevance`/`strategic_fit` score factors are
@@ -110,10 +123,12 @@ BMW 5 Series, enough to demo the mechanics with placeholder numbers.
   same component share those three factor values. Documented in each
   factor's `rationale` field, visible in the UI.
 - Next.js pinned to 14.2.35 (not latest) for Node 18 compatibility across the
-  team. `npm audit` will show Next.js platform CVEs fixed only in 15+ — not a
-  concern for a localhost demo, but don't deploy this build publicly without
-  upgrading first. Same applies to the `xlsx` package (dev-only, used by the
-  ingestion script against trusted local files).
-- **The real BMW datasets, and anything derived from them, must never be
-  committed** — `data-raw/` and `src/data/*.json` are gitignored. Code that
-  reads them is fine to commit; the data itself is not.
+  team. `npm audit` will show Next.js platform CVEs fixed only in 15+; the
+  team accepted that risk to ship the public hackathon demo at
+  https://ehl-alpha.vercel.app rather than upgrade mid-hackathon. Same
+  applies to the `xlsx` package (dev-only, used by the ingestion script
+  against trusted local files).
+- **The derived data (`src/data/*.json`) is intentionally committed** — team
+  decision, so everyone on the team and anyone reviewing the hackathon
+  submission sees identical data without re-running the ingestion pipeline.
+  The raw source dataset files (`data-raw/`) stay gitignored.
