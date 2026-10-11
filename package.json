@@ -20,6 +20,7 @@
     "@react-three/drei": "^9.114.0",
     "@react-three/fiber": "^8.17.10",
     "clsx": "^2.1.1",
+    "jspdf": "^2.5.2",
     "nanoid": "^5.0.9",
     "next": "14.2.35",
     "openai": "^7.32.0",
