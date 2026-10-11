@@ -17,6 +17,12 @@ export interface Vehicle {
   markets: string[]; // e.g. ["Europe", "China", "United States"]
 }
 
+// Likes vs. complaints (Difficult to Use + Defect) from customer feedback.
+export interface ComponentSentiment {
+  likes: number;
+  complaints: number;
+}
+
 export interface VehicleComponent {
   id: string;
   vehicleId: string;

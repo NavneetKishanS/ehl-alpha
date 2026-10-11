@@ -8,7 +8,7 @@ import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import clsx from "clsx";
 import { HotspotButton } from "@/components/HotspotButton";
 import { BmwLogo } from "@/components/BmwLogo";
-import type { ComponentKey, VehicleComponent } from "@/lib/types";
+import type { ComponentKey, ComponentSentiment, VehicleComponent } from "@/lib/types";
 import type { ViewMode, ZoomRequest } from "@/lib/carViewer";
 
 // Any GLB dropped at this path is picked up. The default is the CC BY 4.0
@@ -179,6 +179,7 @@ export default function Car3DViewer({
   resetKey,
   zoom,
   highlightedId,
+  sentiment,
   onHover,
   onSelect,
 }: {
@@ -188,6 +189,7 @@ export default function Car3DViewer({
   resetKey: number;
   zoom?: ZoomRequest;
   highlightedId: string | null;
+  sentiment?: Record<string, ComponentSentiment>;
   onHover: (id: string | null) => void;
   onSelect: (c: VehicleComponent) => void;
 }) {
@@ -212,6 +214,7 @@ export default function Car3DViewer({
               <Hotspot
                 key={`${mode}-${c.id}`}
                 component={c}
+                sentiment={sentiment?.[c.key]}
                 position={[pos[0], pos[1], pos[2] + CAR_OFFSET_Z]}
                 highlighted={highlightedId === c.id}
                 onSelect={onSelect}

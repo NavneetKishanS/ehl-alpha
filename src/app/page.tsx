@@ -6,7 +6,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { api } from "@/lib/api-client";
-import type { Vehicle, VehicleComponent } from "@/lib/types";
+import type { ComponentSentiment, Vehicle, VehicleComponent } from "@/lib/types";
+import { MOOD_STYLE } from "@/components/HotspotButton";
 import { SiteHeader } from "@/components/SiteHeader";
 import { PAINTS, type ViewMode, type ZoomRequest } from "@/lib/carViewer";
 
@@ -27,6 +28,7 @@ export default function LandingPage() {
   const [resetKey, setResetKey] = useState(0);
   const [zoom, setZoom] = useState<ZoomRequest | undefined>(undefined);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [sentiment, setSentiment] = useState<Record<string, ComponentSentiment>>({});
 
   useEffect(() => {
     api.listVehicles().then((vs) => {
@@ -38,6 +40,7 @@ export default function LandingPage() {
   useEffect(() => {
     if (!vehicleId) return;
     api.listComponents(vehicleId).then(setComponents);
+    api.getComponentSentiment(vehicleId).then(setSentiment).catch(() => setSentiment({}));
   }, [vehicleId]);
 
   const vehicle = vehicles.find((v) => v.id === vehicleId) ?? null;
@@ -78,6 +81,7 @@ export default function LandingPage() {
             resetKey={resetKey}
             zoom={zoom}
             highlightedId={hoveredId}
+            sentiment={sentiment}
             onHover={setHoveredId}
             onSelect={handleSelect}
           />
@@ -166,6 +170,9 @@ export default function LandingPage() {
             </div>
 
             <div className="pointer-events-auto flex items-center gap-4 text-xs text-neutral-600">
+              <span className="hidden bg-white/80 px-3 py-1 backdrop-blur xl:block">
+                <SentimentLegend compact />
+              </span>
               <span className="hidden bg-white/80 px-2 py-1 backdrop-blur lg:block">{mode === "exterior" ? "Drag to rotate" : "Drag to look around"}</span>
               <div className="flex border border-neutral-300 bg-white/90" role="group" aria-label="Zoom">
                 {([[1, "+", "Zoom in"], [-1, "−", "Zoom out"]] as const).map(([step, glyph, label], i) => (
@@ -215,14 +222,7 @@ export default function LandingPage() {
               Pick a component on the car or below to open its requirements workflow, or start a new one.
             </p>
           </div>
-          <div className="flex items-center gap-5 text-xs text-neutral-600">
-            <span className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-bmw-blue" /> Active workflow
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full border border-neutral-400 bg-white" /> Not started
-            </span>
-          </div>
+          <SentimentLegend />
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -348,5 +348,22 @@ function Fact({ label, value }: { label: string; value: string }) {
       <div className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-500">{label}</div>
       <div className="mt-2 text-lg font-normal tracking-tight sm:text-xl">{value}</div>
     </div>
+  );
+}
+
+function SentimentLegend({ compact }: { compact?: boolean }) {
+  return (
+    <span className={clsx("flex items-center text-xs text-neutral-600", compact ? "gap-3" : "gap-5")}>
+      {(["liked", "disliked"] as const).map((m) => (
+        <span key={m} className="flex items-center gap-2">
+          <span className={clsx("h-2.5 w-2.5 rounded-full", MOOD_STYLE[m].dot)} /> {MOOD_STYLE[m].label}
+        </span>
+      ))}
+      {!compact && (
+        <span className="flex items-center gap-2">
+          <span className={clsx("h-2.5 w-2.5 rounded-full", MOOD_STYLE.mixed.dot)} /> {MOOD_STYLE.mixed.label}
+        </span>
+      )}
+    </span>
   );
 }

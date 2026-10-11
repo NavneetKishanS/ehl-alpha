@@ -4,6 +4,7 @@
 // file that needs an update.
 
 import type {
+  ComponentSentiment,
   Vehicle,
   VehicleComponent,
   Workflow,
@@ -73,6 +74,9 @@ export const api = {
 
   listComponents: (vehicleId: string) =>
     fetch(`/api/components?vehicleId=${encodeURIComponent(vehicleId)}`).then((r) => j<VehicleComponent[]>(r)),
+
+  getComponentSentiment: (vehicleId: string) =>
+    fetch(`/api/components/sentiment?vehicleId=${encodeURIComponent(vehicleId)}`).then((r) => j<Record<string, ComponentSentiment>>(r)),
 
   getComponent: (id: string) => fetch(`/api/components/${id}`).then((r) => j<VehicleComponent>(r)),
 
