@@ -1,0 +1,39 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4N58067EFWFJ24FGHK2KHKD",
+  "session_id": "d37aa735-2e3e-44d6-80a4-b881437cd9a7",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-11T09:38:32.565809Z",
+  "branch": "docs/update-tutorial-screenshots",
+  "checkpoints_count": 10,
+  "save_step_count": 1,
+  "files_touched": [
+    "docs/ROLE_B_AI_SUMMARY.md"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "turn_id": "3acd4d799f94",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 338,
+    "cache_creation_tokens": 2035694,
+    "cache_read_tokens": 43773120,
+    "output_tokens": 172896,
+    "api_call_count": 167
+  },
+  "session_metrics": {
+    "turn_count": 11
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-11T09:38:32.430978Z",
+    "agent_lines": 284,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 284,
+    "total_lines_changed": 284,
+    "agent_percentage": 100,
+    "metric_version": 2
+  }
+}
