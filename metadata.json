@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4N3DYDN6WP2J29A18C8WBXT",
+  "strategy": "manual-commit",
+  "branch": "rename/pm-kompass",
+  "checkpoints_count": 2,
+  "files_touched": [
+    "docker-compose.yml"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 62,
+    "cache_creation_tokens": 21296,
+    "cache_read_tokens": 6339022,
+    "output_tokens": 10207,
+    "api_call_count": 31
+  }
+}
