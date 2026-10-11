@@ -3,8 +3,16 @@
   "checkpoint_id": "01M4N57YC6DQJ6NF92JVQ5YN1B",
   "strategy": "manual-commit",
   "branch": "docs/update-tutorial-screenshots",
-  "checkpoints_count": 3,
-  "files_touched": null,
+  "checkpoints_count": 13,
+  "files_touched": [
+    "public/tutorial/01-landing.jpg",
+    "public/tutorial/02-workflow-nav.jpg",
+    "public/tutorial/03-workflow-decision-trail.jpg",
+    "public/tutorial/04-workflow-requirement.jpg",
+    "public/tutorial/05-stakeholder.jpg",
+    "public/tutorial/06-evidence-hero.jpg",
+    "public/tutorial/07-evidence-filters.jpg"
+  ],
   "sessions": [
     {
       "metadata": "/0/metadata.json",
@@ -12,13 +20,20 @@
       "compact_transcript": "/0/transcript.jsonl",
       "content_hash": "/0/content_hash.txt",
       "prompt": "/0/prompt.txt"
+    },
+    {
+      "metadata": "/1/metadata.json",
+      "transcript": "/1/full.jsonl",
+      "compact_transcript": "/1/transcript.jsonl",
+      "content_hash": "/1/content_hash.txt",
+      "prompt": "/1/prompt.txt"
     }
   ],
   "token_usage": {
-    "input_tokens": 136,
-    "cache_creation_tokens": 1040727,
-    "cache_read_tokens": 10442285,
-    "output_tokens": 101303,
-    "api_call_count": 69
+    "input_tokens": 312,
+    "cache_creation_tokens": 2146308,
+    "cache_read_tokens": 38893482,
+    "output_tokens": 160505,
+    "api_call_count": 155
   }
 }

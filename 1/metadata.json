@@ -1,0 +1,138 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4N57YC6DQJ6NF92JVQ5YN1B",
+  "session_id": "d37aa735-2e3e-44d6-80a4-b881437cd9a7",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-11T09:38:30.4127Z",
+  "branch": "docs/update-tutorial-screenshots",
+  "checkpoints_count": 10,
+  "save_step_count": 10,
+  "files_touched": [
+    "public/tutorial/01-landing.jpg",
+    "public/tutorial/02-workflow-nav.jpg",
+    "public/tutorial/03-workflow-decision-trail.jpg",
+    "public/tutorial/04-workflow-requirement.jpg",
+    "public/tutorial/05-stakeholder.jpg",
+    "public/tutorial/06-evidence-hero.jpg",
+    "public/tutorial/07-evidence-filters.jpg"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "turn_id": "3acd4d799f94",
+  "checkpoint_transcript_start": 620,
+  "transcript_lines_at_start": 620,
+  "compact_transcript_start": 105,
+  "token_usage": {
+    "input_tokens": 176,
+    "cache_creation_tokens": 1105581,
+    "cache_read_tokens": 28451197,
+    "output_tokens": 59202,
+    "api_call_count": 86
+  },
+  "session_metrics": {
+    "turn_count": 11
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-11T09:38:30.240669Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 0,
+    "total_lines_changed": 0,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2,
+      "agent_lines_removed": 2
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2,
+      "agent_lines_removed": 2
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2,
+      "agent_lines_removed": 2
+    },
+    {
+      "checkpoint_number": 6,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2,
+      "agent_lines_removed": 2
+    },
+    {
+      "checkpoint_number": 7,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2,
+      "agent_lines_removed": 2
+    },
+    {
+      "checkpoint_number": 8,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2,
+      "agent_lines_removed": 2
+    },
+    {
+      "checkpoint_number": 9,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2,
+      "agent_lines_removed": 2
+    },
+    {
+      "checkpoint_number": 10,
+      "user_lines_added": 1,
+      "user_lines_removed": 1,
+      "agent_lines_added": 284,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "docs/ROLE_B_AI_SUMMARY.md": 1
+      },
+      "user_removed_per_file": {
+        "docs/ROLE_B_AI_SUMMARY.md": 1
+      }
+    },
+    {
+      "checkpoint_number": 11,
+      "user_lines_added": 1,
+      "user_lines_removed": 1,
+      "agent_lines_added": 284,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "docs/ROLE_B_AI_SUMMARY.md": 1
+      },
+      "user_removed_per_file": {
+        "docs/ROLE_B_AI_SUMMARY.md": 1
+      }
+    }
+  ]
+}
