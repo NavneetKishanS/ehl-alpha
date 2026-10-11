@@ -33,7 +33,7 @@ export function HelpTutorial({ onClose }: { onClose: () => void }) {
         <div className="flex shrink-0 items-center justify-between border-b border-neutral-200 px-6 py-4">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-bmw-blue">How this works</p>
-            <h2 className="text-lg font-medium tracking-tight text-neutral-900">Requirements Copilot walkthrough</h2>
+            <h2 className="text-lg font-medium tracking-tight text-neutral-900">PM Kompass walkthrough</h2>
           </div>
           <button
             onClick={onClose}

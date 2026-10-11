@@ -1,4 +1,4 @@
-# BMW Requirements Copilot
+# PM Kompass
 
 AI-assisted product requirement derivation, prioritization and human-in-the-loop
 review for BMW's "AI for Product Decision Making" hackathon challenge.

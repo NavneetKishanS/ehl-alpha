@@ -24,7 +24,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     signals: listSignals(requirement.workflowId).filter((s) => linkedSignalIds.has(s.id)),
   });
 
-  const aiActor: Actor = { type: "ai", id: "ai_engine", name: "Requirements Copilot", model: result.model };
+  const aiActor: Actor = { type: "ai", id: "ai_engine", name: "PM Kompass", model: result.model };
   const scoreBefore = requirement.score;
 
   logAction({

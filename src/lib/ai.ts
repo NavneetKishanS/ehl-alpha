@@ -169,7 +169,7 @@ export interface DecisionTrailInput {
   previousSummary?: string | null;
 }
 
-const DECISION_TRAIL_SYSTEM = `You write the "decision trail" summary in a BMW requirements copilot. Product managers and stakeholders read it to understand how a customer requirement got to where it is now.
+const DECISION_TRAIL_SYSTEM = `You write the "decision trail" summary in PM Kompass. Product managers and stakeholders read it to understand how a customer requirement got to where it is now.
 
 Write one paragraph of 4-7 sentences, plain prose, no markdown, no bullet points, past tense for events, present tense for the current state. Cover, in chronological order and only where the audit trail contains it:
 1. What the AI originally proposed and on what evidence (keep the real numbers: verbatim counts, percentages, scores).
@@ -264,7 +264,7 @@ export interface StakeholderOverviewInput {
   requirement?: Requirement | null;
 }
 
-const STAKEHOLDER_OVERVIEW_SYSTEM = `You write the "AI overview" above a stakeholder review panel in a BMW requirements copilot — like a summary of pull-request reviews. The reader is the product manager deciding whether to approve the requirement.
+const STAKEHOLDER_OVERVIEW_SYSTEM = `You write the "AI overview" above a stakeholder review panel in PM Kompass — like a summary of pull-request reviews. The reader is the product manager deciding whether to approve the requirement.
 
 Write 3-5 sentences, plain prose, no markdown. Say where reviewers agree and why, and where they disagree and why. For every objection, state whether it is a process objection (sign-off, claim substantiation, governance — it constrains how the requirement ships) or a product objection (customer value, feasibility, cost — it questions the requirement itself), and whether it blocks the requirement or only a part of it. Name reviewers by function (Engineering, Sales, Design, Legal). Mention who has not responded yet, if anyone — the header line states exactly who is pending. End with the one question the PM has to resolve.
 
@@ -419,7 +419,7 @@ const ReassessmentSchema = z.object({
   citedSourceIds: z.array(z.string()),
 });
 
-const REASSESS_SYSTEM = `You re-assess a customer requirement in a BMW requirements copilot after the product manager (PM) challenges it. The PM stays in control; your job is an honest second look, not agreement.
+const REASSESS_SYSTEM = `You re-assess a customer requirement in PM Kompass after the product manager (PM) challenges it. The PM stays in control; your job is an honest second look, not agreement.
 
 What you may change:
 - competitive_gap, strategic_fit, effort_inverse (0-100 each) — only when the PM's argument gives a concrete, relevant reason. Give each change a one-sentence rationale.
@@ -558,7 +558,7 @@ const JudgmentSchema = z.object({
   strategic_fit: JudgmentFactorSchema,
 });
 
-const JUDGMENT_SYSTEM = `You score two judgment-call factors for one customer requirement in a BMW requirements copilot. Each is 0-100 and feeds a weighted priority score that the product manager can inspect, so every number needs a traceable reason.
+const JUDGMENT_SYSTEM = `You score two judgment-call factors for one customer requirement in PM Kompass. Each is 0-100 and feeds a weighted priority score that the product manager can inspect, so every number needs a traceable reason.
 
 competitive_gap — how far BMW is behind competitors on what this requirement addresses (higher = bigger gap to close).
 - 50 = parity, or no usable evidence. 65-85 = customers report competitors doing this clearly better. 15-35 = BMW clearly leads.

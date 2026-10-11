@@ -89,7 +89,7 @@ export function applyJudgmentCache(args: {
     auditLog.push({
       id: `log_aifactors_${req.id}`,
       workflowId: req.workflowId,
-      actor: { type: "ai", id: "ai_engine", name: "Requirements Copilot", model: entry.model },
+      actor: { type: "ai", id: "ai_engine", name: "PM Kompass", model: entry.model },
       action: "score_recomputed",
       targetType: "requirement",
       targetId: req.id,

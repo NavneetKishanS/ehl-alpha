@@ -283,7 +283,7 @@ export default function LandingPage() {
 
       <footer className="border-t border-neutral-200">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3 px-4 py-6 text-xs text-neutral-500 sm:px-8">
-          <span>BMW Group · Requirements Copilot · TUM Hackathon prototype</span>
+          <span>BMW Group · PM Kompass · TUM Hackathon prototype</span>
           <span>
             3D model:{" "}
             <a href="https://sketchfab.com/3d-models/2025-bmw-330i-xdrive-a587961a125340738ca1c6ba53c57cd8" className="underline hover:text-neutral-800" target="_blank" rel="noreferrer">
