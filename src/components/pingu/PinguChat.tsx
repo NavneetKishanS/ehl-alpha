@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import clsx from "clsx";
 import { api } from "@/lib/api-client";
 import type { ChartSpec, ChatTurn } from "@/lib/pingu/types";
@@ -75,8 +76,8 @@ export function PinguChat() {
         >
           <header className="flex items-center justify-between border-b border-neutral-200 px-4 py-3">
             <div className="flex items-center gap-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-bmw-blue text-base" aria-hidden>
-                🐧
+              <span className="relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-bmw-blue" aria-hidden>
+                <Image src="/pingu/mascot.gif" alt="" fill sizes="32px" className="object-cover" unoptimized />
               </span>
               <div>
                 <p className="text-sm font-semibold leading-tight">Pingu</p>
@@ -165,9 +166,15 @@ export function PinguChat() {
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Close Pingu chat" : "Chat with Pingu"}
         title="Chat with Pingu"
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-bmw-blue text-2xl text-white shadow-xl transition-transform hover:scale-105 hover:bg-[#0653b6]"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-bmw-blue text-2xl text-white shadow-xl transition-transform hover:scale-105 hover:bg-[#0653b6]"
       >
-        {open ? <span className="text-xl leading-none">×</span> : <span aria-hidden>🐧</span>}
+        {open ? (
+          <span className="text-xl leading-none">×</span>
+        ) : (
+          <span className="relative block h-full w-full" aria-hidden>
+            <Image src="/pingu/mascot.gif" alt="" fill sizes="56px" className="object-cover" unoptimized />
+          </span>
+        )}
       </button>
     </>
   );
