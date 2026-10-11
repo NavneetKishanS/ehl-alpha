@@ -1,0 +1,54 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4MW0HR11RC8DGVJK6CHF6B1",
+  "session_id": "cb8c26e5-1642-4704-9388-fdb98b1aa032",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-11T06:57:13.055593Z",
+  "branch": "feat/tag-reviewers",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "src/app/api/requirements/[id]/reviewers/route.ts",
+    "src/app/workflow/[componentId]/page.tsx",
+    "src/components/AssignReviewers.tsx",
+    "src/lib/api-client.ts",
+    "src/lib/db.ts",
+    "src/lib/types.ts"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "a8dae1bc9a4e",
+  "checkpoint_transcript_start": 5241,
+  "transcript_lines_at_start": 5241,
+  "compact_transcript_start": 926,
+  "token_usage": {
+    "input_tokens": 146,
+    "cache_creation_tokens": 41725,
+    "cache_read_tokens": 65843428,
+    "output_tokens": 18560,
+    "api_call_count": 73
+  },
+  "session_metrics": {
+    "turn_count": 32
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-11T06:57:12.352986Z",
+    "agent_lines": 183,
+    "agent_removed": 8,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 183,
+    "total_lines_changed": 191,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
