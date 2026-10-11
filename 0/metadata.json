@@ -1,0 +1,54 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4MWQEBBBBX8E4WN9KDWT0BQ",
+  "session_id": "cb8c26e5-1642-4704-9388-fdb98b1aa032",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-11T07:09:43.313353Z",
+  "branch": "feat/signal-ai-overview",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "src/app/api/signals/[id]/overview/route.ts",
+    "src/components/workflow/SignalBreakdown.tsx",
+    "src/lib/ai.ts",
+    "src/lib/api-client.ts",
+    "src/lib/db.ts",
+    "src/lib/types.ts"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "08bcbdaa1a93",
+  "checkpoint_transcript_start": 5665,
+  "transcript_lines_at_start": 5665,
+  "compact_transcript_start": 1002,
+  "token_usage": {
+    "input_tokens": 84,
+    "cache_creation_tokens": 31209,
+    "cache_read_tokens": 39491730,
+    "output_tokens": 17199,
+    "api_call_count": 42
+  },
+  "session_metrics": {
+    "turn_count": 33
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-11T07:09:42.548963Z",
+    "agent_lines": 199,
+    "agent_removed": 41,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 199,
+    "total_lines_changed": 240,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

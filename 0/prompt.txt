@@ -1,0 +1,1 @@
+can we add an ai overview for What customers are saying section for each element and generate only when clicked on(like if i click on seats, i want a brief ai overview like amazon review overviews)
