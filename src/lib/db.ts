@@ -307,6 +307,37 @@ export function getSourcesByIds(ids: string[]): SourceRecord[] {
   return store.sources.filter((s) => ids.includes(s.id));
 }
 
+export function getSignal(signalId: string): Signal | undefined {
+  return store.signals.find((s) => s.id === signalId);
+}
+
+// Persists a signal's AI overview once generated (the actual OpenAI call
+// lives in the API route, alongside the rest of the AI-orchestration
+// routes — db.ts stays synchronous) and logs it like every other AI output
+// in the app, so it shows up in the audit trail too.
+export function cacheSignalOverview(
+  signalId: string,
+  overview: { content: string; model: string; live: boolean },
+  actor: Actor,
+): Signal {
+  const signal = getSignal(signalId);
+  if (!signal) throw new Error("signal not found");
+  signal.aiOverview = { ...overview, generatedAt: new Date().toISOString() };
+
+  logAction({
+    workflowId: signal.workflowId,
+    actor,
+    action: "ai_summary_generated",
+    targetType: "signal",
+    targetId: signal.id,
+    oldValue: null,
+    newValue: { live: overview.live, model: overview.model },
+    rationale: overview.content,
+  });
+
+  return signal;
+}
+
 // ---------- stakeholders / reviews ----------
 
 export function listStakeholders(): Stakeholder[] {
