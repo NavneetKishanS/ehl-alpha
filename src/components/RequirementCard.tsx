@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import type { Requirement } from "@/lib/types";
 import { api } from "@/lib/api-client";
 import { Chip, EvidenceMeter, ScoreRing, STATUS_CHIP, humanize } from "@/components/workflow/primitives";
+import { PdfPreviewModal } from "@/components/workflow/PdfPreviewModal";
+import { buildRecord, loadDecision, saveDecision, type DecisionRecord } from "@/lib/decisionRecord";
+import { DecisionModal, PRIORITY, formatDue, type DecisionAction, type DecisionDraft, type Priority } from "@/components/workflow/DecisionModal";
 
 export function RequirementCard({
   requirement,
@@ -25,7 +28,18 @@ export function RequirementCard({
     Object.fromEntries(requirement.scoreFactors.map((f) => [f.key, f.weight])),
   );
   const [rationaleDraft, setRationaleDraft] = useState("");
-  const [rationaleError, setRationaleError] = useState(false);
+  const [dueDate, setDueDate] = useState("");
+  const [priority, setPriority] = useState<Priority | null>(null);
+  const [showErrors, setShowErrors] = useState(false);
+  const [preview, setPreview] = useState<DecisionDraft | null>(null);
+  const [record, setRecord] = useState<DecisionRecord | null>(null);
+  const [pdfOpen, setPdfOpen] = useState(false);
+
+  // Signed decisions are kept in this browser; drop one that no longer matches the status.
+  useEffect(() => {
+    const r = loadDecision(requirement.id);
+    setRecord(r && r.action === requirement.status ? r : null);
+  }, [requirement.id, requirement.status]);
   const [pending, setPending] = useState<string | null>(null);
   const [challengeArg, setChallengeArg] = useState("");
   const [challengeResult, setChallengeResult] = useState<{ changed: boolean; explanation: string } | null>(null);
@@ -33,17 +47,43 @@ export function RequirementCard({
   const liveScore = computeLiveScore(requirement, weights);
   const weightsDirty = requirement.scoreFactors.some((f) => Math.abs(weights[f.key] - f.weight) > 0.001);
 
-  async function act(status: Requirement["status"]) {
-    const needsRationale = status === "rejected" || status === "postponed";
-    if (needsRationale && !rationaleDraft.trim()) {
-      setRationaleError(true);
+  const today = new Date().toISOString().slice(0, 10);
+  const missing = { dueDate: !dueDate, priority: !priority, reason: !rationaleDraft.trim() };
+  const formComplete = !missing.dueDate && !missing.priority && !missing.reason;
+
+  // Every decision needs a due date, priority and reason, then a signed preview.
+  function act(action: DecisionAction) {
+    if (!formComplete || !priority) {
+      setShowErrors(true);
       return;
     }
-    setPending(status);
+    setPreview({ action, dueDate, priority, reason: rationaleDraft.trim() });
+  }
+
+  async function confirmDecision(signedBy: string, signedAt: Date, signature: string) {
+    if (!preview) return;
+    setPending(preview.action);
+    const stamp = signedAt.toLocaleString(undefined, { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    const rationale = `${preview.reason} · Priority: ${PRIORITY[preview.priority].label} · Review due: ${formatDue(preview.dueDate)} · Signed by ${signedBy}, ${stamp}`;
     try {
-      const updated = await api.updateRequirementStatus(requirement.id, status, rationaleDraft || undefined);
+      const updated = await api.updateRequirementStatus(requirement.id, preview.action, rationale);
+      const rec = buildRecord(requirement, liveScore, {
+        action: preview.action,
+        priority: preview.priority,
+        dueDate: preview.dueDate,
+        reason: preview.reason,
+        signedBy,
+        signedAt: signedAt.toISOString(),
+        signature,
+      });
+      saveDecision(rec);
+      setRecord(rec);
       onChanged(updated);
       setRationaleDraft("");
+      setDueDate("");
+      setPriority(null);
+      setShowErrors(false);
+      setPreview(null);
     } finally {
       setPending(null);
     }
@@ -95,6 +135,22 @@ export function RequirementCard({
             <span className="ml-1">
               <EvidenceMeter level={requirement.evidenceLevel} />
             </span>
+            {record && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPdfOpen(true);
+                }}
+                className="ml-1 inline-flex items-center gap-1.5 border border-bmw-blue px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-bmw-blue transition-colors hover:bg-bmw-blue hover:text-white"
+                title="Open the signed decision record (PDF)"
+              >
+                <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M4 1.5h5.5L13 5v9.5H4z" />
+                  <path d="M9.5 1.5V5H13" />
+                </svg>
+                Preview
+              </button>
+            )}
           </div>
           <ScoreRing score={liveScore} dirty={weightsDirty} />
         </div>
@@ -178,44 +234,108 @@ export function RequirementCard({
 
       {/* Decision */}
       <div className="border-t border-neutral-100 px-6 py-5" onClick={(e) => e.stopPropagation()}>
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <input
-            value={rationaleDraft}
-            onChange={(e) => {
-              setRationaleDraft(e.target.value);
-              setRationaleError(false);
-            }}
-            placeholder="Decision rationale (required to reject or postpone)"
-            className={clsx(
-              "min-w-0 flex-1 border bg-white px-3 py-2.5 text-[13px] text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 focus:border-neutral-900",
-              rationaleError ? "border-red-500" : "border-neutral-300",
-            )}
-          />
-          <div className="flex shrink-0 gap-2">
-            <button
-              onClick={() => act("approved")}
-              disabled={!!pending}
-              className="bg-bmw-blue px-5 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-[#0653b6] disabled:opacity-50"
-            >
-              {pending === "approved" ? "Approving…" : "Approve"}
-            </button>
-            <button
-              onClick={() => act("postponed")}
-              disabled={!!pending}
-              className="border border-neutral-300 bg-white px-4 py-2.5 text-[13px] font-medium text-neutral-800 transition-colors hover:border-neutral-900 disabled:opacity-50"
-            >
-              Postpone
-            </button>
-            <button
-              onClick={() => act("rejected")}
-              disabled={!!pending}
-              className="border border-neutral-300 bg-white px-4 py-2.5 text-[13px] font-medium text-red-600 transition-colors hover:border-red-600 hover:bg-red-50 disabled:opacity-50"
-            >
-              Reject
-            </button>
+        <div className="border border-neutral-200 bg-neutral-50/70 p-5">
+          <div className="mb-4 flex items-baseline justify-between gap-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bmw-blue">PM decision</p>
+            <p className="text-[12px] text-neutral-500">All fields required</p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-[minmax(0,220px)_minmax(0,1fr)]">
+            <FieldLabel label="Review due date" error={showErrors && missing.dueDate ? "Pick a date" : undefined}>
+              <input
+                type="date"
+                min={today}
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                className={clsx(
+                  "h-11 w-full border bg-white px-3 text-[14px] text-neutral-900 outline-none transition-colors focus:border-neutral-900",
+                  showErrors && missing.dueDate ? "border-red-500" : "border-neutral-300",
+                )}
+              />
+            </FieldLabel>
+
+            <FieldLabel as="div" label="Priority level" error={showErrors && missing.priority ? "Select one" : undefined}>
+              <div
+                role="radiogroup"
+                aria-label="Priority level"
+                className={clsx("grid h-11 grid-cols-3 border bg-white", showErrors && missing.priority ? "border-red-500" : "border-neutral-300")}
+              >
+                {(Object.keys(PRIORITY) as Priority[]).map((p, i) => (
+                  <button
+                    key={p}
+                    type="button"
+                    role="radio"
+                    aria-checked={priority === p}
+                    onClick={() => setPriority(p)}
+                    className={clsx(
+                      "flex items-center justify-center gap-2 text-[13px] font-medium transition-colors",
+                      i > 0 && "border-l border-neutral-300",
+                      priority === p ? "bg-neutral-900 text-white" : "text-neutral-700 hover:bg-neutral-100",
+                    )}
+                  >
+                    <span className={clsx("h-2 w-2 rounded-full", PRIORITY[p].dot)} />
+                    {PRIORITY[p].label}
+                  </button>
+                ))}
+              </div>
+            </FieldLabel>
+          </div>
+
+          <div className="mt-4">
+            <FieldLabel label="Reason for action" error={showErrors && missing.reason ? "Explain the decision" : undefined}>
+              <textarea
+                value={rationaleDraft}
+                onChange={(e) => setRationaleDraft(e.target.value)}
+                rows={2}
+                placeholder="Why approve, postpone or reject? This is recorded in the audit trail."
+                className={clsx(
+                  "w-full resize-y border bg-white px-3 py-2.5 text-[14px] leading-relaxed text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 focus:border-neutral-900",
+                  showErrors && missing.reason ? "border-red-500" : "border-neutral-300",
+                )}
+              />
+            </FieldLabel>
+          </div>
+
+          <div className="mt-5 flex flex-col gap-3 border-t border-neutral-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-[12px] text-neutral-500">You’ll preview and sign before anything is saved.</p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => act("approved")}
+                disabled={!!pending}
+                className="bg-bmw-blue px-6 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-[#0653b6] disabled:opacity-50"
+              >
+                Approve
+              </button>
+              <button
+                onClick={() => act("postponed")}
+                disabled={!!pending}
+                className="border border-neutral-300 bg-white px-5 py-2.5 text-[13px] font-medium text-neutral-800 transition-colors hover:border-neutral-900 disabled:opacity-50"
+              >
+                Postpone
+              </button>
+              <button
+                onClick={() => act("rejected")}
+                disabled={!!pending}
+                className="border border-neutral-300 bg-white px-5 py-2.5 text-[13px] font-medium text-red-600 transition-colors hover:border-red-600 hover:bg-red-50 disabled:opacity-50"
+              >
+                Reject
+              </button>
+            </div>
           </div>
         </div>
-        {rationaleError && <p className="mt-2 text-[12px] text-red-600">Add a short rationale before rejecting or postponing.</p>}
+
+        {pdfOpen && record && <PdfPreviewModal record={record} onClose={() => setPdfOpen(false)} />}
+
+        {preview && (
+          <DecisionModal
+            requirement={requirement}
+            score={liveScore}
+            draft={preview}
+            busy={pending === preview.action}
+            onCancel={() => setPreview(null)}
+            onConfirm={confirmDecision}
+          />
+        )}
 
         {/* Challenge */}
         <div className="mt-4">
@@ -224,7 +344,7 @@ export function RequirementCard({
               onClick={() => setChallengeOpen(true)}
               className="text-[13px] font-medium text-bmw-blue underline-offset-2 hover:underline"
             >
-              Disagree with the score? Challenge the Copilot →
+              Disagree with the score? Challenge PM Kompass →
             </button>
           ) : (
             <div className="flex flex-col gap-2 sm:flex-row">
@@ -294,4 +414,20 @@ function computeLiveScore(requirement: Requirement, weights: Record<string, numb
     0,
   );
   return weighted / totalWeight;
+}
+
+function FieldLabel({ label, error, as = "label", children }: { label: string; error?: string; as?: "label" | "div"; children: React.ReactNode }) {
+  // Use "div" when the field holds several buttons, so clicking the label text doesn't press the first one.
+  const Tag = as;
+  return (
+    <Tag className="block">
+      <span className="mb-1.5 flex items-baseline justify-between gap-2">
+        <span className="text-[12px] font-medium text-neutral-700">
+          {label} <span className="text-red-500">*</span>
+        </span>
+        {error && <span className="text-[11px] text-red-600">{error}</span>}
+      </span>
+      {children}
+    </Tag>
+  );
 }

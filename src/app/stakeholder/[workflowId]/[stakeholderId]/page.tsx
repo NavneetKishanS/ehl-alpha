@@ -11,6 +11,7 @@ import { StakeholderAvatar } from "@/components/StakeholderAvatar";
 import { RoleSwitcher } from "@/components/RoleSwitcher";
 import { Chip, EvidenceMeter, ScoreRing, SectionTitle, STATUS_CHIP, humanize } from "@/components/workflow/primitives";
 import { StudyComparison } from "@/components/workflow/StudyComparison";
+import { expertiseLabel } from "@/lib/stakeholderName";
 import { isCategoryRelevant, isRelevantToStakeholder } from "@/lib/expertiseRelevance";
 
 const DECISION_STYLE: Record<StakeholderReview["decision"], { chip: string; label: string }> = {
@@ -107,7 +108,7 @@ export default function StakeholderPage() {
   const submitted = reviews.filter((r) => r.decision !== "pending").length;
   const pending = reviews.length - submitted;
   const [firstName, role] = stakeholder.name.split(" — ");
-  const expertiseWord = stakeholder.expertise.split("_")[0];
+  const expertiseWord = expertiseLabel(stakeholder.expertise);
 
   return (
     <div className="min-h-screen bg-neutral-50 text-neutral-900">
@@ -162,7 +163,7 @@ export default function StakeholderPage() {
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-500">Reviewing as</p>
                 <p className="text-[15px] font-medium text-neutral-900">{firstName}</p>
-                <p className="text-[13px] capitalize text-neutral-500">{role ?? humanize(stakeholder.expertise)}</p>
+                <p className="text-[13px] capitalize text-neutral-500">{role ?? expertiseLabel(stakeholder.expertise)}</p>
               </div>
             </div>
           </div>
@@ -226,7 +227,7 @@ export default function StakeholderPage() {
             <span className="absolute inset-y-0 left-0 w-[3px] bg-bmw-blue" />
             <div className="flex items-center gap-3">
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-bmw-blue text-[12px] font-semibold">AI</span>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-sky-300">Copilot summary · what happened so far</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-sky-300">Kompass summary · what happened so far</p>
             </div>
             <p className="mt-4 max-w-4xl text-[15px] leading-relaxed text-neutral-200">{decisionTrail.content}</p>
           </section>
@@ -234,7 +235,7 @@ export default function StakeholderPage() {
 
         <section>
           <SectionTitle
-            eyebrow={`Relevant to ${humanize(stakeholder.expertise)}`}
+            eyebrow={`Relevant to ${expertiseLabel(stakeholder.expertise)}`}
             title={`Draft requirements (${visible.length}${hiddenCount > 0 && !showAll ? ` of ${ranked.length}` : ""})`}
             aside={
               hiddenCount > 0 ? (
@@ -472,7 +473,7 @@ function ReviewForm({
       <textarea
         defaultValue={review.expertOpinion}
         onChange={(e) => onDraft(review.id, e.target.value)}
-        placeholder="What should the PM know from your perspective? Risks, feasibility, regulatory or market context…"
+        placeholder="What should the PM know from your perspective? Risks, feasibility, cost or supplier context…"
         rows={3}
         className="mt-3 w-full border border-neutral-300 bg-white px-3 py-2.5 text-[14px] text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 focus:border-neutral-900"
       />

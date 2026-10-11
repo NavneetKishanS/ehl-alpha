@@ -8,10 +8,10 @@ import type { Stakeholder } from "@/lib/types";
 // so they work offline. Swap a photo by replacing the file; a stakeholder with
 // no entry, or an image that fails to load, falls back to the coloured initial.
 const PHOTO: Record<string, string> = {
-  sh_engineering: "/stakeholders/sh_engineering.jpg",
-  sh_sales: "/stakeholders/sh_sales.jpg",
-  sh_design: "/stakeholders/sh_design.jpg",
-  sh_legal: "/stakeholders/sh_legal.jpg",
+  sh_rnd: "/stakeholders/sh_rnd.jpg",
+  sh_manufacturing: "/stakeholders/sh_manufacturing.jpg",
+  sh_controlling: "/stakeholders/sh_controlling.jpg",
+  sh_procurement: "/stakeholders/sh_procurement.jpg",
 };
 
 export function StakeholderAvatar({

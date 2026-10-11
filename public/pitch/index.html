@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
+<title>PM Kompass · Pitch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --blue: #1c69d4;
+    --blue-dark: #0653b6;
+    --ink: #0a0a0a;
+    --ink-2: #262626;
+    --grey: #6b7280;
+    --line: #e5e5e5;
+    --paper: #ffffff;
+    --mist: #eef0f2;
+    --m-light: #81c4ff;
+    --m-dark: #16588e;
+    --m-red: #e7222e;
+    --amber: #f59e0b;
+    --green: #059669;
+    --red: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #050505; overflow: hidden; }
+  body { font-family: Inter, "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+
+  /* Fixed 16:9 stage, scaled to the screen */
+  #viewport { position: fixed; inset: 0; display: grid; place-items: center; }
+  #stage { position: relative; width: 1600px; height: 900px; transform-origin: center; overflow: hidden; background: var(--paper); }
+
+  .slide { position: absolute; inset: 0; opacity: 0; transform: translateX(80px); transition: opacity .6s ease, transform .8s cubic-bezier(.2,.8,.2,1); pointer-events: none; }
+  .slide.active { opacity: 1; transform: none; pointer-events: auto; }
+  .slide.past { transform: translateX(-80px); }
+  .slide .rise { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
+  .slide.active .rise { opacity: 1; transform: none; }
+  .slide.active .d1 { transition-delay: .15s } .slide.active .d2 { transition-delay: .3s } .slide.active .d3 { transition-delay: .45s }
+  .slide.active .d4 { transition-delay: .6s } .slide.active .d5 { transition-delay: .75s } .slide.active .d6 { transition-delay: .9s }
+
+  .light { background: radial-gradient(120% 120% at 75% 0%, #ffffff 0%, #eef0f2 52%, #dde1e5 100%); }
+  .dark  { background: radial-gradient(120% 120% at 80% 10%, #1b2432 0%, #0b0f16 55%, #050608 100%); color: #fff; }
+
+  .pad { position: absolute; inset: 120px 96px 150px; }
+  .eyebrow { font-size: 14px; font-weight: 600; letter-spacing: .28em; text-transform: uppercase; color: var(--blue); }
+  .dark .eyebrow { color: var(--m-light); }
+  h1 { font-weight: 300; letter-spacing: -.03em; line-height: 1.02; }
+  .h-xl { font-size: 104px; }
+  .h-l { font-size: 76px; }
+  .h-m { font-size: 54px; }
+  .sub { font-size: 24px; line-height: 1.45; color: #4b5563; font-weight: 400; }
+  .dark .sub { color: #b9c1cc; }
+  .watermark { position: absolute; right: -20px; bottom: 110px; font-size: 300px; font-weight: 700; letter-spacing: -.05em; line-height: .8; color: transparent; -webkit-text-stroke: 2px rgba(10,10,10,.07); text-transform: uppercase; white-space: nowrap; pointer-events: none; }
+  .dark .watermark { -webkit-text-stroke: 2px rgba(255,255,255,.06); }
+
+  /* ---------- HUD: top bar ---------- */
+  .hud-top { position: absolute; left: 0; right: 0; top: 0; height: 76px; display: flex; align-items: center; justify-content: space-between; padding: 0 56px; z-index: 20; border-bottom: 1px solid rgba(0,0,0,.08); background: rgba(255,255,255,.85); backdrop-filter: blur(8px); transition: background .6s, border-color .6s, color .6s; }
+  #stage.is-dark .hud-top { background: rgba(5,6,8,.55); border-color: rgba(255,255,255,.08); color: #fff; }
+  .brand { display: flex; align-items: center; gap: 16px; font-size: 18px; font-weight: 600; letter-spacing: -.01em; }
+  .logo-dark { display: none; }
+  #stage.is-dark .logo-dark { display: block; }
+  #stage.is-dark .logo-light { display: none; }
+  .brand .sep { width: 1px; height: 26px; background: currentColor; opacity: .2; }
+  .mstripe { display: flex; gap: 0; height: 6px; width: 72px; transform: skewX(-24deg); }
+  .mstripe i { flex: 1; } .mstripe i:nth-child(1) { background: var(--m-light) } .mstripe i:nth-child(2) { background: var(--m-dark) } .mstripe i:nth-child(3) { background: var(--m-red) }
+  .hud-right { display: flex; align-items: center; gap: 28px; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--grey); }
+  #stage.is-dark .hud-right { color: #8b95a3; }
+  .hud-right b { color: var(--ink); font-weight: 600; letter-spacing: .06em; }
+  #stage.is-dark .hud-right b { color: #fff; }
+
+  /* ---------- HUD: bottom instrument cluster (the drive) ---------- */
+  .cluster { position: absolute; left: 0; right: 0; bottom: 0; height: 112px; z-index: 20; display: grid; grid-template-columns: 300px 1fr 300px; align-items: center; padding: 0 56px; background: linear-gradient(to top, rgba(5,6,8,.96), rgba(5,6,8,.88)); color: #fff; }
+  .gears { display: flex; gap: 6px; }
+  .gear { width: 40px; height: 40px; display: grid; place-items: center; font-size: 16px; font-weight: 600; color: #5b6573; border: 1px solid #2a313b; cursor: pointer; transition: all .3s; }
+  .gear.on { color: #fff; background: var(--blue); border-color: var(--blue); box-shadow: 0 0 22px rgba(28,105,212,.6); }
+  .gear-label { margin-top: 8px; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #8b95a3; }
+  .road { position: relative; height: 56px; margin: 0 32px; }
+  .road .asphalt { position: absolute; left: 0; right: 0; top: 36px; height: 2px; background: repeating-linear-gradient(90deg, #3a434f 0 22px, transparent 22px 38px); }
+  .road .done { position: absolute; left: 0; top: 36px; height: 2px; background: var(--blue); box-shadow: 0 0 12px var(--blue); transition: width 1s cubic-bezier(.2,.8,.2,1); }
+  .road .car { position: absolute; z-index: 2; top: 6px; width: 92px; transition: left 1s cubic-bezier(.2,.8,.2,1); transform: translateX(-50%); }
+  .road .flag { position: absolute; right: -10px; top: 14px; width: 22px; height: 22px; background: conic-gradient(#fff 0 25%, #111 0 50%, #fff 0 75%, #111 0) 0 0/11px 11px; opacity: .75; }
+  .road .stops { position: absolute; left: 0; right: 0; top: 31px; }
+  .road .stop { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #0b0f16; border: 2px solid #3a434f; transform: translateX(-50%); transition: all .4s; }
+  .road .stop.on { border-color: var(--blue); background: var(--blue); }
+  .speedo { justify-self: end; display: flex; align-items: center; gap: 16px; }
+  .speedo svg { overflow: visible; }
+  .speedo .read { text-align: right; }
+  .speedo .read .v { font-size: 34px; font-weight: 300; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+  .speedo .read .u { font-size: 11px; letter-spacing: .2em; color: #8b95a3; text-transform: uppercase; }
+  #needle { transition: transform 1s cubic-bezier(.2,.8,.2,1); transform-origin: 40px 40px; }
+
+  /* ---------- Shared bits ---------- */
+  .card { background: #fff; border: 1px solid var(--line); box-shadow: 0 20px 50px rgba(0,0,0,.08); }
+  .chip { display: inline-flex; align-items: center; padding: 6px 10px; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+  .shot { display: block; width: 100%; border: 1px solid rgba(0,0,0,.08); box-shadow: 0 30px 70px rgba(0,0,0,.18); }
+  .dark .shot { border-color: rgba(255,255,255,.1); box-shadow: 0 40px 90px rgba(0,0,0,.6); }
+  .btn { display: inline-flex; align-items: center; gap: 12px; background: var(--blue); color: #fff; text-decoration: none; font-size: 20px; font-weight: 500; padding: 18px 30px; transition: background .2s; }
+  .btn:hover { background: var(--blue-dark); }
+
+  /* ---------- Slide 1: Marcus ---------- */
+  .s1-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; height: 100%; }
+  .persona { display: flex; align-items: center; gap: 22px; margin-top: 40px; }
+  .avatar { width: 84px; height: 84px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; font-size: 34px; font-weight: 300; box-shadow: 0 0 0 4px var(--blue); }
+  .persona .who { font-size: 22px; font-weight: 500; } .persona .role { font-size: 17px; color: var(--grey); margin-top: 4px; }
+  .pains { margin-top: 44px; display: grid; gap: 14px; }
+  .pain { display: flex; gap: 16px; align-items: baseline; font-size: 23px; color: var(--ink-2); }
+  .pain .n { font-size: 14px; font-weight: 600; color: var(--m-red); letter-spacing: .1em; min-width: 30px; }
+  .pile { position: relative; height: 100%; }
+  .pile .item { position: absolute; width: 300px; padding: 22px 24px; background: #fff; border: 1px solid var(--line); box-shadow: 0 16px 40px rgba(0,0,0,.1); }
+  .pile .item .k { font-size: 44px; font-weight: 300; letter-spacing: -.02em; }
+  .pile .item .l { margin-top: 6px; font-size: 15px; color: var(--grey); }
+  .slide.active .pile .item { animation: drop .9s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes drop { from { opacity: 0; transform: translateY(-60px) rotate(var(--r, 0deg)) } to { opacity: 1; transform: rotate(var(--r, 0deg)) } }
+  .board-q { position: absolute; left: 0; right: 0; bottom: -6px; background: var(--ink); color: #fff; padding: 24px 28px; font-size: 24px; font-weight: 300; }
+  .board-q span { display: block; margin-top: 8px; font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: #9aa3ad; }
+
+  /* ---------- Slide 2: Solution ---------- */
+  .s2-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 64px; align-items: center; height: 100%; }
+  .pipeline { margin-top: 44px; display: grid; gap: 0; }
+  .step { display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 18px; padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.08); font-size: 21px; }
+  .step .dot { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 600; background: var(--blue); color: #fff; }
+  .step .own { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: #8b95a3; }
+  .step.pm .dot { background: #fff; color: var(--ink); } .step.pm .own { color: #fff; }
+  .step.sh .dot { background: var(--amber); color: #111; }
+  .device { position: relative; }
+  .device .glow { position: absolute; inset: 10% 5%; background: radial-gradient(closest-side, rgba(28,105,212,.55), transparent); filter: blur(30px); }
+
+  /* ---------- Slide 3: Demo ---------- */
+  .s3-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
+  .route { margin-top: 46px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+  .wp { position: relative; }
+  .wp .img { height: 250px; overflow: hidden; border: 1px solid var(--line); background: #fff; box-shadow: 0 16px 40px rgba(0,0,0,.08); }
+  .wp .img img { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+  .wp .num { margin-top: 18px; font-size: 13px; font-weight: 600; letter-spacing: .2em; color: var(--blue); }
+  .wp .t { margin-top: 6px; font-size: 21px; font-weight: 500; letter-spacing: -.01em; }
+  .wp .d { margin-top: 6px; font-size: 15px; line-height: 1.45; color: var(--grey); }
+  .route-line { position: absolute; left: 0; right: 0; top: 85px; height: 2px; background: var(--blue); opacity: .0; }
+  .live { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; letter-spacing: .2em; color: var(--m-red); text-transform: uppercase; }
+  .live i { width: 10px; height: 10px; border-radius: 50%; background: var(--m-red); animation: pulse 1.4s infinite; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(231,34,46,.6) } 50% { box-shadow: 0 0 0 10px rgba(231,34,46,0) } }
+
+  /* ---------- Slide 4: Trust ---------- */
+  .s4-cols { margin-top: 44px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .tcol .img { height: 250px; overflow: hidden; border: 1px solid rgba(255,255,255,.1); box-shadow: 0 30px 70px rgba(0,0,0,.5); }
+  .tcol .img img { width: 100%; height: 100%; object-fit: cover; }
+  .tcol .t { margin-top: 22px; font-size: 25px; font-weight: 500; letter-spacing: -.01em; }
+  .tcol .d { margin-top: 8px; font-size: 17px; line-height: 1.5; color: #b9c1cc; }
+  .tcol .k { color: #fff; font-weight: 500; }
+  .controls { margin-top: 34px; display: flex; gap: 12px; align-items: center; font-size: 16px; color: #8b95a3; }
+  .controls .c { padding: 10px 18px; border: 1px solid #2f3742; color: #fff; font-size: 15px; }
+  .controls .c.primary { background: var(--blue); border-color: var(--blue); }
+
+  /* ---------- Slide 5: Close ---------- */
+  .funnel { margin-top: 56px; display: flex; align-items: flex-start; gap: 28px; }
+  .fstep { flex: 1; padding-top: 22px; border-top: 2px solid var(--ink); }
+  .fstep .v { font-size: 64px; font-weight: 300; letter-spacing: -.03em; }
+  .fstep .l { margin-top: 6px; font-size: 18px; color: var(--grey); }
+  .fstep.us { border-top-color: var(--blue); }
+  .fstep.us .v { color: var(--blue); }
+  .fstep.us .tag { display: inline-block; margin-top: 12px; }
+  .arrow { font-size: 40px; color: #c4c8cd; padding-top: 34px; }
+  .closing { margin-top: 70px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .closing .line { font-size: 46px; font-weight: 300; letter-spacing: -.02em; line-height: 1.15; }
+  .closing .line b { font-weight: 500; }
+
+  /* ---------- Presenter helpers ---------- */
+  #notes { position: fixed; left: 20px; right: 20px; bottom: 20px; z-index: 50; max-width: 900px; margin: 0 auto; background: rgba(10,12,16,.94); color: #e5e7eb; padding: 18px 22px; font-size: 16px; line-height: 1.55; border-left: 3px solid var(--blue); display: none; }
+  #notes.show { display: block; }
+  #notes .meta { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: #8b95a3; margin-bottom: 6px; display: flex; justify-content: space-between; }
+  #help { position: fixed; right: 18px; top: 14px; z-index: 50; font-size: 12px; color: #6b7280; letter-spacing: .05em; opacity: .0; transition: opacity .4s; }
+  body:hover #help { opacity: .8; }
+  #timer { position: fixed; left: 18px; top: 14px; z-index: 50; font-size: 13px; font-variant-numeric: tabular-nums; color: #9aa3ad; display: none; }
+  #timer.show { display: block; }
+  #timer.over { color: var(--m-red); }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage">
+
+    <!-- ===== HUD top ===== -->
+    <header class="hud-top">
+      <div class="brand">
+        <img class="logo-light" src="img/bmw-logo-light.svg" width="44" height="44" alt="BMW" />
+        <img class="logo-dark" src="img/bmw-logo-dark.svg" width="44" height="44" alt="BMW" />
+        <span class="sep"></span>
+        <span>PM Kompass</span>
+        <span class="mstripe" style="margin-left:10px"><i></i><i></i><i></i></span>
+      </div>
+      <div class="hud-right">
+        <span>TUM Hackathon · BMW Group challenge</span>
+        <span><b id="hud-count">01</b> / 05</span>
+      </div>
+    </header>
+
+    <!-- ===== 01 PROBLEM ===== -->
+    <section class="slide light" data-gear="P" data-label="Problem" data-dark="0">
+      <div class="watermark">Marcus</div>
+      <div class="pad">
+        <div class="s1-grid">
+          <div>
+            <p class="eyebrow rise">01 · The problem</p>
+            <h1 class="h-xl rise d1" style="margin-top:22px">Meet Marcus.</h1>
+            <div class="persona rise d2">
+              <div class="avatar">M</div>
+              <div>
+                <div class="who">Product Manager, BMW 1 Series</div>
+                <div class="role">Has to decide what the F70 successor offers its customers.</div>
+              </div>
+            </div>
+            <div class="pains">
+              <div class="pain rise d3"><span class="n">01</span>Thousands of customer voices nobody has time to read.</div>
+              <div class="pain rise d4"><span class="n">02</span>Data in silos: feedback, sales, studies, option lists.</div>
+              <div class="pain rise d5"><span class="n">03</span>Priorities set by gut feel and the loudest stakeholder.</div>
+            </div>
+          </div>
+          <div class="pile">
+            <div class="item" style="left:0;top:0;--r:-3deg;animation-delay:.2s"><div class="k">10,128</div><div class="l">customer verbatims from 14 countries</div></div>
+            <div class="item" style="left:340px;top:36px;--r:2.5deg;animation-delay:.35s"><div class="k">4</div><div class="l">sales regions, volumes 2024 → 2030</div></div>
+            <div class="item" style="left:24px;top:196px;--r:2deg;animation-delay:.5s"><div class="k">187</div><div class="l">customer-study scores across 38 categories</div></div>
+            <div class="item" style="left:362px;top:236px;--r:-2.5deg;animation-delay:.65s"><div class="k">4</div><div class="l">stakeholders · R&amp;D, manufacturing, controlling, procurement</div></div>
+            <div class="board-q rise d6">“Why exactly is this on the list for 2030?”<span>The question Marcus can’t answer with a spreadsheet</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 02 SOLUTION ===== -->
+    <section class="slide dark" data-gear="N" data-label="Solution" data-dark="1">
+      <div class="watermark">Kompass</div>
+      <div class="pad">
+        <div class="s2-grid">
+          <div>
+            <p class="eyebrow rise">02 · The solution</p>
+            <h1 class="h-l rise d1" style="margin-top:22px">PM Kompass reads everything.<br /><span style="color:var(--m-light)">Marcus decides.</span></h1>
+            <div class="pipeline">
+              <div class="step rise d2"><span class="dot">1</span><span>Ingest real BMW data</span><span class="own">Kompass</span></div>
+              <div class="step rise d2"><span class="dot">2</span><span>Cluster feedback into signals</span><span class="own">Kompass</span></div>
+              <div class="step rise d3"><span class="dot">3</span><span>Derive & score requirements</span><span class="own">Kompass</span></div>
+              <div class="step sh rise d4"><span class="dot">4</span><span>Experts review in their own view</span><span class="own">Stakeholders</span></div>
+              <div class="step pm rise d5"><span class="dot">5</span><span>Approve · challenge · reject</span><span class="own">Marcus</span></div>
+            </div>
+          </div>
+          <div class="device rise d3">
+            <div class="glow"></div>
+            <img class="shot" src="img/landing.jpg" alt="Landing page with the 3D BMW and component hotspots" style="position:relative" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 03 DEMO ===== -->
+    <section class="slide light" data-gear="D" data-label="Demo" data-dark="0">
+      <div class="watermark">Drive</div>
+      <div class="pad">
+        <div class="s3-top">
+          <div>
+            <p class="live rise"><i></i>Live demo</p>
+            <h1 class="h-l rise d1" style="margin-top:18px">One requirement, start to finish.</h1>
+          </div>
+          <a class="btn rise d2" href="http://localhost:3000/" target="_blank" rel="noreferrer">Open the app <span>→</span></a>
+        </div>
+        <div class="route">
+          <div class="wp rise d2"><div class="img"><img src="img/landing.jpg" alt="" /></div><div class="num">01</div><div class="t">Pick a component</div><div class="d">Click a hotspot on the 3D BMW.</div></div>
+          <div class="wp rise d3"><div class="img"><img src="img/requirements_top.jpg" alt="" /></div><div class="num">02</div><div class="t">Ranked requirements</div><div class="d">Each with a score, evidence level and reasoning.</div></div>
+          <div class="wp rise d4"><div class="img"><img src="img/workflow.jpg" alt="" /></div><div class="num">03</div><div class="t">Challenge the AI</div><div class="d">Adjust weights or argue back; the score updates.</div></div>
+          <div class="wp rise d5"><div class="img"><img src="img/stakeholder.jpg" alt="" /></div><div class="num">04</div><div class="t">Stakeholder review</div><div class="d">Procurement sees only what’s relevant to procurement.</div></div>
+          <div class="wp rise d6"><div class="img"><img src="img/evidence.jpg" alt="" /></div><div class="num">05</div><div class="t">Trace to the source</div><div class="d">Every number opens the real customer quotes.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 04 TRUST ===== -->
+    <section class="slide dark" data-gear="M" data-label="Trust" data-dark="1">
+      <div class="watermark">Proof</div>
+      <div class="pad">
+        <p class="eyebrow rise">04 · Why Marcus can trust it</p>
+        <h1 class="h-l rise d1" style="margin-top:22px">Every decision is traceable.</h1>
+        <div class="s4-cols">
+          <div class="tcol rise d2">
+            <div class="img"><img src="img/evidence.jpg" alt="" /></div>
+            <div class="t">Grounded in real data</div>
+            <div class="d">Search “digital key”: <span class="k">149 rows</span>, <span class="k">35% difficult to use</span>. The quote is one click away.</div>
+          </div>
+          <div class="tcol rise d3">
+            <div class="img"><img src="img/stakeholder.jpg" alt="" style="object-position:top" /></div>
+            <div class="t">Experts in the loop</div>
+            <div class="d">R&amp;D, manufacturing, controlling and procurement review in their own view, filtered to <span class="k">their domain</span>.</div>
+          </div>
+          <div class="tcol rise d4">
+            <div class="img"><img src="img/requirements_top.jpg" alt="" style="object-position:top right" /></div>
+            <div class="t">Full audit trail</div>
+            <div class="d">Every AI proposal, PM decision and review is logged. The Kompass summary is <span class="k">written from that log</span>.</div>
+          </div>
+        </div>
+        <div class="controls rise d5">
+          <span>The PM is always in control:</span>
+          <span class="c primary">Approve</span><span class="c">Postpone</span><span class="c">Reject</span><span class="c">Challenge PM Kompass</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 05 CLOSE ===== -->
+    <section class="slide light" data-gear="★" data-label="Finish" data-dark="0">
+      <div class="watermark">Next</div>
+      <div class="pad">
+        <p class="eyebrow rise">05 · The impact</p>
+        <h1 class="h-l rise d1" style="margin-top:22px">From a billion findings<br />to one great car.</h1>
+        <div class="funnel">
+          <div class="fstep rise d2"><div class="v">~1 billion</div><div class="l">customer findings</div></div>
+          <div class="arrow rise d2">→</div>
+          <div class="fstep us rise d3"><div class="v">~1,000</div><div class="l">justified, prioritised requirements</div><span class="chip tag" style="background:#eef4fc;color:var(--blue)">Where PM Kompass helps</span></div>
+          <div class="arrow rise d3">→</div>
+          <div class="fstep rise d4"><div class="v">1</div><div class="l">next-generation BMW</div></div>
+        </div>
+        <div class="closing">
+          <p class="line rise d5">PM Kompass does the reading.<br /><b>Marcus makes the call.</b></p>
+          <p class="rise d6" style="font-size:15px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);text-align:right">Thank you<br /><span style="color:var(--ink);letter-spacing:.06em;text-transform:none;font-size:20px;font-weight:500">Questions?</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Instrument cluster ===== -->
+    <footer class="cluster">
+      <div>
+        <div class="gears" id="gears"></div>
+        <div class="gear-label" id="gear-label">Problem</div>
+      </div>
+      <div class="road">
+        <div class="asphalt"></div>
+        <div class="done" id="done"></div>
+        <div class="stops" id="stops"></div>
+        <svg class="car" id="car" viewBox="0 0 184 52" aria-hidden="true">
+          <path d="M6 38 C6 30 14 27 30 25 L52 23 C64 13 80 8 104 8 C124 8 138 13 150 22 C166 24 178 28 178 36 L178 40 L160 40 A13 13 0 0 0 134 40 L60 40 A13 13 0 0 0 34 40 L10 40 Z" fill="#1c69d4" />
+          <path d="M60 23 C70 15 84 12 104 12 C120 12 132 15 142 22 Z" fill="#0b1626" opacity=".85" />
+          <circle cx="47" cy="40" r="10" fill="#111" stroke="#9aa3ad" stroke-width="2.5" /><circle cx="147" cy="40" r="10" fill="#111" stroke="#9aa3ad" stroke-width="2.5" />
+          <rect x="170" y="29" width="8" height="4" fill="#ffe8a3" /><rect x="6" y="30" width="6" height="4" fill="#e7222e" />
+        </svg>
+        <div class="flag"></div>
+      </div>
+      <div class="speedo">
+        <div class="read"><div class="v" id="speed">0</div><div class="u">km/h · progress</div></div>
+        <svg width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
+          <path d="M12 58 A32 32 0 1 1 68 58" fill="none" stroke="#2a313b" stroke-width="5" />
+          <path id="arcfill" d="M12 58 A32 32 0 1 1 68 58" fill="none" stroke="#1c69d4" stroke-width="5" pathLength="100" stroke-dasharray="0 100" style="transition: stroke-dasharray 1s cubic-bezier(.2,.8,.2,1)" />
+          <line id="needle" x1="40" y1="40" x2="40" y2="14" stroke="#e7222e" stroke-width="3" stroke-linecap="round" />
+          <circle cx="40" cy="40" r="5" fill="#fff" />
+        </svg>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div id="notes"><div class="meta"><span id="notes-title"></span><span id="notes-time"></span></div><div id="notes-body"></div></div>
+<div id="timer">0:00</div>
+<div id="help">← → navigate · F fullscreen · N notes · T timer</div>
+
+<script>
+  const NOTES = [
+    { t: "0:00 – 0:30", s: "Meet Marcus. He's the product manager for the BMW 1 Series and has to decide what the next generation offers its customers. He has over 10,000 customer verbatims from 14 countries, sales volumes, 187 customer-study scores and four stakeholders with four opinions. Nobody can read all of it, so priorities end up set by gut feel. And when the board asks 'why is this on the list?', a spreadsheet can't answer." },
+    { t: "0:30 – 1:05", s: "So we built PM Kompass. The AI does the reading: it ingests BMW's real data, clusters feedback into signals, and derives and scores requirements. Experts review them in their own view. Marcus makes every final decision. Let me show you." },
+    { t: "1:05 – 2:15", s: "LIVE DEMO. 1) Click a hotspot on the 3D BMW. 2) Show ranked requirements with score and evidence. 3) Challenge PM Kompass or move a weight and watch the score change. 4) Switch to Procurement with the role switcher; they only see what's relevant to them. 5) Click a theme and open the real quotes in the Evidence Explorer." },
+    { t: "2:15 – 2:45", s: "Why can Marcus trust it? Every number traces back to real customer quotes. Every AI proposal, decision and stakeholder review is written to an audit log, and PM Kompass's summary is generated from that log. Marcus can approve, postpone, reject or challenge at every step." },
+    { t: "2:45 – 3:00", s: "BMW goes from roughly a billion findings to about a thousand requirements to one car. We help with that middle step. PM Kompass does the reading. Marcus makes the call. Thank you." },
+  ];
+
+  const stage = document.getElementById("stage");
+  const slides = [...document.querySelectorAll(".slide")];
+  const gears = document.getElementById("gears");
+  const stops = document.getElementById("stops");
+  let i = 0;
+
+  slides.forEach((s, n) => {
+    const g = document.createElement("div");
+    g.className = "gear"; g.textContent = s.dataset.gear; g.title = s.dataset.label;
+    g.onclick = () => go(n); gears.appendChild(g);
+    const st = document.createElement("div");
+    st.className = "stop"; st.style.left = (n / (slides.length - 1)) * 100 + "%"; stops.appendChild(st);
+  });
+
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => { s.classList.toggle("active", k === i); s.classList.toggle("past", k < i); });
+    [...gears.children].forEach((g, k) => g.classList.toggle("on", k === i));
+    [...stops.children].forEach((g, k) => g.classList.toggle("on", k <= i));
+    const p = i / (slides.length - 1);
+    document.getElementById("car").style.left = p * 100 + "%";
+    document.getElementById("done").style.width = p * 100 + "%";
+    document.getElementById("gear-label").textContent = slides[i].dataset.label;
+    document.getElementById("hud-count").textContent = String(i + 1).padStart(2, "0");
+    stage.classList.toggle("is-dark", slides[i].dataset.dark === "1");
+    // Speedometer: 0 → 250 km/h across the pitch
+    const target = Math.round(p * 250);
+    animateSpeed(target);
+    document.getElementById("needle").style.transform = `rotate(${-135 + p * 270}deg)`;
+    document.getElementById("arcfill").setAttribute("stroke-dasharray", `${p * 100} 100`);
+    document.getElementById("notes-title").textContent = `${String(i + 1).padStart(2, "0")} · ${slides[i].dataset.label}`;
+    document.getElementById("notes-time").textContent = NOTES[i].t;
+    document.getElementById("notes-body").textContent = NOTES[i].s;
+    try { history.replaceState(null, "", "#" + (i + 1)); } catch (e) {}
+  }
+
+  let speedNow = 0, raf;
+  function animateSpeed(target) {
+    cancelAnimationFrame(raf);
+    const el = document.getElementById("speed");
+    const tick = () => { speedNow += (target - speedNow) * 0.12; if (Math.abs(target - speedNow) < 0.5) speedNow = target; el.textContent = Math.round(speedNow); if (speedNow !== target) raf = requestAnimationFrame(tick); };
+    tick();
+  }
+
+  function fit() {
+    const s = Math.min(innerWidth / 1600, innerHeight / 900);
+    stage.style.transform = `scale(${s})`;
+  }
+  addEventListener("resize", fit); fit();
+
+  // Timer
+  let t0 = null, timerOn = false;
+  const timerEl = document.getElementById("timer");
+  setInterval(() => {
+    if (!timerOn) return;
+    const sec = Math.floor((Date.now() - t0) / 1000);
+    timerEl.textContent = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")} / 3:00`;
+    timerEl.classList.toggle("over", sec > 180);
+  }, 250);
+
+  addEventListener("keydown", (e) => {
+    if (["ArrowRight", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); go(i + 1); }
+    else if (["ArrowLeft", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); go(i - 1); }
+    else if (e.key === "Home") go(0);
+    else if (e.key === "End") go(slides.length - 1);
+    else if (e.key.toLowerCase() === "f") { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }
+    else if (e.key.toLowerCase() === "n") document.getElementById("notes").classList.toggle("show");
+    else if (e.key.toLowerCase() === "t") { timerOn = !timerOn; if (timerOn) t0 = Date.now(); timerEl.classList.toggle("show", timerOn); }
+    else if (/^[1-5]$/.test(e.key)) go(Number(e.key) - 1);
+  });
+  // Click right/left half of the screen (but not on links) to navigate
+  document.getElementById("viewport").addEventListener("click", (e) => {
+    if (e.target.closest("a, .gear")) return;
+    go(e.clientX > innerWidth / 2 ? i + 1 : i - 1);
+  });
+
+  const start = parseInt(location.hash.slice(1), 10);
+  go(Number.isFinite(start) ? start - 1 : 0);
+</script>
+</body>
+</html>

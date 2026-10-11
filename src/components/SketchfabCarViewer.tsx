@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import clsx from "clsx";
-import type { ComponentKey, VehicleComponent } from "@/lib/types";
+import type { ComponentKey, ComponentSentiment, VehicleComponent } from "@/lib/types";
 import type { ViewMode, ZoomRequest } from "@/lib/carViewer";
 import { HotspotButton } from "@/components/HotspotButton";
 import { BmwLogo } from "@/components/BmwLogo";
@@ -120,10 +120,11 @@ export default function SketchfabCarViewer(props: {
   resetKey: number;
   zoom?: ZoomRequest;
   highlightedId: string | null;
+  sentiment?: Record<string, ComponentSentiment>;
   onHover: (id: string | null) => void;
   onSelect: (c: VehicleComponent) => void;
 }) {
-  const { components, mode, paint, resetKey, zoom, highlightedId, onHover, onSelect } = props;
+  const { components, mode, paint, resetKey, zoom, highlightedId, sentiment, onHover, onSelect } = props;
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const apiRef = useRef<SketchfabApi | null>(null);
   const homeRef = useRef<{ cam: CameraLookAt; fov: number } | null>(null);
@@ -305,7 +306,7 @@ export default function SketchfabCarViewer(props: {
               className="absolute left-0 top-0 z-20 opacity-0 transition-opacity duration-200"
               style={{ willChange: "transform" }}
             >
-              <HotspotButton component={c} highlighted={highlightedId === c.id} onSelect={onSelect} onHover={onHover} />
+              <HotspotButton component={c} sentiment={sentiment?.[c.key]} highlighted={highlightedId === c.id} onSelect={onSelect} onHover={onHover} />
             </div>
           ) : null,
         )}

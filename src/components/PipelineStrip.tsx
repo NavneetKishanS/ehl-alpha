@@ -3,7 +3,7 @@
 import clsx from "clsx";
 import type { Stage } from "@/lib/types";
 
-const OWNER_LABEL: Record<Stage["owner"], string> = { ai: "Copilot", pm: "PM", stakeholder: "Stakeholders" };
+const OWNER_LABEL: Record<Stage["owner"], string> = { ai: "Kompass", pm: "PM", stakeholder: "Stakeholders" };
 
 // Configurator-style stepper: numbered stages on a progress rail. Hovering a
 // stage shows its status, owner and timestamps.

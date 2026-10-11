@@ -17,6 +17,12 @@ export interface Vehicle {
   markets: string[]; // e.g. ["Europe", "China", "United States"]
 }
 
+// Likes vs. complaints (Difficult to Use + Defect) from customer feedback.
+export interface ComponentSentiment {
+  likes: number;
+  complaints: number;
+}
+
 export interface VehicleComponent {
   id: string;
   vehicleId: string;
@@ -192,12 +198,11 @@ export interface Requirement {
 // ---------- Stakeholders ----------
 
 export type StakeholderExpertise =
-  | "engineering"
-  | "sales"
-  | "design"
-  | "legal_regulatory"
-  | "brand"
-  | "procurement";
+  | "research_development"
+  | "manufacturing"
+  | "controlling"
+  | "procurement"
+  | "brand";
 
 export interface Stakeholder {
   id: string;
