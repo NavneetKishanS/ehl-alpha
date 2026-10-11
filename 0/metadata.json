@@ -1,0 +1,49 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4MY3YFHPXYPJ41JM2EEN3YW",
+  "session_id": "cb8c26e5-1642-4704-9388-fdb98b1aa032",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-11T07:34:01.585013Z",
+  "branch": "feat/pingu-mascot-gif",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "src/components/pingu/PinguChat.tsx"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "d8950f7acaf8",
+  "checkpoint_transcript_start": 5944,
+  "transcript_lines_at_start": 5944,
+  "compact_transcript_start": 1047,
+  "token_usage": {
+    "input_tokens": 86,
+    "cache_creation_tokens": 45704,
+    "cache_read_tokens": 14516847,
+    "output_tokens": 9021,
+    "api_call_count": 37
+  },
+  "session_metrics": {
+    "turn_count": 34
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-11T07:34:00.874838Z",
+    "agent_lines": 11,
+    "agent_removed": 4,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 11,
+    "total_lines_changed": 15,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
