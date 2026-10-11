@@ -1,4 +1,4 @@
-# Local stack for the BMW Requirements Copilot.
+# Local stack for PM Kompass.
 #
 #   docker compose up --build                  # web app on http://localhost:3000
 #   docker compose run --rm ingest             # xlsx/PDF in ./data -> src/data/*.json
