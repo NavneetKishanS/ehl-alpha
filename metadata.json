@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4N1VSS57J8E140MMT6FFNZR",
+  "strategy": "manual-commit",
+  "branch": "ci/remove-manual-vercel-deploy",
+  "checkpoints_count": 3,
+  "files_touched": [
+    ".github/workflows/deploy.yml"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 26,
+    "cache_creation_tokens": 15044,
+    "cache_read_tokens": 2087290,
+    "output_tokens": 8812,
+    "api_call_count": 13
+  }
+}
