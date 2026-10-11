@@ -153,7 +153,7 @@
   .controls .c.primary { background: var(--blue); border-color: var(--blue); }
 
   /* ---------- Slide 5: Close ---------- */
-  .funnel { margin-top: 56px; display: flex; align-items: flex-start; gap: 28px; }
+  .funnel { margin-top: 44px; display: flex; align-items: flex-start; gap: 28px; }
   .fstep { flex: 1; padding-top: 22px; border-top: 2px solid var(--ink); }
   .fstep .v { font-size: 64px; font-weight: 300; letter-spacing: -.03em; }
   .fstep .l { margin-top: 6px; font-size: 18px; color: var(--grey); }
@@ -161,9 +161,38 @@
   .fstep.us .v { color: var(--blue); }
   .fstep.us .tag { display: inline-block; margin-top: 12px; }
   .arrow { font-size: 40px; color: #c4c8cd; padding-top: 34px; }
-  .closing { margin-top: 70px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .closing { margin-top: 44px; display: flex; justify-content: space-between; align-items: flex-end; }
   .closing .line { font-size: 46px; font-weight: 300; letter-spacing: -.02em; line-height: 1.15; }
   .closing .line b { font-weight: 500; }
+
+  /* ---------- Slide 5: QR ---------- */
+  .qr { display: flex; align-items: center; gap: 22px; background: #fff; border: 1px solid var(--line); padding: 16px 22px 16px 16px; box-shadow: 0 20px 50px rgba(0,0,0,.08); }
+  .qr img { width: 132px; height: 132px; display: block; }
+  .qr .k { font-size: 12px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--blue); }
+  .qr .t { margin-top: 6px; font-size: 24px; font-weight: 500; letter-spacing: -.01em; line-height: 1.2; }
+  .qr .u { margin-top: 8px; font-size: 15px; color: var(--grey); font-family: ui-monospace, Menlo, monospace; }
+  .qr .ty { margin-top: 10px; font-size: 13px; letter-spacing: .18em; text-transform: uppercase; color: var(--grey); }
+
+  /* ---------- Appendix ---------- */
+  .ax-grid { margin-top: 30px; display: grid; grid-template-columns: 500px 1fr; gap: 48px; }
+  .formula { background: var(--ink); color: #fff; padding: 26px 28px; }
+  .formula .f { font-size: 40px; font-weight: 300; letter-spacing: -.01em; line-height: 1.25; font-family: "Cambria Math", "STIX Two Math", Georgia, serif; }
+  .formula .f i { font-style: italic; }
+  .formula .leg { margin-top: 14px; font-size: 15px; line-height: 1.6; color: #b9c1cc; }
+  .formula .leg b { color: #fff; font-weight: 500; }
+  .example { margin-top: 18px; border: 1px solid var(--line); background: #fff; padding: 18px 22px; }
+  .example .k { font-size: 12px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--blue); }
+  .example .t { margin-top: 6px; font-size: 18px; font-weight: 500; }
+  .example .calc { margin-top: 10px; font-size: 14.5px; line-height: 1.65; color: #374151; font-variant-numeric: tabular-nums; }
+  .example .res { margin-top: 8px; font-size: 26px; font-weight: 300; color: var(--blue); }
+  .ftable { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .ftable th { text-align: left; font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--grey); padding: 0 12px 10px 0; border-bottom: 2px solid var(--ink); }
+  .ftable td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.4; }
+  .ftable td.w { font-size: 20px; font-weight: 300; color: var(--blue); font-variant-numeric: tabular-nums; width: 64px; }
+  .ftable td.n { font-weight: 500; width: 170px; }
+  .ftable td.s { color: var(--grey); font-size: 13px; width: 150px; }
+  .ftable .ai { display: inline-block; margin-left: 6px; padding: 1px 6px; font-size: 10px; font-weight: 600; letter-spacing: .1em; background: #eef4fc; color: var(--blue); vertical-align: 2px; }
+  .ax-note { margin-top: 14px; font-size: 13.5px; color: var(--grey); line-height: 1.5; }
 
   /* ---------- Presenter helpers ---------- */
   #notes { position: fixed; left: 20px; right: 20px; bottom: 20px; z-index: 50; max-width: 900px; margin: 0 auto; background: rgba(10,12,16,.94); color: #e5e7eb; padding: 18px 22px; font-size: 16px; line-height: 1.55; border-left: 3px solid var(--blue); display: none; }
@@ -191,7 +220,7 @@
       </div>
       <div class="hud-right">
         <span>TUM Hackathon · BMW Group challenge</span>
-        <span><b id="hud-count">01</b> / 05</span>
+        <span><b id="hud-count">01</b> / <span id="hud-total">05</span></span>
       </div>
     </header>
 
@@ -317,7 +346,53 @@
         </div>
         <div class="closing">
           <p class="line rise d5">PM Kompass does the reading.<br /><b>Marcus makes the call.</b></p>
-          <p class="rise d6" style="font-size:15px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);text-align:right">Thank you<br /><span style="color:var(--ink);letter-spacing:.06em;text-transform:none;font-size:20px;font-weight:500">Questions?</span></p>
+          <a class="qr rise d6" href="https://ehl-alpha.vercel.app" target="_blank" rel="noreferrer" style="text-decoration:none;color:inherit">
+            <img src="img/qr.svg" alt="QR code to ehl-alpha.vercel.app" />
+            <div>
+              <div class="k">Try it yourself</div>
+              <div class="t">Scan to drive<br />PM Kompass</div>
+              <div class="u">ehl-alpha.vercel.app</div>
+              <div class="ty">Thank you · Questions?</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== APPENDIX ===== -->
+    <section class="slide light" data-gear="A" data-label="Appendix" data-dark="0" data-appendix="1">
+      <div class="watermark">Formula</div>
+      <div class="pad">
+        <p class="eyebrow rise">Appendix · How a requirement is prioritised</p>
+        <h1 class="h-m rise d1" style="margin-top:16px">Priority score: a transparent weighted average.</h1>
+        <div class="ax-grid">
+          <div>
+            <div class="formula rise d2">
+              <div class="f">Score = <span style="white-space:nowrap">Σ (<i>w</i><sub>i</sub> · <i>v</i><sub>i</sub>) / Σ <i>w</i><sub>i</sub></span></div>
+              <div class="leg"><b>v</b><sub>i</sub> = factor value, 0–100 &nbsp;·&nbsp; <b>w</b><sub>i</sub> = factor weight<br />7 factors · default weights sum to 100% · PM can adjust every weight live</div>
+            </div>
+            <div class="example rise d3">
+              <div class="k">Worked example · BMW 1 Series</div>
+              <div class="t">Reduce friction: High voltage battery</div>
+              <div class="calc">0.25·89 + 0.15·2 + 0.15·54 + 0.15·26<br />+ 0.10·85 + 0.10·50 + 0.10·65</div>
+              <div class="res">= 54.6 / 100</div>
+            </div>
+          </div>
+          <div class="rise d3">
+            <table class="ftable">
+              <thead><tr><th>Weight</th><th>Factor</th><th>How the value (0–100) is calculated</th><th>Source</th></tr></thead>
+              <tbody>
+                <tr><td class="w">25%</td><td class="n">Customer impact</td><td>Share of the theme’s feedback with the same sentiment</td><td class="s">Customer verbatims</td></tr>
+                <tr><td class="w">15%</td><td class="n">Signal frequency</td><td>Mentions ÷ the vehicle’s largest theme × 100</td><td class="s">Customer verbatims</td></tr>
+                <tr><td class="w">15%</td><td class="n">Sales relevance</td><td>50 + volume growth 2025→2030 × 150</td><td class="s">Sales volumes</td></tr>
+                <tr><td class="w">15%</td><td class="n">Competitive gap<span class="ai">AI</span></td><td>50 + (best sibling score − our score) × 15</td><td class="s">Customer study</td></tr>
+                <tr><td class="w">10%</td><td class="n">Strategic fit<span class="ai">AI</span></td><td>Alignment with BMW strategy (70 if electrification / connected, else 50)</td><td class="s">BMW Group Report</td></tr>
+                <tr><td class="w">10%</td><td class="n">Feasibility</td><td>Inverse effort; neutral 50 until R&amp;D reviews</td><td class="s">R&amp;D stakeholder</td></tr>
+                <tr><td class="w">10%</td><td class="n">Evidence strength</td><td>90 strong (≥15 verbatims) · 65 moderate (≥5) · 35 weak</td><td class="s">Customer verbatims</td></tr>
+              </tbody>
+            </table>
+            <p class="ax-note"><span class="ai" style="margin:0 4px 0 0;display:inline-block;padding:1px 6px;font-size:10px;font-weight:600;letter-spacing:.1em;background:#eef4fc;color:var(--blue)">AI</span> The AI refines these two judgment factors from the customer study and BMW Group Report, citing its sources. The formula baseline stays visible and every change is logged in the audit trail. All values are clamped to 0–100.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -355,7 +430,7 @@
 
 <div id="notes"><div class="meta"><span id="notes-title"></span><span id="notes-time"></span></div><div id="notes-body"></div></div>
 <div id="timer">0:00</div>
-<div id="help">← → navigate · F fullscreen · N notes · T timer</div>
+<div id="help">← → navigate · A appendix · F fullscreen · N notes · T timer</div>
 
 <script>
   const NOTES = [
@@ -363,11 +438,14 @@
     { t: "0:30 – 1:05", s: "So we built PM Kompass. The AI does the reading: it ingests BMW's real data, clusters feedback into signals, and derives and scores requirements. Experts review them in their own view. Marcus makes every final decision. Let me show you." },
     { t: "1:05 – 2:15", s: "LIVE DEMO. 1) Click a hotspot on the 3D BMW. 2) Show ranked requirements with score and evidence. 3) Challenge PM Kompass or move a weight and watch the score change. 4) Switch to Procurement with the role switcher; they only see what's relevant to them. 5) Click a theme and open the real quotes in the Evidence Explorer." },
     { t: "2:15 – 2:45", s: "Why can Marcus trust it? Every number traces back to real customer quotes. Every AI proposal, decision and stakeholder review is written to an audit log, and PM Kompass's summary is generated from that log. Marcus can approve, postpone, reject or challenge at every step." },
-    { t: "2:45 – 3:00", s: "BMW goes from roughly a billion findings to about a thousand requirements to one car. We help with that middle step. PM Kompass does the reading. Marcus makes the call. Thank you." },
+    { t: "2:45 – 3:00", s: "Point at the QR code: judges can scan and try the live app. BMW goes from roughly a billion findings to about a thousand requirements to one car. We help with that middle step. PM Kompass does the reading. Marcus makes the call. Thank you." },
+    { t: "Q&A only", s: "Appendix for questions about prioritisation. Score = weighted average of 7 factors (0–100). Walk through the worked example: 0.25×89 + 0.15×2 + 0.15×54 + 0.15×26 + 0.10×85 + 0.10×50 + 0.10×65 = 54.6. Stress: the PM can change every weight live; AI only refines competitive gap and strategic fit, with sources, and the change is logged." },
   ];
 
   const stage = document.getElementById("stage");
   const slides = [...document.querySelectorAll(".slide")];
+  // The pitch "drive" covers the main slides; appendix slides sit after the finish line.
+  const mainCount = slides.filter((s) => !s.dataset.appendix).length;
   const gears = document.getElementById("gears");
   const stops = document.getElementById("stops");
   let i = 0;
@@ -377,7 +455,7 @@
     g.className = "gear"; g.textContent = s.dataset.gear; g.title = s.dataset.label;
     g.onclick = () => go(n); gears.appendChild(g);
     const st = document.createElement("div");
-    st.className = "stop"; st.style.left = (n / (slides.length - 1)) * 100 + "%"; stops.appendChild(st);
+    if (n < mainCount) { st.className = "stop"; st.style.left = (n / (mainCount - 1)) * 100 + "%"; stops.appendChild(st); }
   });
 
   function go(n) {
@@ -385,11 +463,12 @@
     slides.forEach((s, k) => { s.classList.toggle("active", k === i); s.classList.toggle("past", k < i); });
     [...gears.children].forEach((g, k) => g.classList.toggle("on", k === i));
     [...stops.children].forEach((g, k) => g.classList.toggle("on", k <= i));
-    const p = i / (slides.length - 1);
+    const p = Math.min(i, mainCount - 1) / (mainCount - 1);
     document.getElementById("car").style.left = p * 100 + "%";
     document.getElementById("done").style.width = p * 100 + "%";
     document.getElementById("gear-label").textContent = slides[i].dataset.label;
-    document.getElementById("hud-count").textContent = String(i + 1).padStart(2, "0");
+    const isAppendix = Boolean(slides[i].dataset.appendix);
+    document.getElementById("hud-count").textContent = isAppendix ? "A" : String(i + 1).padStart(2, "0");
     stage.classList.toggle("is-dark", slides[i].dataset.dark === "1");
     // Speedometer: 0 → 250 km/h across the pitch
     const target = Math.round(p * 250);
@@ -434,7 +513,8 @@
     else if (e.key.toLowerCase() === "f") { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }
     else if (e.key.toLowerCase() === "n") document.getElementById("notes").classList.toggle("show");
     else if (e.key.toLowerCase() === "t") { timerOn = !timerOn; if (timerOn) t0 = Date.now(); timerEl.classList.toggle("show", timerOn); }
-    else if (/^[1-5]$/.test(e.key)) go(Number(e.key) - 1);
+    else if (/^[1-9]$/.test(e.key) && Number(e.key) <= slides.length) go(Number(e.key) - 1);
+    else if (e.key.toLowerCase() === "a") go(slides.length - 1);
   });
   // Click right/left half of the screen (but not on links) to navigate
   document.getElementById("viewport").addEventListener("click", (e) => {
