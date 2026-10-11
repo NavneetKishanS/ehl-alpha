@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { StakeholderAvatar } from "@/components/StakeholderAvatar";
-import { splitStakeholderName } from "@/lib/stakeholderName";
+import { expertiseLabel, splitStakeholderName } from "@/lib/stakeholderName";
 import type { Stakeholder, StakeholderReview } from "@/lib/types";
 
 // PR-reviewer-style row: who, their decision, and their written rationale.
@@ -20,7 +20,7 @@ export function ReviewerRow({ review, stakeholder }: { review: StakeholderReview
             <p className="text-[13px] font-medium leading-snug text-neutral-900">{stakeholder ? splitStakeholderName(stakeholder.name).person : "Unknown"}</p>
             {stakeholder && (
               <p className="text-[12px] capitalize leading-snug text-neutral-400">
-                {splitStakeholderName(stakeholder.name).role ?? stakeholder.expertise.replace(/_/g, " ")}
+                {splitStakeholderName(stakeholder.name).role ?? expertiseLabel(stakeholder.expertise)}
               </p>
             )}
           </div>

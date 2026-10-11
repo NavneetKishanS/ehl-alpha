@@ -4,7 +4,7 @@
 // evidence_strength) vs. which Role B upgrades to an LLM call with cited
 // sources (competitive_gap, strategic_fit) once real web/competitor data
 // is available. `effort` is intentionally never computed here — it's a
-// placeholder until an Engineering stakeholder confirms it via review.
+// placeholder until an R&D stakeholder confirms it via review.
 
 import type { ComponentKey, RequirementCategory, ScoreFactor } from "./types";
 import type { RawSignal } from "./realData";
@@ -190,7 +190,7 @@ export function buildScoreFactors(args: {
     { key: "sales_relevance", label: "Sales relevance", weight: 0.15, rawValue: sr.value, rationale: sr.rationale },
     { key: "competitive_gap", label: "Competitive gap", weight: 0.15, rawValue: gap.value, rationale: gap.rationale },
     { key: "strategic_fit", label: "Strategic fit", weight: 0.1, rawValue: sf.value, rationale: sf.rationale },
-    { key: "effort_inverse", label: "Feasibility (inverse effort)", weight: 0.1, rawValue: 50, rationale: "Not yet estimated — placeholder pending Engineering stakeholder review." },
+    { key: "effort_inverse", label: "Feasibility (inverse effort)", weight: 0.1, rawValue: 50, rationale: "Not yet estimated — placeholder pending R&D stakeholder review." },
     { key: "evidence_strength", label: "Evidence strength", weight: 0.1, rawValue: ev, rationale: `${candidate.signal.frequency} first-party verbatims → ${evidenceLevel(candidate.signal.frequency)} evidence.` },
   ];
 }

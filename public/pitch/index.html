@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
 <title>PM Kompass · Pitch</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -58,6 +59,9 @@
   .hud-top { position: absolute; left: 0; right: 0; top: 0; height: 76px; display: flex; align-items: center; justify-content: space-between; padding: 0 56px; z-index: 20; border-bottom: 1px solid rgba(0,0,0,.08); background: rgba(255,255,255,.85); backdrop-filter: blur(8px); transition: background .6s, border-color .6s, color .6s; }
   #stage.is-dark .hud-top { background: rgba(5,6,8,.55); border-color: rgba(255,255,255,.08); color: #fff; }
   .brand { display: flex; align-items: center; gap: 16px; font-size: 18px; font-weight: 600; letter-spacing: -.01em; }
+  .logo-dark { display: none; }
+  #stage.is-dark .logo-dark { display: block; }
+  #stage.is-dark .logo-light { display: none; }
   .brand .sep { width: 1px; height: 26px; background: currentColor; opacity: .2; }
   .mstripe { display: flex; gap: 0; height: 6px; width: 72px; transform: skewX(-24deg); }
   .mstripe i { flex: 1; } .mstripe i:nth-child(1) { background: var(--m-light) } .mstripe i:nth-child(2) { background: var(--m-dark) } .mstripe i:nth-child(3) { background: var(--m-red) }
@@ -179,13 +183,8 @@
     <!-- ===== HUD top ===== -->
     <header class="hud-top">
       <div class="brand">
-        <svg width="40" height="40" viewBox="0 0 100 100" aria-label="BMW">
-          <circle cx="50" cy="50" r="49" fill="#111" /><circle cx="50" cy="50" r="47" fill="none" stroke="#bfbfbf" stroke-width="1.2" />
-          <path id="arc" d="M 17 50 A 33 33 0 0 1 83 50" fill="none" />
-          <text fill="#fff" font-size="17" font-weight="700" letter-spacing="2" font-family="Helvetica, Arial, sans-serif"><textPath href="#arc" startOffset="50%" text-anchor="middle">BMW</textPath></text>
-          <circle cx="50" cy="50" r="27.5" fill="#fff" />
-          <path d="M50 50 L50 22.5 A27.5 27.5 0 0 1 77.5 50 Z" fill="#1c69d4" /><path d="M50 50 L50 77.5 A27.5 27.5 0 0 1 22.5 50 Z" fill="#1c69d4" />
-        </svg>
+        <img class="logo-light" src="img/bmw-logo-light.svg" width="44" height="44" alt="BMW" />
+        <img class="logo-dark" src="img/bmw-logo-dark.svg" width="44" height="44" alt="BMW" />
         <span class="sep"></span>
         <span>PM Kompass</span>
         <span class="mstripe" style="margin-left:10px"><i></i><i></i><i></i></span>
@@ -221,7 +220,7 @@
             <div class="item" style="left:0;top:0;--r:-3deg;animation-delay:.2s"><div class="k">10,128</div><div class="l">customer verbatims from 14 countries</div></div>
             <div class="item" style="left:340px;top:36px;--r:2.5deg;animation-delay:.35s"><div class="k">4</div><div class="l">sales regions, volumes 2024 → 2030</div></div>
             <div class="item" style="left:24px;top:196px;--r:2deg;animation-delay:.5s"><div class="k">187</div><div class="l">customer-study scores across 38 categories</div></div>
-            <div class="item" style="left:362px;top:236px;--r:-2.5deg;animation-delay:.65s"><div class="k">4</div><div class="l">stakeholders · engineering, sales, design, legal</div></div>
+            <div class="item" style="left:362px;top:236px;--r:-2.5deg;animation-delay:.65s"><div class="k">4</div><div class="l">stakeholders · R&amp;D, manufacturing, controlling, procurement</div></div>
             <div class="board-q rise d6">“Why exactly is this on the list for 2030?”<span>The question Marcus can’t answer with a spreadsheet</span></div>
           </div>
         </div>
@@ -267,7 +266,7 @@
           <div class="wp rise d2"><div class="img"><img src="img/landing.jpg" alt="" /></div><div class="num">01</div><div class="t">Pick a component</div><div class="d">Click a hotspot on the 3D BMW.</div></div>
           <div class="wp rise d3"><div class="img"><img src="img/requirements_top.jpg" alt="" /></div><div class="num">02</div><div class="t">Ranked requirements</div><div class="d">Each with a score, evidence level and reasoning.</div></div>
           <div class="wp rise d4"><div class="img"><img src="img/workflow.jpg" alt="" /></div><div class="num">03</div><div class="t">Challenge the AI</div><div class="d">Adjust weights or argue back; the score updates.</div></div>
-          <div class="wp rise d5"><div class="img"><img src="img/stakeholder.jpg" alt="" /></div><div class="num">04</div><div class="t">Stakeholder review</div><div class="d">Legal sees only what’s relevant to legal.</div></div>
+          <div class="wp rise d5"><div class="img"><img src="img/stakeholder.jpg" alt="" /></div><div class="num">04</div><div class="t">Stakeholder review</div><div class="d">Procurement sees only what’s relevant to procurement.</div></div>
           <div class="wp rise d6"><div class="img"><img src="img/evidence.jpg" alt="" /></div><div class="num">05</div><div class="t">Trace to the source</div><div class="d">Every number opens the real customer quotes.</div></div>
         </div>
       </div>
@@ -288,7 +287,7 @@
           <div class="tcol rise d3">
             <div class="img"><img src="img/stakeholder.jpg" alt="" style="object-position:top" /></div>
             <div class="t">Experts in the loop</div>
-            <div class="d">Engineering, sales, design and legal review in their own view, filtered to <span class="k">their domain</span>.</div>
+            <div class="d">R&amp;D, manufacturing, controlling and procurement review in their own view, filtered to <span class="k">their domain</span>.</div>
           </div>
           <div class="tcol rise d4">
             <div class="img"><img src="img/requirements_top.jpg" alt="" style="object-position:top right" /></div>
@@ -362,7 +361,7 @@
   const NOTES = [
     { t: "0:00 – 0:30", s: "Meet Marcus. He's the product manager for the BMW 1 Series and has to decide what the next generation offers its customers. He has over 10,000 customer verbatims from 14 countries, sales volumes, 187 customer-study scores and four stakeholders with four opinions. Nobody can read all of it, so priorities end up set by gut feel. And when the board asks 'why is this on the list?', a spreadsheet can't answer." },
     { t: "0:30 – 1:05", s: "So we built PM Kompass. The AI does the reading: it ingests BMW's real data, clusters feedback into signals, and derives and scores requirements. Experts review them in their own view. Marcus makes every final decision. Let me show you." },
-    { t: "1:05 – 2:15", s: "LIVE DEMO. 1) Click a hotspot on the 3D BMW. 2) Show ranked requirements with score and evidence. 3) Challenge PM Kompass or move a weight and watch the score change. 4) Switch to Legal with the role switcher; they only see what's relevant. 5) Click a theme and open the real quotes in the Evidence Explorer." },
+    { t: "1:05 – 2:15", s: "LIVE DEMO. 1) Click a hotspot on the 3D BMW. 2) Show ranked requirements with score and evidence. 3) Challenge PM Kompass or move a weight and watch the score change. 4) Switch to Procurement with the role switcher; they only see what's relevant to them. 5) Click a theme and open the real quotes in the Evidence Explorer." },
     { t: "2:15 – 2:45", s: "Why can Marcus trust it? Every number traces back to real customer quotes. Every AI proposal, decision and stakeholder review is written to an audit log, and PM Kompass's summary is generated from that log. Marcus can approve, postpone, reject or challenge at every step." },
     { t: "2:45 – 3:00", s: "BMW goes from roughly a billion findings to about a thousand requirements to one car. We help with that middle step. PM Kompass does the reading. Marcus makes the call. Thank you." },
   ];

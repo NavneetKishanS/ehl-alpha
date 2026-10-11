@@ -4,7 +4,7 @@ You own the stakeholder review page, the Evidence Explorer, and the audit
 trail — everything about making the app's reasoning *inspectable*. Read
 `docs/PROJECT_BRIEF.md` and `docs/DATA_SETUP.md` first, run
 `npm run ingest` (see that doc), then `npm run dev` and click through
-`/stakeholder/wf_g60_battery/sh_design` and `/evidence` before changing
+`/stakeholder/wf_g60_battery/sh_controlling` and `/evidence` before changing
 anything — both already run end to end against the real 13,771-row
 dataset.
 

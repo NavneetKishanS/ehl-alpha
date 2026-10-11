@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import { StakeholderAvatar } from "@/components/StakeholderAvatar";
-import { splitStakeholderName } from "@/lib/stakeholderName";
+import { expertiseLabel, splitStakeholderName } from "@/lib/stakeholderName";
 import type { Stakeholder } from "@/lib/types";
 
 type Role = { type: "pm" } | { type: "stakeholder"; stakeholderId: string };
@@ -85,7 +85,7 @@ export function RoleSwitcher({
             >
               <StakeholderAvatar stakeholder={s} size={24} />
               <span className="min-w-0 flex-1 truncate text-neutral-800">{splitStakeholderName(s.name).person}</span>
-              <span className="shrink-0 text-[10px] uppercase text-neutral-400">{s.expertise.split("_")[0]}</span>
+              <span className="shrink-0 text-[10px] uppercase text-neutral-400">{expertiseLabel(s.expertise)}</span>
             </Link>
           ))}
           {stakeholders.length === 0 && <p className="px-3 py-2.5 text-[12px] text-neutral-400">No stakeholders on this workflow.</p>}

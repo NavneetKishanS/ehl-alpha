@@ -192,12 +192,11 @@ export interface Requirement {
 // ---------- Stakeholders ----------
 
 export type StakeholderExpertise =
-  | "engineering"
-  | "sales"
-  | "design"
-  | "legal_regulatory"
-  | "brand"
-  | "procurement";
+  | "research_development"
+  | "manufacturing"
+  | "controlling"
+  | "procurement"
+  | "brand";
 
 export interface Stakeholder {
   id: string;

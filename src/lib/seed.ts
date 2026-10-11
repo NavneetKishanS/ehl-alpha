@@ -254,10 +254,10 @@ function buildRealSeed() {
 }
 
 const DEFAULT_STAKEHOLDERS: Stakeholder[] = [
-  { id: "sh_engineering", name: "Mara Voss — Engineering", expertise: "engineering", avatarColor: "#1c69d4" },
-  { id: "sh_sales", name: "Li Wen — Sales", expertise: "sales", avatarColor: "#d97706" },
-  { id: "sh_design", name: "Jonas Keller — Design", expertise: "design", avatarColor: "#8b5cf6" },
-  { id: "sh_legal", name: "Amara Johnson — Legal & Regulatory", expertise: "legal_regulatory", avatarColor: "#16a34a" },
+  { id: "sh_rnd", name: "Mara Voss — R&D", expertise: "research_development", avatarColor: "#1c69d4" },
+  { id: "sh_manufacturing", name: "Li Wen — Manufacturing", expertise: "manufacturing", avatarColor: "#d97706" },
+  { id: "sh_controlling", name: "Jonas Keller — Controlling", expertise: "controlling", avatarColor: "#8b5cf6" },
+  { id: "sh_procurement", name: "Amara Johnson — Procurement", expertise: "procurement", avatarColor: "#16a34a" },
 ];
 
 function toAppSignal(raw: RawSignal, workflowId: string, vehicleCode: string, component: ComponentKey): Signal {
@@ -297,27 +297,27 @@ function buildFlagshipNarrative(workflowId: string, req: Requirement, candidate:
   const pct = Math.round(candidate.concentration * 100);
 
   const reviews: StakeholderReview[] = [
-    { id: "rev_eng_flagship", workflowId, stakeholderId: "sh_engineering", requirementId: req.id, decision: "approve", expertOpinion: `${pct}% concentration on "${candidate.signal.theme}" across ${freq} verbatims lines up with what we're already seeing in warranty data. Technically addressable next cycle; flagging as a roadmap priority, not a blocker.`, submittedAt: daysAgo(5), aiContextSnapshot: `Signal: ${req.title} (${freq} verbatims).` },
-    { id: "rev_sales_flagship", workflowId, stakeholderId: "sh_sales", requirementId: req.id, decision: "approve", expertOpinion: `This shows up in loss-reason conversations with customers cross-shopping. Approve — directly tied to the sales volume we're trying to grow in this segment.`, submittedAt: daysAgo(4), aiContextSnapshot: `Signal: ${req.title} (${freq} verbatims).` },
-    { id: "rev_legal_flagship", workflowId, stakeholderId: "sh_legal", requirementId: req.id, decision: "reject", expertOpinion: `No regulatory blocker on the underlying requirement, but any public-facing claim derived from this needs substantiation before marketing use — flagging so it doesn't ship as an unverified claim.`, submittedAt: daysAgo(3), aiContextSnapshot: `Signal: ${req.title} (${freq} verbatims).` },
-    { id: "rev_design_flagship", workflowId, stakeholderId: "sh_design", requirementId: req.id, decision: "pending", expertOpinion: "", submittedAt: null, aiContextSnapshot: `Signal: ${req.title} (${freq} verbatims).` },
+    { id: "rev_rnd_flagship", workflowId, stakeholderId: "sh_rnd", requirementId: req.id, decision: "approve", expertOpinion: `${pct}% concentration on "${candidate.signal.theme}" across ${freq} verbatims lines up with what we're already seeing in warranty data. Technically addressable in the next development cycle; flagging as a roadmap priority, not a blocker.`, submittedAt: daysAgo(5), aiContextSnapshot: `Signal: ${req.title} (${freq} verbatims).` },
+    { id: "rev_manufacturing_flagship", workflowId, stakeholderId: "sh_manufacturing", requirementId: req.id, decision: "approve", expertOpinion: `Can be built on the current production line with minor tooling changes and no impact on plant cycle time. Approve.`, submittedAt: daysAgo(4), aiContextSnapshot: `Signal: ${req.title} (${freq} verbatims).` },
+    { id: "rev_procurement_flagship", workflowId, stakeholderId: "sh_procurement", requirementId: req.id, decision: "reject", expertOpinion: `No sourcing blocker in principle, but the parts this needs are not covered by our current supplier agreements. Rejecting until we have a second-source quote, so we don't lock ourselves into a single supplier.`, submittedAt: daysAgo(3), aiContextSnapshot: `Signal: ${req.title} (${freq} verbatims).` },
+    { id: "rev_controlling_flagship", workflowId, stakeholderId: "sh_controlling", requirementId: req.id, decision: "pending", expertOpinion: "", submittedAt: null, aiContextSnapshot: `Signal: ${req.title} (${freq} verbatims).` },
   ];
 
   const logs: AuditLogEntry[] = [
     mkLog(workflowId, "requirement_proposed", "requirement", req.id, aiActor(), null, { title: req.title, score: req.score }, `Derived from ${freq} real verbatims tagged "${candidate.signal.theme}", ${pct}% sharing the same sentiment. Evidence level: ${req.evidenceLevel}.`, daysAgo(7)),
     mkLog(workflowId, "requirement_challenged", "requirement", req.id, pmActor(), { score: req.score }, { note: "PM pushed back on the first draft" }, `PM asked: "the first draft just restates the complaint — give me something I can act on, grounded in the actual numbers, not a paraphrase."`, daysAgo(6)),
     mkLog(workflowId, "ai_summary_generated", "requirement", req.id, aiActor(), null, { note: "revised" }, `Re-derived with explicit evidence: ${freq} verbatims, ${pct}% concentration, cross-referenced against sibling-model customer-study scores for competitive framing. PM's challenge moved the requirement from a restated complaint to a cited, scoreable one.`, daysAgo(6)),
-    mkLog(workflowId, "stage_transition", "stage", "stakeholder_review", pmActor(), "pending", "active", `PM sent "${req.title}" to stakeholder review: Engineering, Sales, Design, Legal.`, daysAgo(5)),
-    mkLog(workflowId, "stakeholder_review_submitted", "review", "rev_eng_flagship", stakeholderActor("sh_engineering", "Mara Voss — Engineering"), { decision: "pending" }, { decision: "approve" }, reviews[0].expertOpinion, daysAgo(5)),
-    mkLog(workflowId, "stakeholder_review_submitted", "review", "rev_sales_flagship", stakeholderActor("sh_sales", "Li Wen — Sales"), { decision: "pending" }, { decision: "approve" }, reviews[1].expertOpinion, daysAgo(4)),
-    mkLog(workflowId, "stakeholder_review_submitted", "review", "rev_legal_flagship", stakeholderActor("sh_legal", "Amara Johnson — Legal & Regulatory"), { decision: "pending" }, { decision: "reject" }, reviews[2].expertOpinion, daysAgo(3)),
-    mkLog(workflowId, "stage_transition", "stage", "stakeholder_review", pmActor(), "active", "complete", "3 of 4 stakeholder reviews in; Design still pending. PM chose to proceed given majority signal.", daysAgo(2)),
+    mkLog(workflowId, "stage_transition", "stage", "stakeholder_review", pmActor(), "pending", "active", `PM sent "${req.title}" to stakeholder review: R&D, Manufacturing, Controlling, Procurement.`, daysAgo(5)),
+    mkLog(workflowId, "stakeholder_review_submitted", "review", "rev_rnd_flagship", stakeholderActor("sh_rnd", "Mara Voss — R&D"), { decision: "pending" }, { decision: "approve" }, reviews[0].expertOpinion, daysAgo(5)),
+    mkLog(workflowId, "stakeholder_review_submitted", "review", "rev_manufacturing_flagship", stakeholderActor("sh_manufacturing", "Li Wen — Manufacturing"), { decision: "pending" }, { decision: "approve" }, reviews[1].expertOpinion, daysAgo(4)),
+    mkLog(workflowId, "stakeholder_review_submitted", "review", "rev_procurement_flagship", stakeholderActor("sh_procurement", "Amara Johnson — Procurement"), { decision: "pending" }, { decision: "reject" }, reviews[2].expertOpinion, daysAgo(3)),
+    mkLog(workflowId, "stage_transition", "stage", "stakeholder_review", pmActor(), "active", "complete", "3 of 4 stakeholder reviews in; Controlling still pending. PM chose to proceed given majority signal.", daysAgo(2)),
     mkLog(workflowId, "stage_transition", "stage", "pm_decision", pmActor(), "pending", "active", "PM reviewing stakeholder input: 2 approve, 1 reject (process objection, not technical), 1 pending.", daysAgo(2)),
   ];
 
   const summaries: AISummary[] = [
-    { id: "aisum_decision_trail", workflowId, type: "decision_trail", content: `Started from ${freq} real verbatims tagged "${candidate.signal.theme}" (${pct}% sharing the same sentiment). First AI draft restated the complaint without a concrete hook; PM challenged it as not actionable. AI revised using the actual frequency/concentration numbers and a cross-model customer-study comparison. Sent to 4 stakeholders: Engineering and Sales approved; Legal rejected on a process ground (any public claim needs substantiation before marketing use, not a product objection); Design has not responded yet. PM is now deciding whether to approve with a caveat requiring Legal sign-off before any public claim, or wait for Design.`, basedOnLogIds: [], generatedAt: daysAgo(1) },
-    { id: "aisum_stakeholder_overview", workflowId, type: "stakeholder_overview", content: `3 of 4 stakeholders responded. Engineering confirms this matches internal warranty-data patterns and is addressable next cycle. Sales ties it directly to loss-reason conversations with cross-shopping customers. Legal's rejection is narrow: it blocks public marketing claims, not the underlying requirement. Design has not yet weighed in.`, basedOnLogIds: [], generatedAt: daysAgo(1) },
+    { id: "aisum_decision_trail", workflowId, type: "decision_trail", content: `Started from ${freq} real verbatims tagged "${candidate.signal.theme}" (${pct}% sharing the same sentiment). First AI draft restated the complaint without a concrete hook; PM challenged it as not actionable. AI revised using the actual frequency/concentration numbers and a cross-model customer-study comparison. Sent to 4 stakeholders: R&D and Manufacturing approved; Procurement rejected on a process ground (a second-source supplier quote is needed first, not a product objection); Controlling has not responded yet. PM is now deciding whether to approve with a caveat requiring Procurement's supplier quote, or wait for Controlling's cost view.`, basedOnLogIds: [], generatedAt: daysAgo(1) },
+    { id: "aisum_stakeholder_overview", workflowId, type: "stakeholder_overview", content: `3 of 4 stakeholders responded. R&D confirms this matches internal warranty-data patterns and is addressable in the next development cycle. Manufacturing can build it on the current line with minor tooling changes. Procurement's rejection is narrow: it waits for a second-source supplier quote, not a product objection. Controlling has not yet weighed in on cost.`, basedOnLogIds: [], generatedAt: daysAgo(1) },
     { id: "aisum_limitations", workflowId, type: "limitations", content: `This requirement is derived entirely from internal verbatim frequency — no external competitor review data or engineering feasibility input is factored in yet (see the competitive_gap and effort_inverse score-factor rationales for exactly where those gaps are). Customer-study comparisons mix a direct 0-10 mean (CN/EU) with a distribution-reconstructed mean (US) — treat US figures as lower-precision.`, basedOnLogIds: [], generatedAt: daysAgo(1) },
   ];
 
@@ -430,8 +430,8 @@ function buildMockSeed() {
 
   const stakeholders: Stakeholder[] = DEFAULT_STAKEHOLDERS;
   const reviews: StakeholderReview[] = [
-    { id: "rev_eng_charging", workflowId: MOCK_WORKFLOW_ID, stakeholderId: "sh_engineering", requirementId: "req_fast_charging", decision: "approve", expertOpinion: "Achievable with the next-gen cell chemistry already in validation.", submittedAt: daysAgo(5), aiContextSnapshot: "Mock review." },
-    { id: "rev_design_charging", workflowId: MOCK_WORKFLOW_ID, stakeholderId: "sh_design", requirementId: "req_fast_charging", decision: "pending", expertOpinion: "", submittedAt: null, aiContextSnapshot: "Mock review." },
+    { id: "rev_rnd_charging", workflowId: MOCK_WORKFLOW_ID, stakeholderId: "sh_rnd", requirementId: "req_fast_charging", decision: "approve", expertOpinion: "Achievable with the next-gen cell chemistry already in validation.", submittedAt: daysAgo(5), aiContextSnapshot: "Mock review." },
+    { id: "rev_controlling_charging", workflowId: MOCK_WORKFLOW_ID, stakeholderId: "sh_controlling", requirementId: "req_fast_charging", decision: "pending", expertOpinion: "", submittedAt: null, aiContextSnapshot: "Mock review." },
   ];
 
   const auditLog: AuditLogEntry[] = [
