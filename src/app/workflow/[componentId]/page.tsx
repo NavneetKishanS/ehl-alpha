@@ -92,7 +92,7 @@ export default function WorkflowPage() {
   if (notFound) {
     return (
       <div className="min-h-screen bg-white text-neutral-900">
-        <SiteHeader active="vehicles" />
+        <SiteHeader active="workflow" />
         <div className="mx-auto max-w-xl px-4 py-24 text-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-bmw-blue">{component?.label ?? "Component"}</p>
           <h1 className="mt-3 text-3xl font-light tracking-tight">No workflow exists yet</h1>
@@ -125,7 +125,7 @@ export default function WorkflowPage() {
 
   return (
     <div className="min-h-screen bg-neutral-50 text-neutral-900">
-      <SiteHeader active="vehicles" />
+      <SiteHeader active="workflow" workflowHref={`/workflow/${params.componentId}`} />
 
       {/* ---------- Hero ---------- */}
       <section className="relative overflow-hidden bg-[radial-gradient(120%_120%_at_70%_0%,#ffffff_0%,#eef0f2_50%,#dde1e5_100%)]">
@@ -253,7 +253,7 @@ export default function WorkflowPage() {
               }
             />
             <div className="border border-neutral-200 bg-white p-5 sm:p-8">
-              <SignalBreakdown signals={signals} sources={sources} />
+              <SignalBreakdown signals={signals} sources={sources} evidenceHref={(theme) => `${evidenceHref}&q=${encodeURIComponent(theme)}`} />
             </div>
           </section>
 
@@ -342,7 +342,7 @@ function Kpi({ label, value }: { label: string; value: string }) {
 function LoadingState() {
   return (
     <div className="min-h-screen bg-neutral-50">
-      <SiteHeader active="vehicles" />
+      <SiteHeader active="workflow" />
       <div className="bg-[radial-gradient(120%_120%_at_70%_0%,#ffffff_0%,#eef0f2_50%,#dde1e5_100%)]">
         <div className="mx-auto max-w-[1440px] animate-pulse px-4 pb-24 pt-10 sm:px-8">
           <div className="h-3 w-48 bg-neutral-300/60" />

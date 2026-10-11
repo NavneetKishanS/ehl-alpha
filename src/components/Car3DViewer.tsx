@@ -8,7 +8,7 @@ import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import clsx from "clsx";
 import { HotspotButton } from "@/components/HotspotButton";
 import type { ComponentKey, VehicleComponent } from "@/lib/types";
-import type { ViewMode } from "@/lib/carViewer";
+import type { ViewMode, ZoomRequest } from "@/lib/carViewer";
 
 // Any GLB dropped at this path is picked up. The default is the CC BY 4.0
 // Khronos "Car Concept" sample (it ships a full cabin). Swap in a BMW model
@@ -175,6 +175,7 @@ export default function Car3DViewer({
   mode,
   paint,
   resetKey,
+  zoom,
   highlightedId,
   onHover,
   onSelect,
@@ -183,6 +184,7 @@ export default function Car3DViewer({
   mode: ViewMode;
   paint: string;
   resetKey: number;
+  zoom?: ZoomRequest;
   highlightedId: string | null;
   onHover: (id: string | null) => void;
   onSelect: (c: VehicleComponent) => void;
@@ -219,7 +221,7 @@ export default function Car3DViewer({
         <OrbitControls
           makeDefault
           enablePan={false}
-          enableZoom={!interior}
+          enableZoom={false} // the wheel scrolls the page; zoom is on the page's +/- buttons
           enableDamping
           dampingFactor={0.08}
           rotateSpeed={interior ? -0.35 : 0.6}
@@ -229,6 +231,7 @@ export default function Car3DViewer({
           maxPolarAngle={interior ? Math.PI * 0.75 : Math.PI * 0.49}
         />
         <CameraRig mode={mode} resetKey={resetKey} />
+        <ZoomHandler zoom={zoom} interior={interior} />
       </Canvas>
       <LoadingOverlay />
     </div>
@@ -241,5 +244,27 @@ function FovSync({ fov }: { fov: number }) {
     camera.fov = fov;
     camera.updateProjectionMatrix();
   }, [camera, fov]);
+  return null;
+}
+
+// +/- buttons: dolly towards the target outside, narrow the field of view inside.
+function ZoomHandler({ zoom, interior }: { zoom?: ZoomRequest; interior: boolean }) {
+  const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
+  const controls = useThree((s) => s.controls) as unknown as OrbitControlsImpl | null;
+  useEffect(() => {
+    if (!zoom) return;
+    if (interior) {
+      camera.fov = Math.min(95, Math.max(35, camera.fov - zoom.step * 10));
+      camera.updateProjectionMatrix();
+      return;
+    }
+    if (!controls) return;
+    const offset = camera.position.clone().sub(controls.target);
+    const next = Math.min(20, Math.max(4.2, offset.length() * (zoom.step > 0 ? 0.87 : 1.15)));
+    camera.position.copy(controls.target).add(offset.setLength(next));
+    controls.update();
+    // Only a new click should zoom, not a mode switch.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [zoom?.nonce]);
   return null;
 }
