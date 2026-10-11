@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4N0Y4DAJ72V41PPD4S5VY32",
+  "session_id": "cb8c26e5-1642-4704-9388-fdb98b1aa032",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-11T08:23:16.852894Z",
+  "branch": "fix/vercel-deploy-noninteractive",
+  "checkpoints_count": 3,
+  "files_touched": [
+    ".github/workflows/deploy.yml"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "3e55a4b1b40b",
+  "checkpoint_transcript_start": 6738,
+  "transcript_lines_at_start": 6738,
+  "compact_transcript_start": 1176,
+  "token_usage": {
+    "input_tokens": 38,
+    "cache_creation_tokens": 14491,
+    "cache_read_tokens": 2706662,
+    "output_tokens": 7237,
+    "api_call_count": 19
+  },
+  "session_metrics": {
+    "turn_count": 45
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-11T08:23:16.116902Z",
+    "agent_lines": 11,
+    "agent_removed": 9,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 11,
+    "total_lines_changed": 20,
+    "agent_percentage": 100,
+    "metric_version": 2
+  }
+}
