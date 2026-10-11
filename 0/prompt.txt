@@ -1,0 +1,13 @@
+new updates came in now where do we stand in the project deliverables? I'll add openAI key soon
+
+---
+
+new update in!...quick check the only updates and lmk
+
+---
+
+what's left before we can demo this
+
+---
+
+are there guardrails for the apis? here's the api key: REDACTED
