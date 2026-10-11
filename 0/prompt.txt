@@ -1,0 +1,21 @@
+check the issues with this PR: https://github.com/NavneetKishanS/ehl-alpha/pull/24
+
+---
+
+add an about tab to show all the developers who worked on it...I'll give the linkedin accounts for all devs of this project: https://www.linkedin.com/in/navneet-kishan-s/, https://www.linkedin.com/in/raj-bharmal-595571199/, https://www.linkedin.com/in/shiv-kadiwala/, https://www.linkedin.com/in/mitesh-kumar0707/, https://www.linkedin.com/in/raj-vasani-7905bb230/ ....get some info on all of us and add a sentence/phrase about each of us and add photos and connect to our linkedin by giving links
+
+---
+
+here's the linkedins
+
+---
+
+match photos and add
+
+---
+
+photo of shiv
+
+---
+
+push and make PR for now and then add the images
