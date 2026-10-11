@@ -172,6 +172,9 @@ export default function WorkflowPage() {
               <Link href="/" className="border border-neutral-300 bg-white/80 px-5 py-3 text-sm font-medium text-neutral-800 backdrop-blur transition-colors hover:border-neutral-900">
                 All components
               </Link>
+              <Link href="/spec" className="border border-neutral-300 bg-white/80 px-5 py-3 text-sm font-medium text-neutral-800 backdrop-blur transition-colors hover:border-neutral-900">
+                Export spec
+              </Link>
               <Link href={evidenceHref} className="bg-bmw-blue px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[#0653b6]">
                 Open Evidence Explorer →
               </Link>
