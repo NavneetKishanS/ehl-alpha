@@ -348,6 +348,48 @@ export function submitReview(
   return review;
 }
 
+// PM tags one or more stakeholders to review a specific requirement.
+// Skips anyone already assigned (idempotent — calling it twice with an
+// overlapping set only creates the new ones). Each new review starts
+// pending, with a snapshot of the requirement's current evidence so the
+// stakeholder sees what the PM saw at assignment time, not a moving target.
+export function assignReviewers(requirementId: string, stakeholderIds: string[], actor: Actor): StakeholderReview[] {
+  const req = getRequirement(requirementId);
+  if (!req) throw new Error("requirement not found");
+
+  const alreadyAssigned = new Set(store.reviews.filter((r) => r.requirementId === requirementId).map((r) => r.stakeholderId));
+  const toAssign = stakeholderIds.filter((id) => !alreadyAssigned.has(id));
+
+  const created: StakeholderReview[] = toAssign.map((stakeholderId) => {
+    const stakeholder = getStakeholder(stakeholderId);
+    const review: StakeholderReview = {
+      id: `rev_${nanoid(8)}`,
+      workflowId: req.workflowId,
+      stakeholderId,
+      requirementId: req.id,
+      decision: "pending",
+      expertOpinion: "",
+      submittedAt: null,
+      aiContextSnapshot: `Signal: ${req.title} (${req.evidenceLevel} evidence, score ${req.score.toFixed(1)}).`,
+    };
+    store.reviews.push(review);
+
+    logAction({
+      workflowId: req.workflowId,
+      actor,
+      action: "review_requested",
+      targetType: "review",
+      targetId: review.id,
+      oldValue: null,
+      newValue: { stakeholderId, requirementId: req.id },
+      rationale: `Sent "${req.title}" to ${stakeholder?.name ?? stakeholderId} for review.`,
+    });
+    return review;
+  });
+
+  return created;
+}
+
 // ---------- AI summaries ----------
 
 // Newest first, so `summaries.find((s) => s.type === ...)` in the UI always

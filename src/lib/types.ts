@@ -239,6 +239,7 @@ export type AuditAction =
   | "requirement_challenged"
   | "score_recomputed"
   | "stakeholder_review_submitted"
+  | "review_requested"
   | "ai_summary_generated"
   | "weights_adjusted";
 
