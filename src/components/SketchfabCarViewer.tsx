@@ -6,6 +6,7 @@ import clsx from "clsx";
 import type { ComponentKey, VehicleComponent } from "@/lib/types";
 import type { ViewMode, ZoomRequest } from "@/lib/carViewer";
 import { HotspotButton } from "@/components/HotspotButton";
+import { BmwLogo } from "@/components/BmwLogo";
 
 // Offline / blocked-network fallback: the local three.js viewer.
 const Car3DViewer = dynamic(() => import("@/components/Car3DViewer"), { ssr: false });
@@ -315,6 +316,7 @@ export default function SketchfabCarViewer(props: {
           status === "ready" ? "opacity-0" : "opacity-100",
         )}
       >
+        <BmwLogo size={64} className="animate-[splashPulse_1.8s_ease-in-out_infinite]" />
         <div className="h-[2px] w-48 overflow-hidden bg-neutral-300">
           <div className="h-full w-1/3 animate-[loadbar_1.2s_ease-in-out_infinite] bg-bmw-blue" />
         </div>

@@ -7,6 +7,7 @@ import * as THREE from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import clsx from "clsx";
 import { HotspotButton } from "@/components/HotspotButton";
+import { BmwLogo } from "@/components/BmwLogo";
 import type { ComponentKey, VehicleComponent } from "@/lib/types";
 import type { ViewMode, ZoomRequest } from "@/lib/carViewer";
 
@@ -162,6 +163,7 @@ function LoadingOverlay() {
         active || progress < 100 ? "opacity-100" : "opacity-0",
       )}
     >
+      <BmwLogo size={64} className="animate-[splashPulse_1.8s_ease-in-out_infinite]" />
       <div className="h-[2px] w-48 overflow-hidden bg-neutral-300">
         <div className="h-full bg-bmw-blue transition-[width] duration-300" style={{ width: `${progress}%` }} />
       </div>
