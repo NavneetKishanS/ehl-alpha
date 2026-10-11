@@ -8,7 +8,7 @@ import clsx from "clsx";
 import { api } from "@/lib/api-client";
 import type { Vehicle, VehicleComponent } from "@/lib/types";
 import { SiteHeader } from "@/components/SiteHeader";
-import { PAINTS, type ViewMode } from "@/lib/carViewer";
+import { PAINTS, type ViewMode, type ZoomRequest } from "@/lib/carViewer";
 
 // WebGL only runs client-side. Falls back to the local three.js viewer if Sketchfab can't load.
 const CarViewer = dynamic(() => import("@/components/SketchfabCarViewer"), { ssr: false });
@@ -25,6 +25,7 @@ export default function LandingPage() {
   const [mode, setMode] = useState<ViewMode>("exterior");
   const [paintId, setPaintId] = useState(PAINTS[0].id);
   const [resetKey, setResetKey] = useState(0);
+  const [zoom, setZoom] = useState<ZoomRequest | undefined>(undefined);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -75,6 +76,7 @@ export default function LandingPage() {
             mode={mode}
             paint={paint.color}
             resetKey={resetKey}
+            zoom={zoom}
             highlightedId={hoveredId}
             onHover={setHoveredId}
             onSelect={handleSelect}
@@ -83,7 +85,7 @@ export default function LandingPage() {
 
         {/* Headline */}
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10">
-          <div className="mx-auto flex max-w-[1440px] flex-wrap items-start justify-between gap-6 px-4 pt-8 sm:px-8 sm:pt-12">
+          <div className="mx-auto flex max-w-[1440px] flex-wrap items-start justify-between gap-6 px-4 pt-20 sm:px-8 sm:pt-24">
             <div className={clsx("pointer-events-auto max-w-xl transition-opacity duration-500", mode === "interior" && "pointer-events-none opacity-0")}>
               <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-bmw-blue">
                 BMW Group · AI for Product Decision Making
@@ -164,7 +166,23 @@ export default function LandingPage() {
             </div>
 
             <div className="pointer-events-auto flex items-center gap-4 text-xs text-neutral-600">
-              <span className="hidden bg-white/80 px-2 py-1 backdrop-blur lg:block">{mode === "exterior" ? "Drag to rotate · Scroll to zoom" : "Drag to look around"}</span>
+              <span className="hidden bg-white/80 px-2 py-1 backdrop-blur lg:block">{mode === "exterior" ? "Drag to rotate" : "Drag to look around"}</span>
+              <div className="flex border border-neutral-300 bg-white/90" role="group" aria-label="Zoom">
+                {([[1, "+", "Zoom in"], [-1, "−", "Zoom out"]] as const).map(([step, glyph, label], i) => (
+                  <button
+                    key={label}
+                    onClick={() => setZoom((z) => ({ step, nonce: (z?.nonce ?? 0) + 1 }))}
+                    aria-label={label}
+                    title={label}
+                    className={clsx(
+                      "flex h-9 w-9 items-center justify-center text-base text-neutral-800 transition-colors hover:bg-neutral-900 hover:text-white",
+                      i === 1 && "border-l border-neutral-300",
+                    )}
+                  >
+                    {glyph}
+                  </button>
+                ))}
+              </div>
               <button
                 onClick={() => setResetKey((k) => k + 1)}
                 className="border border-neutral-300 bg-white/90 px-3 py-2 font-medium text-neutral-800 transition-colors hover:border-neutral-900"

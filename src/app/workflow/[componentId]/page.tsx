@@ -253,7 +253,7 @@ export default function WorkflowPage() {
               }
             />
             <div className="border border-neutral-200 bg-white p-5 sm:p-8">
-              <SignalBreakdown signals={signals} sources={sources} />
+              <SignalBreakdown signals={signals} sources={sources} evidenceHref={(theme) => `${evidenceHref}&q=${encodeURIComponent(theme)}`} />
             </div>
           </section>
 

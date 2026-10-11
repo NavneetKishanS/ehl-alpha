@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import clsx from "clsx";
 import type { ComponentKey, VehicleComponent } from "@/lib/types";
-import type { ViewMode } from "@/lib/carViewer";
+import type { ViewMode, ZoomRequest } from "@/lib/carViewer";
 import { HotspotButton } from "@/components/HotspotButton";
 
 // Offline / blocked-network fallback: the local three.js viewer.
@@ -117,14 +117,16 @@ export default function SketchfabCarViewer(props: {
   mode: ViewMode;
   paint: string;
   resetKey: number;
+  zoom?: ZoomRequest;
   highlightedId: string | null;
   onHover: (id: string | null) => void;
   onSelect: (c: VehicleComponent) => void;
 }) {
-  const { components, mode, paint, resetKey, highlightedId, onHover, onSelect } = props;
+  const { components, mode, paint, resetKey, zoom, highlightedId, onHover, onSelect } = props;
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const apiRef = useRef<SketchfabApi | null>(null);
   const homeRef = useRef<{ cam: CameraLookAt; fov: number } | null>(null);
+  const exteriorDistRef = useRef<number | null>(null); // framed distance, the reference for zoom limits
   const markerRefs = useRef(new Map<string, HTMLDivElement>());
   const [status, setStatus] = useState<"loading" | "ready" | "failed">("loading");
 
@@ -154,6 +156,7 @@ export default function SketchfabCarViewer(props: {
           ui_annotations: 0,
           ui_inspector: 0,
           ui_loading: 0,
+          scrollwheel: 0, // the wheel scrolls the page; zoom is on the page's +/- buttons
           success: (api: SketchfabApi) => {
             api.addEventListener("viewerready", async () => {
               if (cancelled) return;
@@ -202,10 +205,30 @@ export default function SketchfabCarViewer(props: {
       const aspect = el ? el.clientWidth / Math.max(1, el.clientHeight) : 1.6;
       const k = 1.3 * Math.max(1, 1.5 / aspect);
       const { position, target } = home.cam;
+      exteriorDistRef.current = Math.hypot(...position.map((v, i) => (v - target[i]) * k));
       api.setFov(home.fov);
       api.setCameraLookAt(position.map((v, i) => target[i] + (v - target[i]) * k) as Vec3, target, 1.2);
     }
   }, [mode, resetKey, status]);
+
+  // +/- buttons: dolly towards the target outside, narrow the field of view inside.
+  useEffect(() => {
+    const api = apiRef.current;
+    if (status !== "ready" || !api || !zoom) return;
+    if (mode === "interior") {
+      call<number>((cb) => api.getFov(cb)).then((fov) => api.setFov(Math.min(95, Math.max(35, fov - zoom.step * 10))));
+      return;
+    }
+    call<CameraLookAt>((cb) => api.getCameraLookAt(cb)).then(({ position, target }) => {
+      const offset = position.map((v, i) => v - target[i]);
+      const dist = Math.hypot(...offset);
+      const framed = exteriorDistRef.current ?? dist;
+      const next = Math.min(framed * 1.7, Math.max(framed * 0.6, dist * (zoom.step > 0 ? 0.87 : 1.15)));
+      api.setCameraLookAt(target.map((v, i) => v + offset[i] * (next / dist)) as Vec3, target, 0.35);
+    });
+    // Only a new click should zoom, not a mode switch.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [zoom?.nonce]);
 
   // Track hotspots: project each anchor every frame and move the DOM nodes directly.
   useEffect(() => {
@@ -267,7 +290,7 @@ export default function SketchfabCarViewer(props: {
       />
 
       {/* Soft studio fades so the headline and controls stay legible over the viewer's backdrop. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-56 bg-gradient-to-b from-white/85 via-white/40 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-80 bg-gradient-to-b from-white/85 via-white/50 to-transparent" />
 
       {status === "ready" &&
         components.map((c) =>

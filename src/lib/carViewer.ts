@@ -16,3 +16,11 @@ export const PAINTS: PaintOption[] = [
   { id: "alpine", name: "Alpine White", color: "#e9eae6" },
   { id: "isle", name: "Isle of Man Green", color: "#1d4a3a" },
 ];
+
+// A click on the page's +/- buttons. Scroll-wheel zoom is off in both viewers
+// so the wheel always scrolls the page; `nonce` makes repeated clicks in the
+// same direction register as new requests.
+export interface ZoomRequest {
+  step: 1 | -1; // 1 = zoom in, -1 = zoom out
+  nonce: number;
+}
