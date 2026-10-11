@@ -114,6 +114,13 @@ export const api = {
       body: JSON.stringify({ argument }),
     }).then((r) => j<ChallengeResult>(r)),
 
+  assignReviewers: (requirementId: string, stakeholderIds: string[]) =>
+    fetch(`/api/requirements/${requirementId}/reviewers`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ stakeholderIds }),
+    }).then((r) => j<StakeholderReview[]>(r)),
+
   getSignals: (workflowId: string) =>
     fetch(`/api/workflows/${workflowId}/signals`).then((r) => j<{ signals: Signal[]; sources: SourceRecord[] }>(r)),
 

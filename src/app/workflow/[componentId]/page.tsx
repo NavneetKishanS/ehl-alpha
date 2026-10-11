@@ -28,6 +28,7 @@ import { EvidenceMeter, SectionTitle, humanize } from "@/components/workflow/pri
 import { SensitivityView } from "@/components/SensitivityView";
 import { StakeholderMatrix } from "@/components/StakeholderMatrix";
 import { RoleSwitcher } from "@/components/RoleSwitcher";
+import { AssignReviewers } from "@/components/AssignReviewers";
 
 const WORKFLOW_STATUS: Record<Workflow["status"], string> = {
   draft: "bg-neutral-100 text-neutral-700",
@@ -218,14 +219,21 @@ export default function WorkflowPage() {
             />
             <div className="space-y-5">
               {ranked.map((req, i) => (
-                <RequirementCard
-                  key={req.id}
-                  rank={i + 1}
-                  requirement={req}
-                  selected={selectedReq?.id === req.id}
-                  onSelect={() => setSelectedReqId(req.id)}
-                  onChanged={onRequirementChanged}
-                />
+                <div key={req.id}>
+                  <RequirementCard
+                    rank={i + 1}
+                    requirement={req}
+                    selected={selectedReq?.id === req.id}
+                    onSelect={() => setSelectedReqId(req.id)}
+                    onChanged={onRequirementChanged}
+                  />
+                  <AssignReviewers
+                    requirementId={req.id}
+                    allStakeholders={stakeholders}
+                    existingReviews={reviews}
+                    onAssigned={refresh}
+                  />
+                </div>
               ))}
               {requirements.length === 0 && (
                 <div className="border border-dashed border-neutral-300 bg-white p-10 text-center text-[14px] text-neutral-500">No requirements derived yet.</div>
