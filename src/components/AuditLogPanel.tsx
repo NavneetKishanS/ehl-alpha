@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { splitStakeholderName } from "@/lib/stakeholderName";
 
 const ACTOR: Record<AuditLogEntry["actor"]["type"], { dot: string; chip: string; label: string }> = {
-  ai: { dot: "bg-bmw-blue", chip: "bg-[#eef4fc] text-bmw-blue", label: "Copilot" },
+  ai: { dot: "bg-bmw-blue", chip: "bg-[#eef4fc] text-bmw-blue", label: "Kompass" },
   pm: { dot: "bg-neutral-900", chip: "bg-neutral-100 text-neutral-800", label: "PM" },
   stakeholder: { dot: "bg-amber-500", chip: "bg-amber-50 text-amber-800", label: "Stakeholder" },
 };

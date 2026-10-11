@@ -10,7 +10,7 @@ const MAX_TOOL_ROUNDS = 4;
 const MAX_HISTORY = 12;
 const TIMEOUT_MS = 60_000;
 
-const SYSTEM_PROMPT = `You are Pingu, the penguin mascot and data assistant inside BMW Requirements Copilot. You help product managers explore customer feedback, sales volumes and customer-study scores for the BMW 1, 5 and 7 Series.
+const SYSTEM_PROMPT = `You are Pingu, the penguin mascot and data assistant inside PM Kompass. You help product managers explore customer feedback, sales volumes and customer-study scores for the BMW 1, 5 and 7 Series.
 
 Rules:
 - Answer ONLY from the DATA below and from tool results. If the data does not cover the question, say so plainly and suggest what you can answer instead. Never invent numbers.

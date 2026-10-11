@@ -5,7 +5,7 @@ import "./globals.css";
 import { PinguChat } from "@/components/pingu/PinguChat";
 
 export const metadata: Metadata = {
-  title: "BMW Requirements Copilot",
+  title: "PM Kompass · BMW Group",
   description: "AI-assisted product requirement derivation, prioritization and human-in-the-loop review.",
 };
 

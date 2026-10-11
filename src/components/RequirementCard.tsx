@@ -224,7 +224,7 @@ export function RequirementCard({
               onClick={() => setChallengeOpen(true)}
               className="text-[13px] font-medium text-bmw-blue underline-offset-2 hover:underline"
             >
-              Disagree with the score? Challenge the Copilot →
+              Disagree with the score? Challenge PM Kompass →
             </button>
           ) : (
             <div className="flex flex-col gap-2 sm:flex-row">

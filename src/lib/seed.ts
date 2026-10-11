@@ -325,7 +325,7 @@ function buildFlagshipNarrative(workflowId: string, req: Requirement, candidate:
 }
 
 function aiActor() {
-  return { type: "ai" as const, id: "ai_engine", name: "Requirements Copilot", model: "gpt-4.1" };
+  return { type: "ai" as const, id: "ai_engine", name: "PM Kompass", model: "gpt-4.1" };
 }
 function pmActor() {
   return { type: "pm" as const, id: "pm_demo", name: "Product Manager" };

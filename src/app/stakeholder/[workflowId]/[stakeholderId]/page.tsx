@@ -226,7 +226,7 @@ export default function StakeholderPage() {
             <span className="absolute inset-y-0 left-0 w-[3px] bg-bmw-blue" />
             <div className="flex items-center gap-3">
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-bmw-blue text-[12px] font-semibold">AI</span>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-sky-300">Copilot summary · what happened so far</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-sky-300">Kompass summary · what happened so far</p>
             </div>
             <p className="mt-4 max-w-4xl text-[15px] leading-relaxed text-neutral-200">{decisionTrail.content}</p>
           </section>
@@ -316,7 +316,7 @@ export default function StakeholderPage() {
 
       <footer className="border-t border-neutral-200 bg-white">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3 px-4 py-6 text-xs text-neutral-500 sm:px-8">
-          <span>BMW Group · Requirements Copilot · TUM Hackathon prototype</span>
+          <span>BMW Group · PM Kompass · TUM Hackathon prototype</span>
           {component && (
             <Link href={`/workflow/${component.id}`} className="hover:text-neutral-900">
               ← Back to PM workflow view

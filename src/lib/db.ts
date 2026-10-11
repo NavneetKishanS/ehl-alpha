@@ -441,7 +441,7 @@ export function addAISummary(summary: Omit<AISummary, "id" | "generatedAt">, mod
 
   logAction({
     workflowId: summary.workflowId,
-    actor: { type: "ai", id: "ai_engine", name: "Requirements Copilot", model },
+    actor: { type: "ai", id: "ai_engine", name: "PM Kompass", model },
     action: "ai_summary_generated",
     targetType: "workflow",
     targetId: summary.workflowId,
