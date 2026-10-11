@@ -19,6 +19,7 @@ import type {
   FeedbackRecord,
   CustomerStudyScore,
 } from "./types";
+import type { SpecDocument } from "./spec/types";
 import type { ChatReply, ChatTurn } from "./pingu/types";
 
 export interface FeedbackPage {
@@ -61,6 +62,8 @@ async function j<T>(res: Response): Promise<T> {
 }
 
 export const api = {
+  getSpec: (vehicleId: string) => fetch(`/api/vehicles/${encodeURIComponent(vehicleId)}/spec`).then((r) => j<SpecDocument>(r)),
+
   chat: (messages: ChatTurn[]) =>
     fetch("/api/chat", {
       method: "POST",

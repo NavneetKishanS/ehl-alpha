@@ -32,3 +32,17 @@ body {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.85; transform: scale(0.96); }
 }
+
+/* Specification export: when the PDF export prints, show only the dialog's
+   document preview (see components/spec/SpecExportModal.tsx). */
+@media print {
+  html.printing-spec body > *:not(#spec-print-root) {
+    display: none !important;
+  }
+  html.printing-spec body {
+    background: #ffffff;
+  }
+  @page {
+    margin: 14mm;
+  }
+}
