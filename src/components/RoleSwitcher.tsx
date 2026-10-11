@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
+import { StakeholderAvatar } from "@/components/StakeholderAvatar";
+import { splitStakeholderName } from "@/lib/stakeholderName";
 import type { Stakeholder } from "@/lib/types";
 
 type Role = { type: "pm" } | { type: "stakeholder"; stakeholderId: string };
@@ -81,13 +83,8 @@ export function RoleSwitcher({
                 current.type === "stakeholder" && current.stakeholderId === s.id && "bg-neutral-50 font-medium",
               )}
             >
-              <span
-                className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white"
-                style={{ backgroundColor: s.avatarColor }}
-              >
-                {s.name.slice(0, 1)}
-              </span>
-              <span className="min-w-0 flex-1 truncate text-neutral-800">{s.name}</span>
+              <StakeholderAvatar stakeholder={s} size={24} />
+              <span className="min-w-0 flex-1 truncate text-neutral-800">{splitStakeholderName(s.name).person}</span>
               <span className="shrink-0 text-[10px] uppercase text-neutral-400">{s.expertise.split("_")[0]}</span>
             </Link>
           ))}

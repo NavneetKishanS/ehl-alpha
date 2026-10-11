@@ -195,9 +195,7 @@ function buildRealSeed() {
             status: isFlagship && i === 0 ? "challenged" : "proposed",
             evidenceLevel: evidenceLevelFor(candidate),
             assumptions: assumptionsFor(candidate),
-            uncertainties: [
-              "Derived deterministically from internal verbatim frequency — not yet cross-checked against external competitor reviews or engineering feasibility (see docs/ROLE_B_AI.md for the AI upgrade path).",
-            ],
+            uncertainties: [],
             linkedSignalIds: [signalIdFor(candidate.signal, vehicleCode, component)],
             linkedSourceIds,
             scoreFactors,
