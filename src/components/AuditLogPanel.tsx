@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { AuditLogEntry } from "@/lib/types";
 import clsx from "clsx";
+import { splitStakeholderName } from "@/lib/stakeholderName";
 
 const ACTOR: Record<AuditLogEntry["actor"]["type"], { dot: string; chip: string; label: string }> = {
   ai: { dot: "bg-bmw-blue", chip: "bg-[#eef4fc] text-bmw-blue", label: "Copilot" },
@@ -49,7 +50,7 @@ export function AuditLogPanel({ entries }: { entries: AuditLogEntry[] }) {
                 </time>
               </div>
               <p className="mt-1.5 text-[13px] text-neutral-900">
-                <span className="font-medium">{entry.actor.name}</span>
+                <span className="font-medium">{splitStakeholderName(entry.actor.name).person}</span>
                 <span className="text-neutral-500"> {formatAction(entry.action)}</span>
               </p>
               {entry.rationale && <p className="mt-1 text-[12px] leading-relaxed text-neutral-500">{entry.rationale}</p>}

@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { StakeholderAvatar } from "@/components/StakeholderAvatar";
+import { splitStakeholderName } from "@/lib/stakeholderName";
 import type { Stakeholder, StakeholderReview } from "@/lib/types";
 
 // PR-reviewer-style row: who, their decision, and their written rationale.
@@ -14,17 +15,21 @@ export function ReviewerRow({ review, stakeholder }: { review: StakeholderReview
     <div className="flex items-start gap-3 border-b border-neutral-100 py-3 last:border-b-0">
       <StakeholderAvatar stakeholder={stakeholder} size={36} className="mt-0.5" />
       <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="text-[13px] font-medium text-neutral-900">{stakeholder?.name ?? "Unknown"}</span>
-          {stakeholder && !stakeholder.name.includes("—") && (
-            <span className="text-[11px] capitalize text-neutral-400">{stakeholder.expertise.replace(/_/g, " ")}</span>
-          )}
-          <span className={clsx("ml-auto px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em]", decision.chip)}>{decision.label}</span>
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[13px] font-medium leading-snug text-neutral-900">{stakeholder ? splitStakeholderName(stakeholder.name).person : "Unknown"}</p>
+            {stakeholder && (
+              <p className="text-[12px] capitalize leading-snug text-neutral-400">
+                {splitStakeholderName(stakeholder.name).role ?? stakeholder.expertise.replace(/_/g, " ")}
+              </p>
+            )}
+          </div>
+          <span className={clsx("shrink-0 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em]", decision.chip)}>{decision.label}</span>
         </div>
         {review.expertOpinion ? (
-          <p className="mt-1 text-[13px] leading-relaxed text-neutral-600">{review.expertOpinion}</p>
+          <p className="mt-1.5 text-[13px] leading-relaxed text-neutral-600">{review.expertOpinion}</p>
         ) : (
-          <p className="mt-1 text-[12px] text-neutral-500">Awaiting response</p>
+          <p className="mt-1.5 text-[12px] text-neutral-500">Awaiting response</p>
         )}
       </div>
     </div>

@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import { StakeholderAvatar } from "@/components/StakeholderAvatar";
+import { splitStakeholderName } from "@/lib/stakeholderName";
 import type { Requirement, Stakeholder, StakeholderReview } from "@/lib/types";
 
 // At-a-glance reviewer x requirement grid — the thing a PM actually wants
@@ -47,7 +48,7 @@ export function StakeholderMatrix({
             <tr className="border-b border-neutral-200 text-[10px] uppercase tracking-[0.1em] text-neutral-400">
               <th className="py-2 pr-3 font-medium">Requirement</th>
               {columns.map((s) => (
-                <th key={s.id} className="px-2 py-2 text-center font-medium" title={s.name}>
+                <th key={s.id} className="px-2 py-2 text-center font-medium" title={splitStakeholderName(s.name).person}>
                   <StakeholderAvatar stakeholder={s} size={26} className="mx-auto" />
                 </th>
               ))}
@@ -74,7 +75,7 @@ export function StakeholderMatrix({
                     const review = reviewAt(req.id, s.id);
                     return (
                       <td key={s.id} className="px-2 py-2.5 text-center">
-                        <DecisionDot review={review} stakeholderName={s.name} />
+                        <DecisionDot review={review} stakeholderName={splitStakeholderName(s.name).person} />
                       </td>
                     );
                   })}
