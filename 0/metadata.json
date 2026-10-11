@@ -1,0 +1,51 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4MVBARKX5A05BSSGHPEFRH0",
+  "session_id": "cb8c26e5-1642-4704-9388-fdb98b1aa032",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-11T06:45:37.690547Z",
+  "branch": "feat/splash-logo",
+  "checkpoints_count": 4,
+  "files_touched": [
+    "src/app/globals.css",
+    "src/components/Car3DViewer.tsx",
+    "src/components/SketchfabCarViewer.tsx"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-sonnet-5",
+  "turn_id": "5c1b394cfb54",
+  "checkpoint_transcript_start": 5012,
+  "transcript_lines_at_start": 5012,
+  "compact_transcript_start": 886,
+  "token_usage": {
+    "input_tokens": 62,
+    "cache_creation_tokens": 829799,
+    "cache_read_tokens": 26140031,
+    "output_tokens": 13314,
+    "api_call_count": 31
+  },
+  "session_metrics": {
+    "turn_count": 31
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-11T06:45:37.0193Z",
+    "agent_lines": 9,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 9,
+    "total_lines_changed": 9,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
